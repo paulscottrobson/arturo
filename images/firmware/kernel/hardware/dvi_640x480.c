@@ -214,24 +214,26 @@ void __not_in_flash("main") dvi_core1_main() {
 				queue_remove_blocking_u32(&dvi0.q_tmds_free, &tmdsbuf);
 				uint32_t * _source = (uint32_t*)(framebuf+y*640/8);
 				uint32_t * _target = (uint32_t*) _buffer;
-				for (int i = 0; i < 20; i++) {
-					*_target++ = ~*_source++;
-				}
-				for (uint component = 0; component < 3; ++component) {          // 3 bitplanes RGB, each is bitplane, ~bitplane, all 0 all 1
-					uint32_t *_target = NULL;
-					switch ((mono_fg_bg >> component) & 0x11) {
-						case 0x00:
-							_target = all_zero;break;
-						case 0x01:
-							_target = (uint32_t*)(framebuf+y*640/8);break;
-						case 0x10:
-							_target = (uint32_t  *)_buffer;break;
-						case 0x11:
-							_target = all_one;break;
-					}
-					tmds_encode_custom_1bpp((uint32_t*)_target,
-											tmdsbuf + (2-component) * FRAME_WIDTH / DVI_SYMBOLS_PER_WORD,   // The (2-x) here makes it BGR Acordn standard
-											FRAME_WIDTH);
+				    for (int i = 0; i < 20; i++) {
+				      	*_target++ = ~*_source++;
+				    }
+
+				for (uint component = 0; component < 3; ++component) {  				// 3 bitplanes RGB, each is bitplane, ~bitplane, all 0 all 1
+				  	uint32_t *_target = NULL;
+				  	switch ((mono_fg_bg >> component) & 0x11) {
+					  	case 0x00:
+					    	_target = all_zero;break;
+					  	case 0x01:
+					    	_target = (uint32_t*)(framebuf+y*640/8);break;
+					  	case 0x10:
+					    	_target = (uint32_t  *)_buffer;break;
+					  case 0x11:
+					    	_target = all_one;break;
+				  }
+				  tmds_encode_custom_1bpp(
+						(uint32_t*)_target,
+						tmdsbuf + (2-component) * FRAME_WIDTH / DVI_SYMBOLS_PER_WORD,  	// The (2-x) here makes it BGR Acordn standard
+						FRAME_WIDTH);
 				}
 				queue_add_blocking_u32(&dvi0.q_tmds_valid, &tmdsbuf);
 				break;
@@ -248,9 +250,9 @@ void __not_in_flash("main") dvi_core1_main() {
 				queue_add_blocking_u32(&dvi0.q_tmds_valid, &tmdsbuf);
 			break;
 
-		default:
-			break;
-		}
+			default:
+				break;
+		}		
 	}
 }
 

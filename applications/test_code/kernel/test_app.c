@@ -20,7 +20,7 @@
 // ***************************************************************************************
 
 static int mode;
-static int fg=7;
+static int fg=3;
 static int bg=0;
 
 void ApplicationRun(void) {
@@ -40,6 +40,14 @@ void ApplicationRun(void) {
 	  mode=(mode+1) % 5;
 	  DVISetMode(mode);
 	  CONWrite(12);
+	  fg = 3;
+	  bg = 0;
+	  if (mode==2) {
+	    DVISetMonoColour(fg, bg);
+	    CONSetColour(1, 0);
+	  } else {
+	      CONSetColour(fg, bg);
+	  }	    
 	  CONWriteString("Set mode to %d\n",mode);
 	}
 	if (n == 'f') {
