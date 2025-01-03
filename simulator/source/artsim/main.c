@@ -46,7 +46,7 @@ int main(int argc,char *argv[]) {
 	CONInitialise();  																// Initialise console
 	KBDReceiveEvent(0,0xFF,0);  													// Initialise keyboard manager
 	FIOInitialise();  																// Initialise file system
-	SYSOpen(true);  																// Start SDL and Mouse/Controller/Sound that use it
+	SYSOpen(false);  																// Start SDL and Mouse/Controller/Sound that use it
 	LOGODrawTitle();  																// Boot logo
 	LOGOTextHeader();  																// Boot text
 	ApplicationRun();  																// Run the program

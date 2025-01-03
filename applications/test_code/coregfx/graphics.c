@@ -36,6 +36,12 @@ void ApplicationRun(void) {
     CONWriteString("Graphics Demo Application\r");                                  
     // Test64Colours();            
     GFXPortInitialise(&vp,45,64,553,150);
+
+    SNDCHANNEL s;
+    s.frequency = 440;s.type = SNDTYPE_SQUARE;s.volume = 127;
+    SNDUpdate(0,&s);
+    s.frequency = 220;
+    SNDUpdate(1,&s);
     //
     //      A typical 'main'
     //
@@ -68,8 +74,7 @@ void ApplicationRun(void) {
 // ***************************************************************************************
 
 int8_t ApplicationGetChannelSample(int channel) {
-    return 0; 
-
+    return rand() & 0xFF; 
 }
 
 // ***************************************************************************************

@@ -72,7 +72,11 @@ static void audioCallback(void* userdata,uint8_t* stream,int len) {
 	// Write data to the entire buffer by iterating through all samples and
 	// channels.
 	for (int sample = 0; sample < audioSpec.samples; ++sample) {
+		#if ARTURO_PROCESS_SOUND==1
+		double data = ((double)SNDGetChannelSample(0))/128.0;
+		#else		
 		double data = ((double)ApplicationGetChannelSample(0))/128.0;
+		#endif
 		// Write the same data to all channels
 		for (int channel = 0; channel < audioSpec.channels; ++channel) {
 			int offset = m_calculateOffset(sample, channel);

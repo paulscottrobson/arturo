@@ -45,6 +45,7 @@ void SYSOpen(bool muteSound) {
 	CTLFindControllers();  															// Have to be done after SDL Initialisation.
 	MSEInitialise();
 	SOUNDOpen();
+    SNDMuteAllChannels();             		                                        // Mute all channels
 	if (!muteSound) SOUNDPlay();
 
 	SDL_ShowCursor(SDL_DISABLE);                                                    // Hide mouse cursor

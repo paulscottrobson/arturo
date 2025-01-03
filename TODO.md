@@ -1,6 +1,5 @@
 # TODO stuff
 
-- from ttf fonts
+- revamp documentation
 - fix mono fonts.
 - x/y scales.
-- sound system

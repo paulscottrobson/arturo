@@ -42,6 +42,10 @@ ARTURO_PROCESS_KEYS = 1
 #
 ARTURO_MONO_SOUND = 1
 #
+#		If non-zero, use the sound library
+#
+ARTURO_PROCESS_SOUND = 1
+#
 #		Set the default locale, the list is in the locale directory
 #
 ARTURO_KBD_LOCALE = "gb"
@@ -84,11 +88,12 @@ PICO_SERIAL_BAUD_RATE = 115200
 CONFIG_DATA="\
 \#define PICO_PLATFORM_NAME "$(PLATFORM)" |\
 \
-\#define PICO_HW_RP2040PC 	(0) |\
-\#define PICO_HW_NEO6502 	(1) |\
-\#define PICO_HARDWARE 		$(PICO_HARDWARE) 	|\
+\#define PICO_HW_RP2040PC 	  (0) |\
+\#define PICO_HW_NEO6502 	  (1) |\
+\#define PICO_HARDWARE 		  $(PICO_HARDWARE) 	|\
 \
-\#define ARTURO_PROCESS_KEYS $(ARTURO_PROCESS_KEYS) 			|\
-\#define ARTURO_MONO_SOUND   $(ARTURO_MONO_SOUND) 				|\
-\#define ARTURO_KBD_LOCALE 	 $(ARTURO_KBD_LOCALE) 				|\
+\#define ARTURO_PROCESS_KEYS  $(ARTURO_PROCESS_KEYS) 			|\
+\#define ARTURO_MONO_SOUND    $(ARTURO_MONO_SOUND) 				|\
+\#define ARTURO_PROCESS_SOUND $(ARTURO_PROCESS_SOUND) 			|\
+\#define ARTURO_KBD_LOCALE 	  $(ARTURO_KBD_LOCALE) 				|\
 "

@@ -16,7 +16,7 @@ There are two versions of the Kernel, which share a fair amount of code at the b
 
 ## Graphics
 
-Currently three provided, which is initialised at the start, the default is an 8 colour 640x240 mode, which operates using bitplanes rather like an Amiga. The first bitplane is red, the second green, the third blue.   There is also an 8 colour 320x240 mode, and a 2 colour 640x480 mode.
+Currently three provided, which is initialised at the start, the default is an 8 colour 640x240 mode, which operates using bitplanes rather like an Amiga. The first bitplane is red, the second green, the third blue.   There is also an 8 colour 320x240 mode, a 2 colour 640x480 mode, 320x256x8 colour mode, and a 320x240x64 colour mode.
 
 Information on this can be obtained from the function *DVIGetModeInformation()* which returns a pointer to a *DVIModeInformation* structure.
 
@@ -63,7 +63,9 @@ An RP2040PC has two sound channels at present they are combined by default, and 
 
 The concept is that a sampling function is called to get the next sample at a frequency of *SNDGetSampleFrequency()* , and you can figure out what you want the output level to be. In the example in test_app.c channel 1 (right) returns white noise, channel 0 (left) a square wave beep at 440Hz.
 
-The name of the function that is called to get the sample *ApplicationGetChannelSample()* used as in test_app.c
+There is a system which simulates a 4 channel "sound chip" (currently just offering square wave and noise) which can be used for simplicity.
+
+The name of the function that is called to get the sample *ApplicationGetChannelSample([channel])* used as in test_app.c
 
 The returned value should be -128 .. 127 and can be samples or similar. 
 
@@ -136,10 +138,22 @@ It is also possible to access the keyboard current state allowing the keys to be
 Mouse support automatically converts Mouse information to a useable format. It is not possible at present to manually process the mouse USB messages.
 
 | Function        | Purpose                                                      |
-| --------------- | ------------------------------------------------------------ |
+| :-------------- | ------------------------------------------------------------ |
 | MSEGetState     | Returns the position, button state, and scroll wheel position |
 | MSEMousePresent | Returns true if the mouse is physically connected.           |
 | MSESetPosition  | Sets the mouse position.                                     |
+
+## Sound Support
+
+If *ARTURO_PROCESS_SOUND* is set to 1 the system creates sound itself, with a simple 1980s style "sound chip", offering 4 identical indeendent sound channel, each of which can generate noise or a square wave beep.
+
+| Function                   | Purpose                                                      |
+| :------------------------- | ------------------------------------------------------------ |
+| SNDGetChannelCount()       | Returns the number of available channels (currently 4)       |
+| SNDMuteAllChannels()       | Silence all four channels                                    |
+| SNDUpdate(channel,setting) | Updates a channel from the SNDCHANNEL structure, which contains frequency, volume (0-127) and type (SNDTYPE_NOISE and SNDTYPE_SQUARE) |
+
+
 
 ## Gamepad Support
 
@@ -188,6 +202,6 @@ If this is set to true, then reports from unknown devices are dumped on the cons
 
 *Paul Robson paul@robsons.org.uk*
 
-*Last revised 21st December 2024*
+*Last revised 3rd January 2025*
 
 ## I

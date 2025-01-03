@@ -37,6 +37,7 @@ int main() {
     LOGOTextHeader();                                                           // Write text header
     _showRAMAvailable();                                                        // Show RAM free.
     SNDInitialise(ARTURO_MONO_SOUND != 0);                                      // Start the sound system, seperate channels according to config.
+    SNDMuteAllChannels();                                                       // Mute all channels
     MSEInitialise();                                                            // Initialise the mouse system
     CTLInitialise();                                                            // Initialise the gamepad system
     USBInitialise();                                                            // Initialise keyboard & USB system.
