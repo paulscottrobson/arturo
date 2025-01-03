@@ -26,16 +26,20 @@ clean:
 	rm -f $(TARGET)
 	
 %.ttf:
+	$(CONVERT) $@ 7 $(RANGE) >>$(TARGET)
 	$(CONVERT) $@ 9 $(RANGE) >>$(TARGET)
 	$(CONVERT) $@ 12 $(RANGE) >>$(TARGET)
 	$(CONVERT) $@ 18 $(RANGE) >>$(TARGET)
 
 %.otf:
+	$(CONVERT) $@ 7 $(RANGE) >>$(TARGET)
 	$(CONVERT) $@ 9 $(RANGE) >>$(TARGET)
 	$(CONVERT) $@ 12 $(RANGE) >>$(TARGET)
 	$(CONVERT) $@ 18 $(RANGE) >>$(TARGET)
 
 symbols.otf:
+	$(CONVERT) $@ 7 $(SYMRANGE) >>$(TARGET)
 	$(CONVERT) $@ 9 $(SYMRANGE) >>$(TARGET)
 	$(CONVERT) $@ 12 $(SYMRANGE) >>$(TARGET)
 	$(CONVERT) $@ 18 $(SYMRANGE) >>$(TARGET)
+
