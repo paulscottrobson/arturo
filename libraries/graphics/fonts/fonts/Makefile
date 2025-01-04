@@ -9,6 +9,7 @@
 # *******************************************************************************************
 # *******************************************************************************************
 
+include ../../../../build_env/common.make
 
 SRCFONTS1 = $(shell find . -name "*.ttf")
 SRCFONTS2 = $(shell find . -name "*.otf")
@@ -17,10 +18,18 @@ RANGE = 32 127
 SYMRANGE = 32 255
 TARGET = ../fontdata.h
 
-fonts: convert clean $(SRCFONTS1) $(SRCFONTS2)
+fonts: convert clean $(SRCFONTS1) $(SRCFONTS2) bitmaps
 
 convert:
 	make -C fontconvert
+
+bitmaps:
+	$(PYTHON) convbmf.py 3 5 small3x5.bmf >>$(TARGET)
+	$(PYTHON) convbmf.py 4 6 small4x6.bmf >>$(TARGET)
+	$(PYTHON) convbmf.py 5 5 small5x5.bmf >>$(TARGET)
+	$(PYTHON) convbmf.py 5 7 small5x7.bmf >>$(TARGET)
+	$(PYTHON) convbmf.py 8 8 system.bmf >>$(TARGET)
+
 
 clean:
 	rm -f $(TARGET)

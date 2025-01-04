@@ -36,7 +36,8 @@ static int _DrawCharacter(GFXPort *vp,int xPos,int yPos,int ch,int fontid,int co
 	const FONTInfo *font = _dictionary[fontid];   									// Get the font data	
 	if (ch < font->first || ch > font->last) return 0;                   	        // Unknown character.
 	FONTGlyph *glyph = &(font->glyph[ch - font->first]);   							// Point to the glyph
-
+	if (glyph->bitmapOffset == 0xFFFF) return 0;  									// No bitmap offset here, character not in glyph set.
+	
 	uint8_t *bitmapData = font->bitmap+glyph->bitmapOffset;  						// This points to the actual bits
 	uint8_t bitMask = 0x80;                                                         // Bit to check.
 

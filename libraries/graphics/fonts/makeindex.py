@@ -15,7 +15,7 @@ fonts = {}
 for s in open("fontdata.h").readlines():
 	if s.find("FONTInfo") >= 0:
 		id = s.split()[2].lower()
-		m = re.match("^(.*?)(\\d+)pt[678]b",id)
+		m = re.match("^\\_?(.*?)\\_?(\\d+)pt[678]b",id)
 		fonts[id] = { "name":m.group(1),"size":int(m.group(2)) }
 
 keys = [x for x in fonts.keys()]

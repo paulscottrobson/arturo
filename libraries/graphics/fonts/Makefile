@@ -11,10 +11,9 @@
 
 include ../../../build_env/common.make
 
-BPYTHON = bdflib/bin/python
-
 convert:
 	make -B -C fonts fonts
 	$(PYTHON) makeindex.py
 	cp fontinclude.h ../include
+
 

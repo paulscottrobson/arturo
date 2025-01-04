@@ -101,16 +101,16 @@ static void _GFXAValidate(void) {
 	int yc = yPixel+_currentPort->y;
 	int offset;
 	if (_dmi->bitPlaneDepth == 2) {
-	  offset = (xc >> 2) + (yc * _dmi->bytesPerLine); 							// Work out the offset on the bitmap planes.
-	  bitMask = (0xC0 >> (2*(xc & 3)));
+	  offset = (xc >> 2) + (yc * _dmi->bytesPerLine); 								// Work out the offset on the bitmap planes.
+	  bitMask = (0xC0 >> (2*(xc & 3)));												// Work out the bitmask for the current pixel.
 	} else {
-	  offset = (xc >> 3) + (yc * _dmi->bytesPerLine); 							// Work out the offset on the bitmap planes.
-	  bitMask = (0x80 >> (xc & 7));
+	  offset = (xc >> 3) + (yc * _dmi->bytesPerLine); 								// Work out the offset on the bitmap planes.
+	  bitMask = (0x80 >> (xc & 7));													// Work out the bitmask for the current pixel.
 	}
 	pl0 = _dmi->bitPlane[0]+offset;  												// Set up bitmap plane pointers.
 	pl1 = _dmi->bitPlane[1]+offset;  
 	pl2 = _dmi->bitPlane[2]+offset;  
-							// Work out the bitmask for the current pixel.
+							
 	dataValid = true;  																// We have valid data
 }
 
@@ -134,7 +134,7 @@ void GFXAHorizLine(int x1,int x2,int y,int colour) {
 	//
 	//		First, we go to a byte boundary, if there are enough pixels.
 	//	
-	while (pixelCount > 0 && (bitMask & 0x80) == 0) {   									// Shift until reached byte boundary
+	while (pixelCount > 0 && (bitMask & 0x80) == 0) {   							// Shift until reached byte boundary
 		_GFXDrawBitmap(colour);
 		GFXARight();
 		pixelCount--;
@@ -142,16 +142,16 @@ void GFXAHorizLine(int x1,int x2,int y,int colour) {
 	//
 	//		While on a byte boundary, if there are enough pixels, do whole bytes. I did consider doing it in longs at this point.
 	//
-	while (pixelCount >= ppb) {  														// Now do it byte chunks.
+	while (pixelCount >= ppb) {  													// Now do it byte chunks.
 		bitMask = 0xFF;_GFXDrawBitmap(colour); 										// This does the line in whole bytes.
 		pl0++;pl1++;pl2++;  														// Advance pointer
-		pixelCount -= ppb;  															// 8 fewer pixels
-		xPixel += ppb;  																// Keep the position up to date, doesn't really matter.
+		pixelCount -= ppb;  														// 8 fewer pixels
+		xPixel += ppb;  															// Keep the position up to date, doesn't really matter.
 	}
 	//
 	//		Do any remaining single pixels
 	//
-	bitMask = _dmi->bitPlaneDepth == 2? 0xC0 : 0x80;  																// We know we are on a byte boundary
+	bitMask = _dmi->bitPlaneDepth == 2? 0xC0 : 0x80;  								// We know we are on a byte boundary
 	while (pixelCount-- > 0) {   													// Draw any remaining pixels.
 		_GFXDrawBitmap(colour);
 		GFXARight();
@@ -320,6 +320,12 @@ static inline void _GFXDrawBitmap3(int colour) {
 static inline void _GFXDrawBitmap1(int colour) {
 	*pl0 = ((*pl0) & (~bitMask)) | ((colour & 1) ? bitMask:0);
 }
+
+// ***************************************************************************************
+//
+//					Draw the current pixel (2 plane, e.g. 64 colours)
+//
+// ***************************************************************************************
 
 static inline void _GFXDrawBitmap6(int colour) {
         *pl0 = ((*pl0) & (~bitMask)) | ((colour & 1) ? bitMask & 0xAA : 0) |
