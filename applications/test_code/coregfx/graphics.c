@@ -32,7 +32,7 @@ void ApplicationRun(void) {
     int n = 0;
     int nextSkip = 0;
     GFXSetMode(DVI_MODE_640_240_8);
-    CONWriteString("Graphics Demo Application\r");                                  
+    GFXFillRect(NULL,0,0,640,480,1);
     GFXPortInitialise(&vp,15,15,625,225);
 
     // SNDCHANNEL s;
