@@ -12,6 +12,7 @@
 // ***************************************************************************************
 
 #include "common.h"
+#include <libraries.h>
 #include "include/atomic.h"
 
 static int rx,ry,xc,yc;

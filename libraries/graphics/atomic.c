@@ -11,6 +11,7 @@
 // ***************************************************************************************
 
 #include "common.h"
+#include <libraries.h>
 #include "include/atomic.h"
 
 static inline void _GFXDrawBitmap1(int colour);
