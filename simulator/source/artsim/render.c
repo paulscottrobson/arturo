@@ -12,8 +12,23 @@
 
 #include <artsim.h>
 
+static uint8_t redPlane[640*480/8];
+static uint8_t greenPlane[640*480/8];
+static uint8_t bluePlane[640*480/8];
+
+static struct DVIModeInformation dvi_modeInfo;
+static int mode = DVI_MODE_640_240_8;
+
+// *******************************************************************************************************************************
+//
+//														Mode Palettes
+//
+// *******************************************************************************************************************************
+
 static int palette[8] = { 0x000,0xF00,0x0F0,0xFF0,0x00F,0xF0F,0x0FF,0xFFF };
+
 static int palette_mono[2] = {3, 4};
+
 static int palette_64[64] = {
   0x000, 0x500, 0xA00, 0xF00,
   0x050, 0x550, 0xA50, 0xF50,
@@ -36,12 +51,12 @@ static int palette_64[64] = {
   0x0FF, 0x5FF, 0xAFF, 0xFFF,
 };
 
-static uint8_t redPlane[640*480/8];
-static uint8_t greenPlane[640*480/8];
-static uint8_t bluePlane[640*480/8];
 
-static struct DVIModeInformation dvi_modeInfo;
-static int mode = DVI_MODE_640_240_8;
+// *******************************************************************************************************************************
+//
+//											Set 2 colour foreground/background
+//
+// *******************************************************************************************************************************
 
 void DVISetMonoColour(int fg, int bg)
 {
@@ -51,22 +66,11 @@ void DVISetMonoColour(int fg, int bg)
 
 // *******************************************************************************************************************************
 //
-//												RSet current mode.
+//														Set current mode.
 //
 // *******************************************************************************************************************************
 
-bool DVISetMode(int m) {
-	mode = m;
-	return true;
-}
-
-// *******************************************************************************************************************************
-//
-//												Return mode data.
-//
-// *******************************************************************************************************************************
-
-struct DVIModeInformation *DVIGetModeInformation(void) {
+bool DVISetMode(int mode) {
 	dvi_modeInfo.mode = mode;  														// Record mode
 	dvi_modeInfo.bitPlaneCount = 3;
 	dvi_modeInfo.bitPlane[0] = redPlane;
@@ -101,7 +105,23 @@ struct DVIModeInformation *DVIGetModeInformation(void) {
 			dvi_modeInfo.mode = -1;  												// Failed.
 	}
 	dvi_modeInfo.bytesPerLine = dvi_modeInfo.width / 8 * dvi_modeInfo.bitPlaneDepth;  							// Calculate bytes per line.	return &modeInfo;
+	return true;
+}
+
+// *******************************************************************************************************************************
+//
+//												Return mode data.
+//
+// *******************************************************************************************************************************
+
+struct DVIModeInformation *DVIGetModeInformation(void) {
 	return &dvi_modeInfo;
+}
+
+int  DVIGetScreenExtent(int *pWidth,int *pHeight) {	
+	if (pWidth != NULL) *pWidth = dvi_modeInfo.width;
+	if (pHeight != NULL) *pHeight = dvi_modeInfo.height;
+	return dvi_modeInfo.mode;
 }
 
 // *******************************************************************************************************************************
@@ -128,18 +148,18 @@ void RNDRender(SDL_Surface *surface) {
 			r = *pr++;g = *pg++;b = *pb++;
 			if (dm->bitPlaneDepth == 1) {
 			  for (int bt = 0;bt < 8;bt++) {
-			    uint8_t c = ((r & 0x80) >> 7)+((g & 0x80) >> 6)+((b & 0x80) >> 5);
-			    if (dm->bitPlaneCount == 1) c = (r & 0x80) ? palette_mono[0] : palette_mono[1];
-			    SYSRectangle(&rc,palette[c]);
-			    r <<= 1;g <<= 1;b <<= 1;
-			    rc.x += rc.w;
+				uint8_t c = ((r & 0x80) >> 7)+((g & 0x80) >> 6)+((b & 0x80) >> 5);
+				if (dm->bitPlaneCount == 1) c = (r & 0x80) ? palette_mono[0] : palette_mono[1];
+				SYSRectangle(&rc,palette[c]);
+				r <<= 1;g <<= 1;b <<= 1;
+				rc.x += rc.w;
 			  }
 			} else {
 			  for (int bt = 0;bt < 8;bt++) {
-			    uint8_t c = ((r & 0xC0) >> 6)+((g & 0xC0) >> 4)+((b & 0xC0) >> 2);
-			    SYSRectangle(&rc,palette_64[c]);
-			    r <<= 2;g <<= 2;b <<= 2;
-			    rc.x += rc.w;			    
+				uint8_t c = ((r & 0xC0) >> 6)+((g & 0xC0) >> 4)+((b & 0xC0) >> 2);
+				SYSRectangle(&rc,palette_64[c]);
+				r <<= 2;g <<= 2;b <<= 2;
+				rc.x += rc.w;			    
 			  }			  
 			}
 		}

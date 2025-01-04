@@ -27,13 +27,23 @@ void Test64Colours(void);
 
 static GFXPort vp;
 static int action = -1;
+static int width,height;
+
+void UpdateMode(int mode) {
+    GFXSetMode(mode);
+    DVIGetScreenExtent(&width,&height);
+    CONWrite(12);
+    GFXFillRect(NULL,0,0,width,height,1);
+    CONWriteString("Mode %d : %d x %d",mode,width,height);
+    GFXPortInitialise(&vp,10,10,width-10,height-10);
+}
 
 void ApplicationRun(void) {
     int n = 0;
     int nextSkip = 0;
-    GFXSetMode(DVI_MODE_640_240_8);
-    GFXFillRect(NULL,0,0,640,480,1);
-    GFXPortInitialise(&vp,15,15,625,225);
+    int mode = DVI_MODE_320_256_8;
+
+    UpdateMode(mode);
 
     // SNDCHANNEL s;
     // s.frequency = 440;s.type = SNDTYPE_SQUARE;s.volume = 127;
@@ -47,7 +57,7 @@ void ApplicationRun(void) {
     while (1) {
         if (TMRRead() > nextSkip) {
             nextSkip = TMRRead()+200;
-            GFXFillRect(&vp,0,0,640,480,0);
+            GFXFillRect(&vp,0,0,width,height,0);
             action++;
         }
         TestDrawStuff();
@@ -56,6 +66,11 @@ void ApplicationRun(void) {
             CONWriteString("Escape !\r");
         }
 
+        int k = KBDGetKey();
+        if (k != 0) {
+            mode = (mode + 1) % (DVI_MODE_MAX+1);
+            UpdateMode(mode);
+        }
         if (HASTICK50_FIRED()) {                                                    // Time to do a 50Hz tick (Don't use this for timing !)
             TICK50_RESET();                                                         // Reset the tick flag
             if (USBUpdate() == 0) return;                                           // Update USB
@@ -80,9 +95,9 @@ void ApplicationRun(void) {
 //
 // ***************************************************************************************
 
-static int randx() { return rand() % 640; }
-static int randy() { return rand() % 240; }
-static int randColour() { return rand() % 8; }
+static int randx() { return rand() % width; }
+static int randy() { return rand() % height; }
+static int randColour() { return rand() % 64; }
 
 static int ctr = 0;
 
@@ -94,9 +109,9 @@ void TestDrawStuff(void) {
         case 1:
             GFXLine(&vp,x,y,x1,y1,randColour());break;
         case 2:
-            GFXLine(&vp,0,y,640,y,randColour());break;
+            GFXLine(&vp,0,y,width,y,randColour());break;
         case 3:
-            GFXLine(&vp,x,0,x,480,randColour());break;
+            GFXLine(&vp,x,0,x,height,randColour());break;
         case 4:
             TestScrollAndRect();break;
         case 5:
@@ -129,31 +144,6 @@ void TestScrollAndRect(void) {
     GFXScrollPort(&vp,s,s);
     GFXFillRect(&vp,9,9,301,101,ctr & 7);
     ctr++;
-}
-
-// ***************************************************************************************
-//
-//                                  Ellipse test
-//
-// ***************************************************************************************
-
-void TestEllipse(void) {
-}
-
-// ***************************************************************************************
-//
-//                                  Font test
-//
-// ***************************************************************************************
-
-void TestFonts(void) {
-    for (int i = 0;i < FONT_COUNT;i++) {
-        char buffer[32];
-        int x = i % 6 * 80;
-        int y = i / 6 * 24 + 24;
-        sprintf(buffer,"%d__iM",i);
-        GFXDrawString(&vp,x,y,buffer,i,i % 7 + 1,1);
-    }
 }
 
 // ***************************************************************************************

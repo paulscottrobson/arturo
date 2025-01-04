@@ -1,3 +1,3 @@
 # TODO stuff
 
-- Read gfx state information
+- 256 line mode rendering simulator bug.

@@ -38,12 +38,18 @@ struct DVIModeInformation dvi_modeInfo;                       // Mode informatio
 
 // ***************************************************************************************
 //
-//                  Get mode information
+//                  				Get mode information
 //
 // ***************************************************************************************
 
 struct DVIModeInformation *DVIGetModeInformation(void) {
 	return &dvi_modeInfo;
+}
+
+int  DVIGetScreenExtent(int *pWidth,int *pHeight) {	
+	if (pWidth != NULL) *pWidth = dvi_modeInfo.width;
+	if (pHeight != NULL) *pHeight = dvi_modeInfo.height;
+	return dvi_modeInfo.mode;
 }
 
 // ***************************************************************************************
@@ -214,21 +220,21 @@ void __not_in_flash("main") dvi_core1_main() {
 				queue_remove_blocking_u32(&dvi0.q_tmds_free, &tmdsbuf);
 				uint32_t * _source = (uint32_t*)(framebuf+y*640/8);
 				uint32_t * _target = (uint32_t*) _buffer;
-				    for (int i = 0; i < 20; i++) {
-				      	*_target++ = ~*_source++;
-				    }
+					for (int i = 0; i < 20; i++) {
+						*_target++ = ~*_source++;
+					}
 
 				for (uint component = 0; component < 3; ++component) {  				// 3 bitplanes RGB, each is bitplane, ~bitplane, all 0 all 1
-				  	uint32_t *_target = NULL;
-				  	switch ((mono_fg_bg >> component) & 0x11) {
-					  	case 0x00:
-					    	_target = all_zero;break;
-					  	case 0x01:
-					    	_target = (uint32_t*)(framebuf+y*640/8);break;
-					  	case 0x10:
-					    	_target = (uint32_t  *)_buffer;break;
+					uint32_t *_target = NULL;
+					switch ((mono_fg_bg >> component) & 0x11) {
+						case 0x00:
+							_target = all_zero;break;
+						case 0x01:
+							_target = (uint32_t*)(framebuf+y*640/8);break;
+						case 0x10:
+							_target = (uint32_t  *)_buffer;break;
 					  case 0x11:
-					    	_target = all_one;break;
+							_target = all_one;break;
 				  }
 				  tmds_encode_custom_1bpp(
 						(uint32_t*)_target,
