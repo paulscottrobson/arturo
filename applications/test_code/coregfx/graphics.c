@@ -13,11 +13,8 @@
 #include "common.h"
 #include "gfxtest.h"
 
-void TestCodeHorizontalLines(void);
-void TestCodeRandomLines(void);
-void TestCodeVerticalLines(void);
+void TestDrawStuff(void);
 void TestScrollAndRect(void);
-void TestEllipse(void);
 void TestTriangles(void);
 void TestFonts(void);
 void Test64Colours(void);
@@ -29,31 +26,31 @@ void Test64Colours(void);
 // ***************************************************************************************
 
 static GFXPort vp;
+static int action = -1;
 
 void ApplicationRun(void) {
     int n = 0;
-    // GFXSetMode(DVI_MODE_640_240_8);
+    int nextSkip = 0;
+    GFXSetMode(DVI_MODE_640_240_8);
     CONWriteString("Graphics Demo Application\r");                                  
-    // Test64Colours();            
-    GFXPortInitialise(&vp,45,64,553,150);
+    GFXPortInitialise(&vp,15,15,625,225);
 
     // SNDCHANNEL s;
     // s.frequency = 440;s.type = SNDTYPE_SQUARE;s.volume = 127;
     // SNDUpdate(0,&s);
     // s.frequency = 220;
     // SNDUpdate(1,&s);
+    // Test64Colours();            
     //
     //      A typical 'main'
     //
     while (1) {
-        n++;
-        // TestCodeHorizontalLines();
-        // TestCodeRandomLines();
-        // TestCodeVerticalLines();
-        // TestScrollAndRect();
-        // TestEllipse();
-        // TestTriangles();
-        TestFonts();
+        if (TMRRead() > nextSkip) {
+            nextSkip = TMRRead()+200;
+            GFXFillRect(&vp,0,0,640,480,0);
+            action++;
+        }
+        TestDrawStuff();
 
         if (KBDEscapePressed(true)) {                                               // Escaped ?
             CONWriteString("Escape !\r");
@@ -67,15 +64,15 @@ void ApplicationRun(void) {
     }
 }
 
-// ***************************************************************************************
-//
-//                                  Sound driver. (dummy)
-//
-// ***************************************************************************************
+// // ***************************************************************************************
+// //
+// //                                  Sound driver. (dummy)
+// //
+// // ***************************************************************************************
 
-int8_t ApplicationGetChannelSample(int channel) {
-    return rand() & 0xFF; 
-}
+// int8_t ApplicationGetChannelSample(int channel) {
+//     return rand() & 0xFF; 
+// }
 
 // ***************************************************************************************
 //
@@ -83,38 +80,36 @@ int8_t ApplicationGetChannelSample(int channel) {
 //
 // ***************************************************************************************
 
+static int randx() { return rand() % 640; }
+static int randy() { return rand() % 240; }
+static int randColour() { return rand() % 8; }
+
 static int ctr = 0;
 
-void TestCodeHorizontalLines(void) {
-    for (int y = 2;y < 240;y++) {
-        GFXLine(&vp,2,y,640,y,(y+ctr) >> 2);
+void TestDrawStuff(void) {
+    int x = randx(),y = randy(),x1 = randx(),y1 = randy(),x2 = randx(),y2 = randy();
+    switch(action) {
+        case 0: 
+            GFXDrawString(&vp,x,y,"Hello",rand()%FONT_COUNT,randColour(),1);        
+        case 1:
+            GFXLine(&vp,x,y,x1,y1,randColour());break;
+        case 2:
+            GFXLine(&vp,0,y,640,y,randColour());break;
+        case 3:
+            GFXLine(&vp,x,0,x,480,randColour());break;
+        case 4:
+            TestScrollAndRect();break;
+        case 5:
+            GFXFillEllipse(&vp,x,y,x1,y1,randColour());
+            GFXFrameEllipse(&vp,x,y,x1,y1,randColour());
+            GFXFrameRect(&vp,x,y,x1,y1,randColour());
+            break;
+        case 6:
+            GFXFillTriangle(&vp,x,y,x1,y1,x2,y2,randColour());
+            GFXFrameTriangle(&vp,x,y,x1,y1,x2,y2,randColour());break;
+        default:
+            action = 0;break;
     }
-    ctr++;
-}
-
-// ***************************************************************************************
-//
-//                                  Random line test code
-//
-// ***************************************************************************************
-
-void TestCodeRandomLines(void) {
-    for (int i = 0;i < 10;i++) {
-        GFXLine(&vp,rand() % 640,rand() % 240,rand() %640,rand() % 240,rand()%7+1);
-    }
-}
-
-// ***************************************************************************************
-//
-//                                  Vertical line test code
-//
-// ***************************************************************************************
-
-void TestCodeVerticalLines(void) {
-    for (int x = 2;x < 640;x++) {
-        GFXLine(&vp,x,2,x,300,(x+ctr) >> 2);
-    }
-    ctr++;
 }
 
 // ***************************************************************************************
@@ -143,20 +138,6 @@ void TestScrollAndRect(void) {
 // ***************************************************************************************
 
 void TestEllipse(void) {
-    GFXFillEllipse(&vp,20,30,300,130,3);
-    GFXFrameEllipse(&vp,20,30,300,130,5);
-    GFXFrameRect(&vp,20,30,300,130,1);
-}
-
-// ***************************************************************************************
-//
-//                                  Triangle test
-//
-// ***************************************************************************************
-
-void TestTriangles(void) {
-    GFXFillTriangle(&vp,rand()%640,rand()%240,rand()%640,rand()%240,rand()%640,rand()%240,rand() & 7);
-    GFXFrameTriangle(&vp,rand()%640,rand()%240,rand()%640,rand()%240,rand()%640,rand()%240,rand() & 7);
 }
 
 // ***************************************************************************************

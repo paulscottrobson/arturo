@@ -24,7 +24,7 @@ typedef struct _GFXPort {
 
 void GFXSetMode(int mode);
 
-void GFXPortInitialise(GFXPort *vp,int x,int y,int w,int h);
+void GFXPortInitialise(GFXPort *vp,int x0,int y0,int x1,int y1);
 void GFXScrollPort(GFXPort *vp,int xo,int yo);
 
 void GFXPlot(GFXPort *vp,int x,int y,int colour);
