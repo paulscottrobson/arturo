@@ -58,6 +58,7 @@ void ApplicationRun(void) {
         if (TMRRead() > nextSkip) {
             nextSkip = TMRRead()+200;
             GFXFillRect(&vp,0,0,width,height,0);
+		    GFXScrollPort(&vp,0,0);
             action++;
         }
         TestDrawStuff();
@@ -105,7 +106,7 @@ void TestDrawStuff(void) {
     int x = randx(),y = randy(),x1 = randx(),y1 = randy(),x2 = randx(),y2 = randy();
     switch(action) {
         case 0: 
-            GFXDrawString(&vp,x,y,"Hello",rand()%FONT_COUNT,randColour(),1);        
+            GFXDrawString(&vp,x,y,"Hello",rand()%FONT_COUNT,randColour(),1);break;      
         case 1:
             GFXLine(&vp,x,y,x1,y1,randColour());break;
         case 2:
