@@ -15,24 +15,24 @@
 //
 //		Bits in the first byte of the data packet.
 //
-#define _KEY_MOD_LCTRL  0x01
-#define _KEY_MOD_LSHIFT 0x02
-#define _KEY_LEFT_ALT   0x04
-#define _KEY_MOD_RCTRL  0x10
-#define _KEY_MOD_RSHIFT 0x20
-#define _KEY_RIGHT_ALT 	0x40
+#define KEY_MOD_LCTRL  0x01
+#define KEY_MOD_LSHIFT 0x02
+#define KEY_MOD_LALT   0x04
+#define KEY_MOD_RCTRL  0x10
+#define KEY_MOD_RSHIFT 0x20
+#define KEY_MOD_RALT 	0x40
 //
 //		Actual mask bits.
 //
 #define KEY_NOSHIFT 	(0)
-#define KEY_SHIFT 		(_KEY_MOD_LSHIFT|_KEY_MOD_RSHIFT)
-#define KEY_CONTROL 	(_KEY_MOD_LCTRL|_KEY_MOD_RCTRL)
-#define KEY_ALT  		(_KEY_LEFT_ALT)
-#define KEY_ALTGR 		(_KEY_RIGHT_ALT)
+#define KEY_SHIFT 		(KEY_MOD_LSHIFT|KEY_MOD_RSHIFT)
+#define KEY_CONTROL 	(KEY_MOD_LCTRL|KEY_MOD_RCTRL)
+#define KEY_ALT  		(KEY_MOD_LALT)
+#define KEY_ALTGR 		(KEY_MOD_RALT)
 //
 //		Key sequence to Reboot.
 //
-#define REBOOT_KEYS 	(_KEY_MOD_LCTRL|_KEY_LEFT_ALT|_KEY_RIGHT_ALT)
+#define REBOOT_KEYS 	(KEY_MOD_LCTRL|KEY_MOD_LALT|KEY_MOD_RALT)
 //
 //		Keys A-Z are in order
 //
