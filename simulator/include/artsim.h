@@ -28,7 +28,7 @@ void SYSClose(void);
 void SYSRectangle(SDL_Rect *rc,int colour);
 
 void RNDRender(SDL_Surface *surface);
-int TMRRead(void);
+int TMRReadTimerMS(void);
 void KBDProcessEvent(int scanCode,int modifiers,bool isDown);
 
 void CTLFindControllers(void);

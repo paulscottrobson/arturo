@@ -56,13 +56,15 @@ void ApplicationRun(void) {
     //      A typical 'main'
     //
     while (1) {
-        if (TMRRead() > nextSkip) {
-            nextSkip = TMRRead()+200;
+        if (TMRReadTimeMS() > nextSkip) {
+            nextSkip = TMRReadTimeMS()+2000;
             GFXFillRect(&vp,0,0,width,height,0);
 		    GFXScrollPort(&vp,0,0);
             action++;
         }
-        TestDrawStuff();
+        for (int i = 0;i < 100;i++) {
+        	TestDrawStuff();
+        }
 
         if (KBDEscapePressed(true)) {                                               // Escaped ?
             CONWriteString("Escape !\r");
@@ -128,8 +130,8 @@ void TestDrawStuff(void) {
 static int nextDraw = 0;
 
 void TestScrollAndRect(void) {
-    if (TMRRead() < nextDraw) return;
-    nextDraw = TMRRead()+3;
+    if (TMRReadTimeMS() < nextDraw) return;
+    nextDraw = TMRReadTimeMS()+3;
     GFXScrollPort(&vp,0,0);
     GFXPlot(&vp,0,0,7);GFXPlot(&vp,vp.width-1,0,7);GFXPlot(&vp,0,vp.height-1,7);
     int s = -(ctr % 100);

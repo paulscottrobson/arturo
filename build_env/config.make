@@ -30,7 +30,7 @@ PICO_HARDWARE = PICO_HW_RP2040PC
 #
 #		Directory the App is in.
 #
-ARTURO_APP_DIRECTORY = $(ROOTDIR)/applications/test_code/kernel
+ARTURO_APP_DIRECTORY = $(ROOTDIR)/applications/test_code/coregfx
 #
 # 		If non-zero, USB keyboard messages are converted to ASCII and Localised. It also allows
 # 		the state of each key (up or down) to be read. If zero, then the responsibility for 
