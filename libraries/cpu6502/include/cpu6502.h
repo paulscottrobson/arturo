@@ -38,8 +38,8 @@ typedef struct _CPU6502Status {
 //
 void CPU6502Setup(CPU6502SETUP *setup);
 void CPU6502GetStatus(CPU6502STATUS *stat);
-bool CPUReset(void);
+bool CPU6502Reset(void);
 int CPU6502ExecuteOne(void);
-bool CPUTriggerNMI(void);
-bool CPUTriggerIRQ(void);
+bool CPU6502TriggerNMI(void);
+bool CPU6502TriggerIRQ(void);
 

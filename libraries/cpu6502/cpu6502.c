@@ -74,6 +74,7 @@ void CPU6502GetStatus(CPU6502STATUS *stat) {
 // ***************************************************************************************
 
 int CPU6502ExecuteOne(void) {
+	
 	switch(FETCH8()) {  															// Execute one 6502 opcode
 		#include "generator/__6502opcodes.h"
 	}
@@ -88,7 +89,7 @@ int CPU6502ExecuteOne(void) {
 //
 // ***************************************************************************************
 
-bool CPUTriggerNMI(void) {
+bool CPU6502TriggerNMI(void) {
 	nmiCode();
 	return true;
 }
@@ -99,7 +100,7 @@ bool CPUTriggerNMI(void) {
 //
 // ***************************************************************************************
 
-bool CPUTriggerIRQ(void) {
+bool CPU6502TriggerIRQ(void) {
 	if (interruptDisableFlag == 0) {  												// Fire if I flag is clear
 		executeInterrupt(0xFFFE,1);
 	}
@@ -112,7 +113,7 @@ bool CPUTriggerIRQ(void) {
 //
 // ***************************************************************************************
 
-bool CPUReset(void) {
+bool CPU6502Reset(void) {
 	resetProcessor();
 	return true;
 }

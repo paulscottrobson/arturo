@@ -103,16 +103,14 @@ for l in src:
 		#		For each opcode, 
 		#
 		for mode in opcodes.group(1).split(","):
-			m2 = re.match("^(\\w+)\\:([0-9A-F]+)$",mode)							# the opcode.
+			m2 = re.match("^(\\w+)\\:([0-9A-F]+)$",mode)						# the opcode.
 			assert(m2 is not None)
 			mode = m2.group(1).lower()											# addressing mode.
 			body = m.group(4)													# code.
 			assert mode in modes
 
-			if mode[0] == 'z':													# if zero page use fast access
-				body = body.replace("Read(","Read(").replace("Write(","Write(")
 			if mode == 'i':														# immediate mode.
-				body = body.replace("Read(eac)","FETCH8()")
+				body = body.replace("READ8(eac)","FETCH8()")
 
 			mnemonic = m.group(1).replace("@O",modes[mode]["desc"])				# construct the assembler mnemonic
 			body = body.replace("@EAC",modes[mode]["eac"],int(m.group(2))) 		# insert EAC code.
