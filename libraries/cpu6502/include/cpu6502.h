@@ -1,16 +1,15 @@
 // ***************************************************************************************
 // ***************************************************************************************
 //
-//      Name :      libraries.h
+//      Name :      cpu6502.h
 //      Authors :   Paul Robson (paul@robsons.org.uk)
-//      Date :      27th December 2024
+//      Date :      5th January 2025
 //      Reviewed :  No
-//      Purpose :   Composite libraries header file.
+//      Purpose :   6502 Emulation header.
 //
 // ***************************************************************************************
 // ***************************************************************************************
 
 #pragma once
 
-#include "graphics/include/graphics.h"
-#include "cpu6502/include/cpu6502.h"
+int CPU6502ExecuteOne(void)

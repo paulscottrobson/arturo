@@ -36,18 +36,6 @@ BASICCODEDIR = $(BASICDIR)code/
 INCLUDEDIR = $(BASICCODEDIR)include/
 BASICSCRIPTDIR = $(BASICDIR)scripts/
 
-default: build
-	
-
-# *******************************************************************************************
-#
-#								Clean out the build directory
-#
-# *******************************************************************************************
-
-clean-build:
-	rm -Rf $(BUILDDIR)/*
-
 # *******************************************************************************************
 #
 #				    Uncommenting .SILENT will shut the whole build up.

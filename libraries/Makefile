@@ -2,34 +2,25 @@
 # *******************************************************************************************
 #
 #		Name : 		Makefile
-#		Purpose :	Build Emulator
-#		Date :		29th December 2024
+#		Purpose :	Library Makefile.
+#		Date :		5th January 2025
 #		Author : 	Paul Robson (paul@robsons.org.uk)
 #
 # *******************************************************************************************
 # *******************************************************************************************
 
-include build_env/common.make
-include build_env/config.make
+include ../build_env/common.make
+include ../build_env/config.make
 
+.any:
 
 # ***************************************************************************************
 #
-#								Run on hardware or software
+#							Build any subsiduary library stuff
 #
 # ***************************************************************************************
 
-hw:
-	make -C images run
-
-sw:
-	make -C simulator run
-
-fonts:
-	make -B -C libraries/graphics/fonts convert
-	rm -f applications/coregfx/graphics.o
-	rm -f libraries/graphics/fonts.o
-
-lib:
-	make -C libraries
-		
+all: .any
+	
+	make -C graphics/fonts convert
+	make -C cpu6502/generator
