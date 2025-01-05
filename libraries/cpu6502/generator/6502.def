@@ -322,13 +322,13 @@
 		y = sValue = zValue = Pop()
 
 :static void Push(uint8_t v) {
-:	WRITE8(0x100+s,v);
-:	s = (s - 1) & 0xFF;	
+:	WRITE8(0x100+sp,v);
+:	sp = (sp - 1) & 0xFF;	
 :}
 
 :static uint8_t Pop(void) {
-:	s = (s + 1) & 0xFF;
-:	return READ8(0x100+s);	
+:	sp = (sp + 1) & 0xFF;
+:	return READ8(0x100+sp);	
 :}
 
 // *******************************************************************************************
@@ -348,13 +348,13 @@
 		sValue = zValue = y = a
 
 "tsx" 		2 	BA 																
-		sValue = zValue = x = s
+		sValue = zValue = x = sp
 
 "txa"		2 	8A 																
 		sValue = zValue = a = x
 
 "txs"		2 	9A 																
-		s = x
+		sp = x
 
 "tya"		2 	98 																
 		sValue = zValue = a = y

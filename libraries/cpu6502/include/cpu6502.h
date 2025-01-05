@@ -12,4 +12,7 @@
 
 #pragma once
 
-int CPU6502ExecuteOne(void)
+bool CPUReset(void);
+int CPU6502ExecuteOne(void);
+bool CPUTriggerNMI(void);
+bool CPUTriggerIRQ(void);
