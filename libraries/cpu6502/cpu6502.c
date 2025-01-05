@@ -38,7 +38,7 @@ uint8_t _dummyRead(uint16_t a) { return 0; }  										// These are dummies
 void    _dummyWrite(uint16_t a,uint8_t d) {}
 
 static CPU6502READFUNC readFunc = _dummyRead;   									// Set the read and write functions to the dummies
-static CPU6502WRITEFUNC writeFunc = _dummyWrite;
+static CPU6502WRITEFUNC writeFunc = _dummyWrite;    								
 
 #define READ8(a)  		((*readFunc)(a))
 #define WRITE8(a,d) 	((*writeFunc)(a,d))
@@ -55,11 +55,18 @@ static CPU6502WRITEFUNC writeFunc = _dummyWrite;
 //
 // ***************************************************************************************
 
-void CPU6502Setup(CPU6502READFUNC read,CPU6502WRITEFUNC write,int fRate,int clock) {
-	readFunc = read;writeFunc = write;  											// Save the function pointer
-	frameRate = fRate;   															// Save Frame rate (in Hz)
-	cyclesPerFrame = clock/fRate;  													// Cycles in each frame.
+void CPU6502Setup(CPU6502SETUP *setup) {
+	readFunc = setup->read;writeFunc = setup->write;  								// Save the function pointer
+	frameRate = setup->frameRate;   												// Save Frame rate (in Hz)
+	cyclesPerFrame = setup->clockSpeed/setup->frameRate;  							// Cycles in each frame.
 }
+
+void CPU6502GetStatus(CPU6502STATUS *stat) {
+	stat->a = a;stat->x = x;stat->y = y;
+	stat->pc = pc;stat->stackPointer = sp;
+	stat->status = constructFlagRegister();
+}
+
 // ***************************************************************************************
 //
 //				Execute a single instruction. Returns true on frame completed
