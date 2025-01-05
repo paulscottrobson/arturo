@@ -71,7 +71,7 @@ The returned value should be -128 .. 127 and can be samples or similar.
 
 ## Timer
 
-A function *TMRRead()* returns the time since power up which clocks at 100Hz. This is not used in the sample code. 
+A function *TMRReadTimeMS()* returns the time since power up which clocks at 1kHz. 
 
 This should be used as the basis for time centric code, e.g. sprite moving speeds.
 
