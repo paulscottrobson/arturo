@@ -14,6 +14,8 @@
 #include <libraries.h>
 
 uint8_t SuperRead(uint16_t a);
+uint8_t ReadKeyboard(void);
+void ScreenPaint(uint16_t addr,uint8_t c);
 
 // ***************************************************************************************
 //	
@@ -41,6 +43,7 @@ void Dump(void) {
 
 uint8_t ram[RAMSIZE];  																// 8k of Program RAM
 uint8_t videoRAM[0x400];  															// 1k of Video RAM
+uint8_t keyboardPort;  																// Keyboard port latch.
 
 //
 //		Handles reads
@@ -48,7 +51,7 @@ uint8_t videoRAM[0x400];  															// 1k of Video RAM
 uint8_t SuperRead(uint16_t a) { 
 	if (a < RAMSIZE) return ram[a];  												// 0000-1FFF is RAM
 	if (a >= 0xD000 && a < 0xD400) return videoRAM[a-0xD000];						// D000-D3FF is the video RAM
-	if (a >= 0xDF00 && a < 0xE000) return 0xFF;  									// DF00-DFFF is the keyboard
+	if (a >= 0xDF00 && a < 0xE000) return ReadKeyboard(); 							// DF00-DFFF is the keyboard
 	if (a >= 0xA000 && a < 0xC000) return basic_rom[a-0xA000];  					// A000-BFFF is the BASIC ROM
 	if (a >= 0xF800) return monitor_rom[a-0xF800];   								// F800-FFFF is the Monitor ROM
 	return 0; 
@@ -60,10 +63,79 @@ uint8_t SuperRead(uint16_t a) {
 void SuperWrite(uint16_t a,uint8_t d) {
 	if (a < RAMSIZE) ram[a] = d;  													// 0000-1FFF is RAM
 	if (a >= 0xD000 && a < 0xD400) {  												// D000-D3FF is video RAM
-		videoRAM[a-0xD000] = d;
-		printf("Screen %d %d %c\n",a-0xD000,d,d);
+		videoRAM[a-0xD000] = d;  													// Update and repaint.
+		ScreenPaint(a,d); 
 	}
-	if (st.pc >= 0xF800) printf("Write %x %x\n",a,d);
+	if (a >= 0xDF00 && a < 0xDFFF) {  												// DF00-DFFF is the keyboard port.
+		keyboardPort = d;
+	}
+}
+
+// ***************************************************************************************
+//
+//                     			Read a keyboard row
+//
+// ***************************************************************************************
+
+const int keyboardMap[] = {
+	KEY_1,KEY_2,KEY_3,KEY_4,KEY_5,KEY_6,KEY_7,0,
+	KEY_8,KEY_9,KEY_0,KEY_APOSTROPHE,KEY_MINUS, KEY_BACKSPACE, 0,  0,
+	KEY_DOT,KEY_L,KEY_O, 0, KEY_ENTER, 0,  0,  0,
+	KEY_W,KEY_E,KEY_R,KEY_T,KEY_Y,KEY_U,KEY_I,0,
+	KEY_S,KEY_D,KEY_F,KEY_G,KEY_H,KEY_J,KEY_K,0,
+	KEY_X,KEY_C,KEY_V,KEY_B,KEY_N,KEY_M,KEY_COMMA,0,
+	KEY_Q,KEY_A,KEY_Z,KEY_SPACE,KEY_SLASH,KEY_SEMICOLON,KEY_P,0,
+	KEY_TAB,-_KEY_MOD_LCTRL,KEY_ESC,0,0,-_KEY_MOD_LSHIFT,-_KEY_MOD_RSHIFT
+};
+
+bool IsKeyPressed(int c) {
+	if (c == 0) return 0;  															// No key
+	if (c < 0) return (KBDGetModifiers() & (-c)) != 0;  							// -ve is a modifier key (shift, control, alt etc.)
+	return KBDGetStateArray()[c] != 0;  											// +ve is a keyboard key
+}
+
+uint8_t ReadKeyboard(void) {
+	uint8_t output = 0;   															// We calculate it active low
+
+	for (int row = 0;row < 8;row ++) {  											// Do each row
+		if ((keyboardPort & (0x80 >> row)) == 0) {  								// If the port bit is clear, check the row.
+			for (int col = 0;col < 8;col++) {
+				if (IsKeyPressed(keyboardMap[row * 8 + col])) {  					// Key pressed ?
+					output |= (0x80 >> col); 										// Set the column bit
+				}
+			}
+		}
+	}
+	return output ^ 0xFF;  															// Active low.
+}
+
+// ***************************************************************************************
+//
+//                     			Update the display
+//
+// ***************************************************************************************
+
+#include "roms/character_rom.h"   													// Binary character graphics
+
+void ScreenPaint(uint16_t addr,uint8_t c) {
+	if (addr < 0xD085 || addr > 0xD37C) return;   									// Outside the 24x24 screen..
+	addr = addr - 0xD085;  															// Offset into VRAM, $D085 is the top left.
+	int x = addr % 32,y = addr / 32;  												// Cell position.
+	if (x >= 24) return;  															// Off the display
+	int offset = x + y * 320; 														// Offset into the bitmap
+	offset += 12*40 + 8;  															// Centre on the display 
+	const uint8_t *fontData = character_rom + c * 8;   								// Character data to copy
+	struct DVIModeInformation *dmi = DVIGetModeInformation();  						// Access bitmaps.
+	for (int i = 0;i < 8;i++) {  													// Write to bitmap
+		uint8_t bd = *fontData++,bdr = 0;  											// Get the character line and reverse it.
+		for (int i = 0;i < 8;i++) {
+			if (bd & (1 << i)) bdr |= 0x80 >> i;
+		}
+		*(dmi->bitPlane[0]+offset) = bdr;  											// Write to RGB bitmaps
+		*(dmi->bitPlane[1]+offset) = bdr;
+		*(dmi->bitPlane[2]+offset) = bdr;
+		offset += 320/8;  															// One line down
+	}
 }
 
 // ***************************************************************************************
@@ -76,11 +148,10 @@ static GFXPort vp;
 
 void ApplicationRun(void) {
     GFXSetMode(DVI_MODE_320_240_8);   												// Display to 320x240x8 mode.
-
     CPU6502SETUP s;    																// Set up the processor r/w
     s.read = SuperRead;s.write = SuperWrite;
     s.clockSpeed = 1000000;  														// 1Mhz Clock
-    s.frameRate = 60;  																// 60 Frames/Second	
+    s.frameRate = 5;  																// 60 Frames/Second	
     CPU6502Setup(&s);   															// Set up the processor
     CPU6502Reset();  																// Reset the CPU
     while (1) {

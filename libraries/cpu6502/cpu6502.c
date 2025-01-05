@@ -27,6 +27,7 @@ static int cycles;																	// Cycle Count.
 
 static int frameRate;   															// Frame rate per second
 static int cyclesPerFrame;  														// CPU Cycles per frame.
+static int nextFrameSync = 0;  														// Timer frame sync next
 
 // ***************************************************************************************
 //
@@ -80,6 +81,8 @@ int CPU6502ExecuteOne(void) {
 	}
 	if (cycles < cyclesPerFrame) return 0;  										// No frame, yet.
 	cycles -= cyclesPerFrame;   													// Adjust the cycle counter back.
+	while (TMRRead() < nextFrameSync) {}  											// Wait till frame time elapsed
+	nextFrameSync = TMRRead() + 100 / frameRate;
 	return 1;
 }
 

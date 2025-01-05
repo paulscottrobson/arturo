@@ -37,11 +37,46 @@
 //		Keys A-Z are in order
 //
 #define KEY_A 0x04 		    
+#define KEY_B (KEY_A+1)
+#define KEY_C (KEY_A+2)
+#define KEY_D (KEY_A+3)
+#define KEY_E (KEY_A+4)
+#define KEY_F (KEY_A+5)
+#define KEY_G (KEY_A+6)
+#define KEY_H (KEY_A+7)
+#define KEY_I (KEY_A+8)
+#define KEY_J (KEY_A+9)
+#define KEY_K (KEY_A+10)
+#define KEY_L (KEY_A+11)
+#define KEY_M (KEY_A+12)
+#define KEY_N (KEY_A+13)
+#define KEY_O (KEY_A+14)
+#define KEY_P (KEY_A+15)
+#define KEY_Q (KEY_A+16)
+#define KEY_R (KEY_A+17)
+#define KEY_S (KEY_A+18)
+#define KEY_T (KEY_A+19)
+#define KEY_U (KEY_A+20)
+#define KEY_V (KEY_A+21)
+#define KEY_W (KEY_A+22)
+#define KEY_X (KEY_A+23)
+#define KEY_Y (KEY_A+24)
+#define KEY_Z (KEY_A+25)
 //
 //		Number keys are in the tweaked order 1-9,0 matching the keyboard.
 // 		Two sets, top row and number keypad.
 //
 #define KEY_1 0x1e 		    
+#define KEY_2 (KEY_1+1)
+#define KEY_3 (KEY_1+2)
+#define KEY_4 (KEY_1+3)
+#define KEY_5 (KEY_1+4)
+#define KEY_6 (KEY_1+5)
+#define KEY_7 (KEY_1+6)
+#define KEY_8 (KEY_1+7)
+#define KEY_9 (KEY_1+8)
+#define KEY_0 (KEY_1+9)
+
 #define KEY_KP1 0x59  			// We don't use these 10, but the USB routine can map them onto $1E...
 //
 //		Standard keys
