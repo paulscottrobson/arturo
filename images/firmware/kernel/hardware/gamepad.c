@@ -39,11 +39,20 @@ int  CTLControllerCount(void) {
 
 // ***************************************************************************************
 //
-//						Read a specified controller, NULL if not found.
+//   	Read a specified controller, NULL if not found, -1 reads the first controller or 
+//		emulated gamepad
 //
 // ***************************************************************************************
 
 CTLState *CTLReadController(int n) {
+	if (n < 0) {  																	// Autoselect
+		if (controllerCount > 0) return &controllers[0];   							// If there is a plugged in controller, use that.
+		#if AURTURO_PROCESS_KEYS == 1
+		return KBDReadController();
+		#else
+		return NULL;
+		#endif
+	}
 	return (n < controllerCount) ? &controllers[n] : NULL;
 }
 

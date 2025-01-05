@@ -26,8 +26,7 @@ static int bg=0;
 void ApplicationRun(void) {
     int n = 0;
     CONWriteString("Kernel Demo Application\r");                                          
-    PrintHello();                                                                   // A library function
-    //
+	    //
     //      A typical 'main'
     //
     while (1) {
@@ -96,12 +95,13 @@ void ApplicationRun(void) {
              MSEGetState(&x,&y,&b,&w);
              if (b != 0) CONWriteString("Mouse:%d %d %d %d\r",x,y,b,w);              // Show mouse if button pressed
              
-             if (CTLControllerCount() != 0) {                                        // Show controller state if anything pressed.
-                CTLState *c = CTLReadController(0);
-                if (c->dx != 0 || c->dy != 0 || c->a || c->b || c->x || c->y) {
-                    CONWriteString("DX:%3d DY:%3d A:%d B:%d X:%d Y:%d\r",c->dx,c->dy,
-                                             c->a ? 1:0,c->b ? 1:0,c->x ? 1:0,c->y ? 1:0);
-                    }
+                                        
+                CTLState *c = CTLReadController(-1);								// Show controller state if anything pressed.
+                if (c != NULL) {
+	                if (c->dx != 0 || c->dy != 0 || c->a || c->b || c->x || c->y) {
+	                    CONWriteString("DX:%3d DY:%3d A:%d B:%d X:%d Y:%d\r",c->dx,c->dy,
+	                                             c->a ? 1:0,c->b ? 1:0,c->x ? 1:0,c->y ? 1:0);
+	                }
                 }
         }
     }

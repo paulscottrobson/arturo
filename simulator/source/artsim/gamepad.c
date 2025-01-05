@@ -35,6 +35,17 @@ int CTLControllerCount(void) {
 // *******************************************************************************************************************************
 
 CTLState *CTLReadController(int n) {
+
+	if (n < 0) {
+		if (controllerCount == 0) {
+			#if AURTURO_PROCESS_KEYS == 1
+			return KBDReadController();
+			#else
+			return NULL;
+			#endif			
+		}
+		n = 0;
+	}
 	static CTLState state;
 	bool butState[4];
 	state.dx = state.dy = 0;
