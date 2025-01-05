@@ -28,8 +28,8 @@ static int nextUpdateTime = 0;
 
 int USBUpdate(void) {
 	tick50HzHasFired = true;  														// Rigged so we fire every time round the main loop
-	if (TMRRead() >= nextUpdateTime) {   											// So do this to limit the repaint rate to 50Hz.
-		nextUpdateTime = TMRRead()+100/FRAME_RATE;
+	if (TMRReadTimeMS() >= nextUpdateTime) {   										// So do this to limit the repaint rate to 50Hz.
+		nextUpdateTime = TMRReadTimeMS()+100/FRAME_RATE;
 		return SYSPollUpdate();  													// So we don't update *all* the time
 	}
 	return -1;

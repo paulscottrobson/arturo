@@ -81,8 +81,8 @@ int CPU6502ExecuteOne(void) {
 	}
 	if (cycles < cyclesPerFrame) return 0;  										// No frame, yet.
 	cycles -= cyclesPerFrame;   													// Adjust the cycle counter back.
-	while (TMRRead() < nextFrameSync) {}  											// Wait till frame time elapsed
-	nextFrameSync = TMRRead() + 100 / frameRate;
+	while (TMRReadTimeMS() < nextFrameSync) {}  									// Wait till frame time elapsed
+	nextFrameSync = TMRReadTimeMS() + 1000 / frameRate;
 	return 1;
 }
 

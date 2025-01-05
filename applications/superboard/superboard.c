@@ -151,7 +151,7 @@ void ApplicationRun(void) {
     CPU6502SETUP s;    																// Set up the processor r/w
     s.read = SuperRead;s.write = SuperWrite;
     s.clockSpeed = 1000000;  														// 1Mhz Clock
-    s.frameRate = 5;  																// 60 Frames/Second	
+    s.frameRate = 50;  																// 50 Frames/Second	
     CPU6502Setup(&s);   															// Set up the processor
     CPU6502Reset();  																// Reset the CPU
     while (1) {

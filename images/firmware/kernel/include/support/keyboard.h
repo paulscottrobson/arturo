@@ -12,8 +12,8 @@
 
 #pragma once
 
-#define KBD_REPEAT_START 	(90)  												// Time for first repeat (100ms units)
-#define KBD_REPEAT_AFTER  	(12)  												// Time for subsequent repeats (100ms units)
+#define KBD_REPEAT_START 	(900)  												// Time for first repeat (1ms units)
+#define KBD_REPEAT_AFTER  	(120)  												// Time for subsequent repeats (1ms units)
 
 void KBDReceiveEvent(uint8_t isDown,uint8_t keyCode,uint8_t modifiers);
 void KBDCheckTimer(void);

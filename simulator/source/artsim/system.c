@@ -49,7 +49,7 @@ void SYSOpen(bool muteSound) {
 	if (!muteSound) SOUNDPlay();
 
 	SDL_ShowCursor(SDL_DISABLE);                                                    // Hide mouse cursor
-	startTime = TMRRead();
+	startTime = TMRReadTimeMS();
 }
 
 // *******************************************************************************************************************************
@@ -97,12 +97,12 @@ int SYSPollUpdate(void) {
 // *******************************************************************************************************************************
 
 void SYSClose(void) {
-	endTime = TMRRead();
+	endTime = TMRReadTimeMS();
 	SDL_DestroyWindow(mainWindow);													// Destroy working window
 	SOUNDStop();
 	SDL_CloseAudio();  																// Shut audio up.
 	SDL_Quit();																		// Exit SDL.
-	printf("Frame Rate %.2f\n",frameCount/((endTime-startTime)/100.0));
+	printf("Frame Rate %.2f\n",frameCount/((endTime-startTime)/1000.0));
 }
 
 // *******************************************************************************************************************************

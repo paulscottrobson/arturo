@@ -18,7 +18,7 @@ void ApplicationRun(void);
 //
 //		Timer/Interrupt functions.
 //
-int TMRRead(void);
+int TMRReadTimeMS(void);
 //
 //		Set every 20ms
 //

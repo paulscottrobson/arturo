@@ -54,11 +54,11 @@ void TMRStartTickInterrupt(void) {
 
 // ***************************************************************************************
 //
-//                              Read 100Hz timer
+//                              Read 1kHz timer
 //
 // ***************************************************************************************
 
-int TMRRead(void) {
-    uint32_t time32 = (uint32_t)(time_us_64() >> 10);                           // divide by 1024
-    return (time32 * 210) >> 11;                                                // Error of about 0.07%
+int TMRReadTimeMS(void) {
+    uint32_t time32 = (uint32_t)(time_us_64() >> 9);                           	// divide by 512
+    return (time32 * 131) >> 8;                                                // Error of about 0.07%
 }
