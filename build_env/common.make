@@ -35,6 +35,7 @@ BASICDIR = $(ROOTDIR)basic/
 BASICCODEDIR = $(BASICDIR)code/
 INCLUDEDIR = $(BASICCODEDIR)include/
 BASICSCRIPTDIR = $(BASICDIR)scripts/
+APPDIR = $(ROOTDIR)applications/
 
 # *******************************************************************************************
 #

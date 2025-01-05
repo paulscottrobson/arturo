@@ -11,6 +11,7 @@
 // ***************************************************************************************
 
 #include "common.h"
+#include "libraries.h"
 
 // ***************************************************************************************
 //	
@@ -27,29 +28,38 @@ static int cycles;																	// Cycle Count.
 static int frameRate;   															// Frame rate per second
 static int cyclesPerFrame;  														// CPU Cycles per frame.
 
-#define READ8(a)		(0)
-#define WRITE8(a,d)  	{}
+// ***************************************************************************************
+//
+//									Read / Write system
+//
+// ***************************************************************************************
 
-//
-//			The extended functions, which have default implementation. Only R/W are required.
-//
-#ifndef READ16
+uint8_t _dummyRead(uint16_t a) { return 0; }  										// These are dummies
+void    _dummyWrite(uint16_t a,uint8_t d) {}
+
+static CPU6502READFUNC readFunc = _dummyRead;   									// Set the read and write functions to the dummies
+static CPU6502WRITEFUNC writeFunc = _dummyWrite;
+
+#define READ8(a)  		((*readFunc)(a))
+#define WRITE8(a,d) 	((*writeFunc)(a,d))
 #define READ16(a) 		(READ8(a) + ((READ8(a+1)) << 8))
-#endif 
-
-#ifndef FETCH8
 #define FETCH8() 		READ8(pc++)
-#endif
-
-#ifndef FETCH16
 #define FETCH16()   	{ temp16 = FETCH8();temp16 |= (FETCH8() << 8); }
-#endif
-
-
 #define CYCLES(x) 		cycles += (x)
 
 #include "generator/__6502support.h"
 
+// ***************************************************************************************
+//
+//									Set up the 6502 CPU
+//
+// ***************************************************************************************
+
+void CPU6502Setup(CPU6502READFUNC read,CPU6502WRITEFUNC write,int fRate,int clock) {
+	readFunc = read;writeFunc = write;  											// Save the function pointer
+	frameRate = fRate;   															// Save Frame rate (in Hz)
+	cyclesPerFrame = clock/fRate;  													// Cycles in each frame.
+}
 // ***************************************************************************************
 //
 //				Execute a single instruction. Returns true on frame completed
