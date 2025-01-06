@@ -23,3 +23,4 @@ int KBDIsKeyAvailable(void);
 uint8_t *KBDGetStateArray(void);
 int KBDGetKey(void);
 int KBDEscapePressed(int resetEscape);
+CTLState *KBDReadController(void);

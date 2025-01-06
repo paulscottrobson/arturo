@@ -112,8 +112,18 @@ int KBDGetModifiers(void) {
 //
 // ***************************************************************************************
 
+static CTLState kbCt;   															// Used to return result
+
+#define CHECK(k,v)  (keyboardState[k] ? (v) : 0)
+
 CTLState *KBDReadController(void) {
-	return NULL;
+	kbCt.dx = CHECK(KEY_A,-1) + CHECK(KEY_D,1);   									// WASD direction
+	kbCt.dy = CHECK(KEY_W,-1) + CHECK(KEY_S,1);
+	kbCt.a = CHECK(KEY_L,1) != 0;  													// IJKL buttons
+	kbCt.b = CHECK(KEY_K,1) != 0;
+	kbCt.x = CHECK(KEY_I,1) != 0;
+	kbCt.y = CHECK(KEY_J,1) != 0;
+	return &kbCt;
 }
 
 // ***************************************************************************************

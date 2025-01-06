@@ -47,7 +47,7 @@ int  CTLControllerCount(void) {
 CTLState *CTLReadController(int n) {
 	if (n < 0) {  																	// Autoselect
 		if (controllerCount > 0) return &controllers[0];   							// If there is a plugged in controller, use that.
-		#if AURTURO_PROCESS_KEYS == 1
+		#if ARTURO_PROCESS_KEYS == 1
 		return KBDReadController();
 		#else
 		return NULL;
