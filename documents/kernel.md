@@ -162,7 +162,7 @@ Gamepad support converts the gamepad information to a simple process.  Up to fou
 | Function           | Purpose                                                      |
 | ------------------ | ------------------------------------------------------------ |
 | CTLControllerCount | Returns the number of controllers plugged in.                |
-| CTLReadController  | Reads the state of a specific controller by number (0..n-1). Returns a CTLState pointer, which has members dx and dy (for directional control) and booleans a,b,x,y representing the buttons in the SNES arrangement. |
+| CTLReadController  | Reads the state of a specific controller by number (0..n-1). Returns a CTLState pointer, which has members dx and dy (for directional control) and booleans a,b,x,y representing the buttons in the SNES arrangement.  If it is called with -1 as an option it uses the gamepad if one is plugged in keyboard keys (WASD IJKL) if there is no gamepad present. |
 
 ### Gamepad Drivers
 
@@ -202,6 +202,6 @@ If this is set to true, then reports from unknown devices are dumped on the cons
 
 *Paul Robson paul@robsons.org.uk*
 
-*Last revised 3rd January 2025*
+*Last revised 6th January 2025*
 
 ## I

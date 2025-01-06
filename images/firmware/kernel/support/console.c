@@ -67,6 +67,7 @@ static uint x0 = 0;  																// Posiiton in pixels
 static uint y0 = 0;
 static uint fgcol = CON_COL_WHITE;  												// Text colour
 static uint bgcol = CON_COL_BLACK;
+static bool conIsEnabled = true;  													// Console is enabled
 
 // ***************************************************************************************
 //
@@ -75,8 +76,19 @@ static uint bgcol = CON_COL_BLACK;
 // ***************************************************************************************
 
 void CONInitialise(void) {
+	CONEnableConsole(true);
 	CONWrite(12);																	// CHR(12) is clear screen.
 	CONSetColour(CON_COL_GREEN,CON_COL_BLACK);
+}
+
+// ***************************************************************************************
+//
+//									Enable/Disable console
+//
+// ***************************************************************************************
+
+void CONEnableConsole(bool isOn) {
+	conIsEnabled = isOn;
 }
 
 // ***************************************************************************************

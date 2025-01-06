@@ -30,4 +30,4 @@ void CONWrite(int c);
 void CONWriteString(const char *fmt, ...);
 void CONDrawPixel(int x, int y, int rgb);
 void CONSetColour(int foreground,int background);
-
+void CONEnableConsole(bool isOn);
