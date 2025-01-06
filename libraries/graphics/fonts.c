@@ -74,7 +74,10 @@ static int _DrawCharacter(GFXPort *vp,int xPos,int yPos,int ch,int fontid,int co
 // ***************************************************************************************
 
 void GFXDrawString(GFXPort *vp,int xPos,int yPos,char *s,int font,int colour,int scale) {
-	while (*s != '\0' && xPos < vp->width) {
+	int xWidth;
+	DVIGetScreenExtent(&xWidth,NULL);  												// No point in drawing if off right of viewport/screen
+	if (vp != NULL) xWidth = vp->width;
+	while (*s != '\0' && xPos < xWidth) {
 		int w = _DrawCharacter(vp,xPos,yPos,*s++,font,colour,scale);
 		xPos += w;
 	}
