@@ -117,7 +117,15 @@ The default locale can be set by changing *ARTURO_KBD_LOCALE*, which is "gb" by 
 
 ## Console support
 
-There is a very simple debug console which is accessed via *CONWrite()* which outputs a single character, and *CONWriteString()* which works like printf (e.g. has variable arguments). These are printed out on the DVI display in a simple fashion. Note that currently \r should be used for newline.
+There is a text console accessed via the following functions, which are shown on the display in classic "8 bit" fashion.
+
+| Function         | Purpose                                      |
+| ---------------- | -------------------------------------------- |
+| CONWrite         | Write character                              |
+| CONWriteString   | Write string (like printf)                   |
+| CONSetColour     | Set the display colour                       |
+| CONEnableConsole | Disable console output                       |
+| CONDefineUDG     | Define one of the 32 user defined characters |
 
 ## Keyboard Support
 
