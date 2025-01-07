@@ -26,7 +26,7 @@ SOURCE4 = $(shell find -L $(LIBDIR) -name "*.c")
 
 SOURCES = $(SOURCE1) $(SOURCE2) $(SOURCE3) $(SOURCE4)
 OBJECTS = $(subst .c,.o,$(SOURCES))
-INCLUDES = -I include -I __include_x -I $(ARTURO_APP_DIRECTORY)/include -I $(LIBDIR) -I $(KERNELDIR)include
+INCLUDES = -I include -I $(ARTURO_APP_DIRECTORY)/include -I $(LIBDIR) -I $(KERNELDIR)include
 
 SDL_CFLAGS = $(shell sdl2-config --cflags)
 SDL_LDFLAGS = $(shell sdl2-config --libs)

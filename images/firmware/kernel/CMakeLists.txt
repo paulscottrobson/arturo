@@ -17,7 +17,7 @@
 #
 # ***************************************************************************************
 
-file(GLOB_RECURSE APP_C_SOURCES "${ARTURO_APP_DIRECTORY}/*.c")
+file(GLOB_RECURSE APP_C_SOURCES "${APPLICATION_DIRECTORY}/*.c")
 file(GLOB_RECURSE LIBRARY_C_SOURCES "${LIBRARY_DIRECTORY}/*.c")
 file(GLOB_RECURSE HARDWARE_C_SOURCES "hardware/*.[cS]")
 file(GLOB_RECURSE SUPPORT_C_SOURCES "support/*.c")

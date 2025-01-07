@@ -112,7 +112,7 @@ void CONSetColour(int foreground,int background) {
 void CONWrite(int c) {
 	struct DVIModeInformation *dmi = DVIGetModeInformation();  						// Identify mode data.
 	if (dmi == NULL) return;
-
+	if (!conIsEnabled) return;
 	switch(c) {
 		case 12:  																	// Clear Screen.
 			for (uint x = 0; x < dmi->width; ++x)

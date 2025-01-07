@@ -20,6 +20,14 @@
 export PICO_SDK_PATH := /aux/builds/pico-sdk/
 export PICO_DVI_PATH := /aux/builds/PicoDVI/
 #
+#		Directory the App is in.
+#
+ARTURO_APP_DIRECTORY = $(APPDIR)/test_code/udg
+#
+#		Directory containing libraries
+#
+ARTURO_LIB_DIRECTORY = $(ROOTDIR)libraries
+#
 #		Configure Platform (rp2040,rp2350,rp2350-riscv)
 #
 PLATFORM = rp2040
@@ -27,10 +35,6 @@ PLATFORM = rp2040
 #		Specifies the physical hardware used (PICO_HW_RP2040PC,PICO_HW_NEO6502)
 #
 PICO_HARDWARE = PICO_HW_RP2040PC
-#
-#		Directory the App is in.
-#
-ARTURO_APP_DIRECTORY = $(APPDIR)/superboard	
 #
 # 		If non-zero, USB keyboard messages are converted to ASCII and Localised. It also allows
 # 		the state of each key (up or down) to be read. If zero, then the responsibility for 
@@ -49,10 +53,6 @@ ARTURO_PROCESS_SOUND = 1
 #		Set the default locale, the list is in the locale directory
 #
 ARTURO_KBD_LOCALE = "gb"
-#
-#		Directory containing libraries
-#
-ARTURO_LIB_DIRECTORY = $(ROOTDIR)libraries
 
 # *******************************************************************************************
 #
