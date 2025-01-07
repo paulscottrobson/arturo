@@ -56,7 +56,7 @@ $(CMAKE_OUT_FILE) : $(BUILDENVDIR)/config.make
 	echo "#" >$(CMAKE_OUT_FILE)
 	echo "# This is automatically generated." >>$(CMAKE_OUT_FILE)
 	echo "#" >>$(CMAKE_OUT_FILE)
-	echo 'set(APPLICATION_DIRECTORY "${ARTURO_APP_DIRECTORY}")' >>$(CMAKE_OUT_FILE)
+	echo 'set(ARTURO_APP_DIRECTORY "${ARTURO_APP_DIRECTORY}")' >>$(CMAKE_OUT_FILE)
 	echo 'set(LIBRARY_DIRECTORY "$(ARTURO_LIB_DIRECTORY)")' >>$(CMAKE_OUT_FILE)
 	echo 'add_subdirectory(kernel)' >>$(CMAKE_OUT_FILE)
 
