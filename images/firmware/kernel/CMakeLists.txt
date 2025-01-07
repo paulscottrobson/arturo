@@ -28,7 +28,7 @@ add_executable(kernel
 )
 
 #message("*** ${LIBRARY_DIRECTORY}")
-#message("*** ${APPLICATION_DIRECTORY}")
+#message("*** ${ARTURO_APP_DIRECTORY}")
 #message("*** ${APP_C_SOURCES}")
 #message("*** ${LIBRARY_C_SOURCES}")
 
@@ -41,7 +41,7 @@ add_executable(kernel
 include_directories(
 	include
 	user_code/include
-	${APPLICATION_DIRECTORY}/include
+	${ARTURO_APP_DIRECTORY}/include
 	${LIBRARY_DIRECTORY}
 )
 
