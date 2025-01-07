@@ -1,7 +1,7 @@
 # TODO stuff
 
-- Externally configurable 640x480x8
-- Font back solid.
-- Strip solid.
 - ESC fix
+- Font back solid.
+- Externally configurable 640x480x8
+- Strip solid.
 - Mouse code
