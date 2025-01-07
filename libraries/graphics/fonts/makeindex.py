@@ -4,6 +4,7 @@
 #		Name : 		makeindex.py
 #		Purpose :	Create index for fonts
 #		Date :		3rd January 2025
+#		Reviewed :	No
 #		Author : 	Paul Robson (paul@robsons.org.uk)
 #
 # *******************************************************************************************
