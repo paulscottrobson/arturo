@@ -64,8 +64,8 @@ int SYSPollUpdate(void) {
 	SDL_Event event;
 	while (SDL_PollEvent(&event)) {													// While events in event queue.
 		if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE) {		// Exit if ESC/Ctrl+ESC pressed tbc,
-			int ctrl = ((SDL_GetModState() & KMOD_LCTRL) != 0)||true;				// If control pressed
-			if (ctrl) isRunning = 0; 												// Exit
+			int ctrl = ((SDL_GetModState() & KMOD_LCTRL) != 0);						// If control pressed
+			if (ctrl == 0) isRunning = 0; 											// Exit
 		}
 		if (event.type == SDL_KEYDOWN || event.type == SDL_KEYUP) {					// Handle other keys, which may go up or down.
 			KBDProcessEvent(event.key.keysym.scancode,SDL_GetModState(),event.type == SDL_KEYDOWN);
