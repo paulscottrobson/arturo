@@ -307,10 +307,23 @@ static inline void _GFXDrawBitmap(int colour) {
 // ***************************************************************************************
 
 static inline void _GFXDrawBitmap3(int colour) {
-	*pl0 = ((*pl0) & (~bitMask)) | ((colour & 1) ? bitMask:0);
-	*pl1 = ((*pl1) & (~bitMask)) | ((colour & 2) ? bitMask:0);
-	*pl2 = ((*pl2) & (~bitMask)) | ((colour & 4) ? bitMask:0);
+
+	switch(GFXACTION(colour)) {
+
+		case GFXA_NORMAL: 															// Standard draw
+			*pl0 = ((*pl0) & (~bitMask)) | ((colour & 1) ? bitMask:0);
+			*pl1 = ((*pl1) & (~bitMask)) | ((colour & 2) ? bitMask:0);
+			*pl2 = ((*pl2) & (~bitMask)) | ((colour & 4) ? bitMask:0);
+			break;
+
+		case GFXA_XOR: 																// XOR Draw
+			*pl0 ^= ((colour & 1) ? bitMask:0);
+			*pl1 ^= ((colour & 2) ? bitMask:0);
+			*pl2 ^= ((colour & 4) ? bitMask:0);
+			break;
+	}
 }
+
 
 // ***************************************************************************************
 //
@@ -319,7 +332,17 @@ static inline void _GFXDrawBitmap3(int colour) {
 // ***************************************************************************************
 
 static inline void _GFXDrawBitmap1(int colour) {
-	*pl0 = ((*pl0) & (~bitMask)) | ((colour & 1) ? bitMask:0);
+
+	switch(GFXACTION(colour)) {
+
+		case GFXA_NORMAL: 															// Standard draw
+			*pl0 = ((*pl0) & (~bitMask)) | ((colour & 1) ? bitMask:0);
+			break;
+
+		case GFXA_XOR: 																// XOR Draw
+			*pl0 ^= (colour & 1) ? bitMask:0;
+			break;
+	}
 }
 
 // ***************************************************************************************
@@ -329,10 +352,25 @@ static inline void _GFXDrawBitmap1(int colour) {
 // ***************************************************************************************
 
 static inline void _GFXDrawBitmap6(int colour) {
-        *pl0 = ((*pl0) & (~bitMask)) | ((colour & 1) ? bitMask & 0xAA : 0) |
-          ((colour & 8)  ? bitMask & 0x55:0);
-	*pl1 = ((*pl1) & (~bitMask)) | ((colour & 2) ? bitMask & 0xAA : 0) |
-	  ((colour & 16) ? bitMask & 0x55 :0);
-	*pl2 = ((*pl2) & (~bitMask)) | ((colour & 4) ? bitMask & 0xAA : 0) |
-	  ((colour & 32) ? bitMask & 0x55 :0);
+
+
+	switch(GFXACTION(colour)) {
+
+		case GFXA_NORMAL: 															// Standard draw
+		    *pl0 = 	((*pl0) & (~bitMask)) | ((colour & 1) ? bitMask & 0xAA : 0) |
+		          	((colour & 8)  ? bitMask & 0x55:0);
+			*pl1 = 	((*pl1) & (~bitMask)) | ((colour & 2) ? bitMask & 0xAA : 0) |
+			  		((colour & 16) ? bitMask & 0x55 :0);
+			*pl2 = 	((*pl2) & (~bitMask)) | ((colour & 4) ? bitMask & 0xAA : 0) |
+			  		((colour & 32) ? bitMask & 0x55 :0);
+			 break;
+
+		case GFXA_XOR: 																// XOR Draw
+			*pl0 ^= (((colour & 1) ? bitMask & 0xAA:0) | ((colour & 8) ? bitMask & 0x55:0));
+			*pl1 ^= (((colour & 2) ? bitMask & 0xAA:0) | ((colour & 16) ? bitMask & 0x55:0));
+			*pl2 ^= (((colour & 4) ? bitMask & 0xAA:0) | ((colour & 32) ? bitMask & 0x55:0));
+			break;
+	}
+
 }
+
