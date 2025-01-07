@@ -19,6 +19,8 @@
 #define FONT_N_CHARS 95
 #define FONT_FIRST_ASCII 32
 
+static uint8_t udgData[(FONT_LAST_UDG-FONT_FIRST_UDG+1) * 8];  						// the data for the 32 (currently) 8x8 UDGs
+
 // ***************************************************************************************
 //
 //						Set one pixel at x,y in the given colour.
@@ -132,9 +134,10 @@ void CONWrite(int c) {
 			break;
 
 		default:			
-			if (c >= FONT_FIRST_ASCII && c < FONT_FIRST_ASCII+FONT_N_CHARS) {  		// ASCII character set.
+			bool isUDG = (c >= FONT_FIRST_UDG && c <= FONT_LAST_UDG);
+			if ((c>=FONT_FIRST_ASCII && c<FONT_FIRST_ASCII+FONT_N_CHARS)||isUDG) { 	// ASCII character set or UDGs
 				for (int y = y0; y < y0 + 8; ++y) {
-					uint8_t font_bits = font_8x8[(c - FONT_FIRST_ASCII) * FONT_CHAR_HEIGHT+y-y0];
+					uint8_t font_bits = isUDG ? CONGetUDGGraphicData(c)[y-y0] : font_8x8[(c - FONT_FIRST_ASCII) * FONT_CHAR_HEIGHT+y-y0];
 					for (int i = 0; i < 8; ++i) {
 						CONDrawPixel(x0 + i, y, font_bits & (0x80 >> i) ? fgcol : bgcol);
 						}						
@@ -148,6 +151,31 @@ void CONWrite(int c) {
 
 // ***************************************************************************************
 //
+//									Define the UDG
+//
+// ***************************************************************************************
+
+void CONDefineUDG(int udg,uint8_t *bitData) {
+	if (udg >= FONT_FIRST_UDG && udg <= FONT_LAST_UDG) {
+		uint8_t *udgRAMData = udgData + (udg-FONT_FIRST_UDG) * 8;   				// Address of RAM
+		for (int i = 0;i < 8;i++) *udgRAMData++ = *bitData++;  						// Copy the bitmap data there.
+	}
+}
+
+// ***************************************************************************************
+//
+//			Get the graphic data for the given UDG (bad values return solid block)
+//
+// ***************************************************************************************
+
+uint8_t *CONGetUDGGraphicData(int c) {
+	static uint8_t _duffUDG[] = { 0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF};  		// Used for a bad graphic.
+	if (c < FONT_FIRST_UDG || c > FONT_LAST_UDG) return _duffUDG;  					// Bad UDG return solid block graphic
+	return udgData + (c - FONT_FIRST_UDG) * 8; 										// Return offset to graphic
+}
+
+// ***************************************************************************************
+//
 //								Write a string in varargs format
 //
 // ***************************************************************************************
@@ -157,7 +185,7 @@ void CONWriteString(const char *fmt, ...) {
 	va_list args;
 	va_start(args, fmt);
 	vsnprintf(buf, 128, fmt, args);
-	char *p = buf;
+	uint8_t *p = (uint8_t *)buf;
 	while (*p != '\0') CONWrite(*p++);
 	va_end(args);
 }

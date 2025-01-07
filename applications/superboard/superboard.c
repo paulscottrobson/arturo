@@ -147,7 +147,7 @@ void ScreenPaint(uint16_t addr,uint8_t c) {
 static GFXPort vp;
 
 void ApplicationRun(void) {
-	CONEnableConsole(false);  														// Disable console output.
+	CONEnableConsole(true);  														// Disable console output.
     GFXSetMode(DVI_MODE_320_240_8);   												// Display to 320x240x8 mode.
     CPU6502SETUP s;    																// Set up the processor r/w
     s.read = SuperRead;s.write = SuperWrite;
