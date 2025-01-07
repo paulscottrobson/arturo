@@ -25,36 +25,12 @@
 #include "fonts/fontdata.h"
 #include "fonts/fontindex.h"
 
-// ***************************************************************************************
-//
-//          Draw a single character, return the x adjustment to the next character.
-//
-// ***************************************************************************************
-
-static int _DrawCharacter(GFXPort *vp,int xPos,int yPos,int ch,int fontid,int colour,int scale) {	
-	FONTGlyph *glyph;
-	uint8_t *bitmapData;
-
-	if (fontid < 0 || fontid >= FONT_COUNT) return 0;                               // Unknown font
-
-	const FONTInfo *font = _dictionary[fontid];   									// Get the font data	
-	if (ch >= font->first && ch <= font->last) {
-		glyph = &(font->glyph[ch - font->first]);   								// Point to the glyph
-		if (glyph->bitmapOffset == 0xFFFF) return 0;  								// No bitmap offset here, character not in glyph set.
-		bitmapData = font->bitmap+glyph->bitmapOffset;  							// This points to the actual bits
-	} else {
-		return 0;                   	        									// Unknown character.
-	}
+static void _DrawCharacterFromBitmap(GFXPort *vp,int xPos,int yPos,int w,int h,uint8_t *bitmapData,int colour,int scale) {
 	uint8_t bitMask = 0x80;                                                         // Bit to check.
-
 	GFXASetPort(vp);  																// Set the viewport
 
-	xPos = xPos + scale * glyph->xOffset;
-	yPos = yPos + scale * glyph->yOffset;
-	// Background ?
-
-	for (int y = 0;y < glyph->height;y++) {                                         // For each line of actual data.
-	    for (int x = 0;x < glyph->width;x++) {                                      // Each horizontal pixel ?
+	for (int y = 0;y < h;y++) {                     			                    // For each line of actual data.
+	    for (int x = 0;x < w;x++) {        			            	                // Each horizontal pixel ?
 	        if (((*bitmapData) & bitMask) != 0) {                                   // Plot bitmap.
 	            if (scale == 1) {                                                   // Pixel or Rectangle.
 	                GFXAPlot(xPos+x*scale,yPos,colour);
@@ -69,8 +45,36 @@ static int _DrawCharacter(GFXPort *vp,int xPos,int yPos,int ch,int fontid,int co
 	    }
 	    yPos += scale;                                                              // Next line down.
 	}
+}
+
+// ***************************************************************************************
+//
+//          Draw a single character, return the x adjustment to the next character.
+//
+// ***************************************************************************************
+
+static int _DrawCharacter(GFXPort *vp,int xPos,int yPos,int ch,int fontid,int colour,int scale) {	
+
+	if (fontid < 0 || fontid >= FONT_COUNT) return 0;       	                   	// Unknown font
+	const FONTInfo *font = _dictionary[fontid];   									// Get the font data for the font.
+
+	if (ch >= FONT_FIRST_UDG && ch <= FONT_LAST_UDG) {   							// So, it might be a UDG
+		_DrawCharacterFromBitmap(vp,xPos,yPos-8*scale,8,8,							// Draw it using that UDG. it sort of works :)
+										CONGetUDGGraphicData(ch),colour,scale);	
+		return 8;  																	// Return the horizontal advance (which is 8)
+	}
+
+	if (ch < font->first || ch > font->last) return 0; 								// Unknown character
+	FONTGlyph *glyph = &(font->glyph[ch - font->first]);   							// Point to the glyph
+	if (glyph->bitmapOffset == 0xFFFF) return 0;  									// No bitmap offset here, character not in glyph set.
+	uint8_t *bitmapData = font->bitmap+glyph->bitmapOffset;  						// This points to the actual bits
+
+	xPos = xPos + scale * glyph->xOffset;  											// Drawing pos for font.
+	yPos = yPos + scale * glyph->yOffset;
+	_DrawCharacterFromBitmap(vp,xPos,yPos,glyph->width,glyph->height,bitmapData,colour,scale);
 	return glyph->xAdvance;
 }
+
 
 // ***************************************************************************************
 //
@@ -83,7 +87,8 @@ void GFXDrawString(GFXPort *vp,int xPos,int yPos,char *s,int font,int colour,int
 	DVIGetScreenExtent(&xWidth,NULL);  												// No point in drawing if off right of viewport/screen
 	if (vp != NULL) xWidth = vp->width;
 	while (*s != '\0' && xPos < xWidth) {
-		int w = _DrawCharacter(vp,xPos,yPos,*s++,font,colour,scale);
+		unsigned char c = (unsigned char)(*s++);
+		int w = _DrawCharacter(vp,xPos,yPos,c,font,colour,scale);
 		xPos += w;
 	}
 }

@@ -29,6 +29,7 @@ void ApplicationRun(void) {
 	CONDefineUDG(224, gr1);
 	CONDefineUDG(225,gr2);
 	GFXDrawString(NULL,210,100,buffer,FONT_SYSTEM_8,6,1);
+	GFXDrawString(NULL,210,130,buffer,FONT_SCRIPT_12,5,1);
 	CONWriteString(buffer);
 
     while (1) {
