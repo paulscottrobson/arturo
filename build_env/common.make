@@ -44,5 +44,5 @@ APPDIR = $(ROOTDIR)applications/
 # *******************************************************************************************
 
 ifndef VERBOSE
-.SILENT:
+#.SILENT:
 endif

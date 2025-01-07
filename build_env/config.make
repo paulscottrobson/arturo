@@ -17,8 +17,8 @@
 #
 #		Set these accordingly. 
 #
-export PICO_SDK_PATH := /aux/riscv/pico-sdk/
-export PICO_DVI_PATH := /aux/riscv/PicoDVI/
+export PICO_SDK_PATH := /aux/builds/pico-sdk/
+export PICO_DVI_PATH := /aux/builds/PicoDVI/
 #
 #		Configure Platform (rp2040,rp2350,rp2350-riscv)
 #
@@ -30,7 +30,7 @@ PICO_HARDWARE = PICO_HW_RP2040PC
 #
 #		Directory the App is in.
 #
-ARTURO_APP_DIRECTORY = $(APPDIR)/test_code/udg
+ARTURO_APP_DIRECTORY = $(APPDIR)/superboard	
 #
 # 		If non-zero, USB keyboard messages are converted to ASCII and Localised. It also allows
 # 		the state of each key (up or down) to be read. If zero, then the responsibility for 

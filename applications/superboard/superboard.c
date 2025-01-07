@@ -4,8 +4,9 @@
 //      Name :      superboard.c
 //      Authors :   Paul Robson (paul@robsons.org.uk)
 //      Date :      5th January 2025
-//      Reviewed :  No
-//      Purpose :   Superboard emulator
+//      Reviewed :  Yes
+//      Purpose :   Superboard emulator, typical library use.
+// 					It would be helpful to have the Superboard manual for the full details
 //
 // ***************************************************************************************
 // ***************************************************************************************
@@ -14,6 +15,7 @@
 #include <libraries.h>
 
 uint8_t SuperRead(uint16_t a);
+void SuperWrite(uint16_t a,uint8_t d);
 uint8_t ReadKeyboard(void);
 void ScreenPaint(uint16_t addr,uint8_t c);
 
@@ -36,7 +38,7 @@ void Dump(void) {
 //
 // ***************************************************************************************
 
-#include "roms/basic_rom.h"
+#include "roms/basic_rom.h"  														// Load the ROMs into flash memory
 #include "roms/monitor_rom.h"
 
 #define RAMSIZE 	(8192)  														// Installed RAM size
@@ -77,6 +79,9 @@ void SuperWrite(uint16_t a,uint8_t d) {
 //
 // ***************************************************************************************
 
+//
+//		This is the array of keyboard keys to the row/columns on the Superboard II
+//
 const int keyboardMap[] = {
 	KEY_1,KEY_2,KEY_3,KEY_4,KEY_5,KEY_6,KEY_7,0,
 	KEY_8,KEY_9,KEY_0,KEY_APOSTROPHE,KEY_MINUS, KEY_BACKSPACE, 0,  0,
@@ -88,25 +93,31 @@ const int keyboardMap[] = {
 	KEY_TAB,-KEY_MOD_LCTRL,KEY_ESC,0,0,-KEY_MOD_LSHIFT,-KEY_MOD_RSHIFT
 };
 
+//
+//		Is a key pressed ? 0 is used, -ve is a modifier, +ve is a standard key
+//
 bool IsKeyPressed(int c) {
 	if (c == 0) return 0;  															// No key
 	if (c < 0) return (KBDGetModifiers() & (-c)) != 0;  							// -ve is a modifier key (shift, control, alt etc.)
 	return KBDGetStateArray()[c] != 0;  											// +ve is a keyboard key
 }
 
+//
+//		Read the keyboard depending on what value has been written to the keyboard latch, all these are active low.
+//
 uint8_t ReadKeyboard(void) {
-	uint8_t output = 0;   															// We calculate it active low
+	uint8_t output = 0xFF;   														// We calculate it active low
 
 	for (int row = 0;row < 8;row ++) {  											// Do each row
 		if ((keyboardPort & (0x80 >> row)) == 0) {  								// If the port bit is clear, check the row.
 			for (int col = 0;col < 8;col++) {
 				if (IsKeyPressed(keyboardMap[row * 8 + col])) {  					// Key pressed ?
-					output |= (0x80 >> col); 										// Set the column bit
+					output ^= (0x80 >> col); 										// Toggle the column bit
 				}
 			}
 		}
 	}
-	return output ^ 0xFF;  															// Active low.
+	return output;
 }
 
 // ***************************************************************************************
@@ -115,7 +126,7 @@ uint8_t ReadKeyboard(void) {
 //
 // ***************************************************************************************
 
-#include "roms/character_rom.h"   													// Binary character graphics
+#include "roms/character_rom.h"   													// Binary character graphics, these are *not* on the memory map.
 
 void ScreenPaint(uint16_t addr,uint8_t c) {
 	if (addr < 0xD085 || addr > 0xD37C) return;   									// Outside the 24x24 screen..
@@ -124,8 +135,10 @@ void ScreenPaint(uint16_t addr,uint8_t c) {
 	if (x >= 24) return;  															// Off the display
 	int offset = x + y * 320; 														// Offset into the bitmap
 	offset += 12*40 + 8;  															// Centre on the display 
+
 	const uint8_t *fontData = character_rom + c * 8;   								// Character data to copy
-	struct DVIModeInformation *dmi = DVIGetModeInformation();  						// Access bitmaps.
+	struct DVIModeInformation *dmi = DVIGetModeInformation();  						// Access bitmap planes
+
 	for (int i = 0;i < 8;i++) {  													// Write to bitmap
 		uint8_t bd = *fontData++,bdr = 0;  											// Get the character line and reverse it.
 		for (int i = 0;i < 8;i++) {
@@ -143,8 +156,6 @@ void ScreenPaint(uint16_t addr,uint8_t c) {
 //                      Start and run the CPU. Does not have to return.
 //
 // ***************************************************************************************
-
-static GFXPort vp;
 
 void ApplicationRun(void) {
 	CONEnableConsole(true);  														// Disable console output.
