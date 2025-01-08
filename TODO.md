@@ -1,4 +1,4 @@
 # TODO stuff
 
 - Mouse code
-- More reviewing ogf code.
+- More reviewing of code.

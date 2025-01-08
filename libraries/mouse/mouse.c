@@ -1,17 +1,25 @@
 // ***************************************************************************************
 // ***************************************************************************************
 //
-//      Name :      libraries.h
+//      Name :      mouse.c
 //      Authors :   Paul Robson (paul@robsons.org.uk)
-//      Date :      27th December 2024
+//      Date :      8th January 2025
 //      Reviewed :  No
-//      Purpose :   Composite libraries header file.
+//      Purpose :   Mouse routines 
 //
 // ***************************************************************************************
 // ***************************************************************************************
 
-#pragma once
+#include "common.h"
+#include <libraries.h>
 
-#include "graphics/include/graphics.h"
-#include "cpu6502/include/cpu6502.h"
-#include "mouse/include/mouse.h"
+void MMGRDrawPointer(int xp,int yp,int size) {
+	for (int i = 0;i < size;i++) {
+		bool tbLine = (i == 0) || (i == size-1);
+		GFXHLine(NULL,xp+i/2,xp+i*2,yp+i,tbLine ? 7 : 0);
+		if (!tbLine) {
+			GFXPlot(NULL,xp+i/2,yp+i,7);
+			GFXPlot(NULL,xp+i*2,yp+i,7);
+		}
+	}
+}

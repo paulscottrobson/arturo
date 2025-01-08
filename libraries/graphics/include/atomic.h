@@ -12,8 +12,6 @@
 
 #pragma once
 
-#define XXX "Hello"
-
 void GFXASetPort(GFXPort *vp);
 void GFXAPlot(int x,int y,int colour);
 void GFXAHorizLine(int x1,int x2,int y,int colour);
