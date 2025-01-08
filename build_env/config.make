@@ -4,6 +4,7 @@
 #		Name : 		config.make
 #		Purpose :	Configuration filess
 #		Date :		18th December 2024
+#		Reviewed :	Yes
 #		Author : 	Paul Robson (paul@robsons.org.uk)
 #
 # *******************************************************************************************
@@ -87,7 +88,7 @@ PICO_SERIAL_BAUD_RATE = 115200
 # *******************************************************************************************
 
 #
-#		DO NOT MANUALLY CHANGE THESE !
+#		DO NOT MANUALLY CHANGE THESE ! Must be a better way of doing this reliably.
 #
 CONFIG_DATA="\
 \#define PICO_PLATFORM_NAME "$(PLATFORM)" |\

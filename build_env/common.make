@@ -4,6 +4,7 @@
 #		Name : 		common.make
 #		Purpose :	Common make
 #		Date :		12th December 2024
+#		Reviewed :	Yes
 #		Author : 	Paul Robson (paul@robsons.org.uk)
 #
 # *******************************************************************************************
@@ -26,15 +27,25 @@ LDFLAGS = -fmax-errors=5
 #										Directories
 #
 # *******************************************************************************************
+#
+#		It's really unhappy if there are spaces after these things.
+#
 
+#
+#		Root directory of repo
+#
 ROOTDIR =  $(dir $(realpath $(lastword $(MAKEFILE_LIST))))../
+#
+#		Stores executables and uf2
+#
 BINDIR = $(ROOTDIR)bin/
-BUILDDIR = $(ROOTDIR)build/
+#
+#		Where the build environment files are (e.g. like this)
+#
 BUILDENVDIR = $(ROOTDIR)build_env/
-BASICDIR = $(ROOTDIR)basic/
-BASICCODEDIR = $(BASICDIR)code/
-INCLUDEDIR = $(BASICCODEDIR)include/
-BASICSCRIPTDIR = $(BASICDIR)scripts/
+#
+#		Where applications are stored. The actual location is set in config.make
+#
 APPDIR = $(ROOTDIR)applications/
 
 # *******************************************************************************************
@@ -44,5 +55,5 @@ APPDIR = $(ROOTDIR)applications/
 # *******************************************************************************************
 
 ifndef VERBOSE
-#.SILENT:
+.SILENT:
 endif
