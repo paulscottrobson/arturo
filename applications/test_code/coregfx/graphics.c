@@ -12,7 +12,6 @@
 
 #include "common.h"
 #include <libraries.h>
-#include "gfxtest.h"
 
 void TestDrawStuff(void);
 void TestScrollAndRect(void);
@@ -26,6 +25,9 @@ void Test64Colours(void);
 //
 // ***************************************************************************************
 
+//
+//      640x480 x 3 planes will ONLY work if DVI_SUPPORT_640_480_8 is set to 1
+//
 static GFXPort vp;
 static int action = -1;
 static int width,height;
@@ -42,7 +44,8 @@ void UpdateMode(int mode) {
 void ApplicationRun(void) {
     int n = 0;
     int nextSkip = 0;
-    int mode = DVI_MODE_320_256_8;
+    int mode = DVI_MODE_320_240_64;
+    mode = 0;
 
     UpdateMode(mode);
 

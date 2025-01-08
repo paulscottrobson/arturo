@@ -22,6 +22,8 @@ Information on this can be obtained from the function *DVIGetModeInformation()* 
 
 The mode can be changed by *DVISetMode()*
 
+There can be a 640x480x8 colour mode, but this has to be enabled in config.make because it takes a lot of RAM memory ; this is off by default.
+
 ## File Storage
 
 A USB key plugged into the board (RP2040PC) or external hub (Neo6502) is exposed as a FAT32 storage device. The keys ID is displayed during the bootup sequence.
@@ -210,6 +212,6 @@ If this is set to true, then reports from unknown devices are dumped on the cons
 
 *Paul Robson paul@robsons.org.uk*
 
-*Last revised 6th January 2025*
+*Last revised 8th January 2025*
 
 ## I
