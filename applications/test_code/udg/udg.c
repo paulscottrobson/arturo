@@ -24,34 +24,29 @@ void ApplicationRun(void) {
 	uint8_t gr2[8] = {0xAA,0x55,0xAA,0x55,0xAA,0x55,0xAA,0x55 };
 	char buffer[32];
 	sprintf(buffer,"Chars (%c%c)",224,225);;
-//	GFXSetMode(DVI_MODE_640_240_8);
+	GFXSetMode(DVI_MODE_640_240_8);
 //	GFXSetMode(DVI_MODE_640_480_2);
 //	GFXSetMode(DVI_MODE_320_240_8);
-	GFXSetMode(DVI_MODE_320_240_64);
+//	GFXSetMode(DVI_MODE_320_240_64);
 	CONEnableConsole(true);
 	CONWrite(12);
 	CONDefineUDG(224, gr1);
 	CONDefineUDG(225,gr2);
 	CONWriteString(buffer);
 	CONEnableConsole(false);
+
 	int w,y1,y2;
 	GFXDrawString(NULL,210,100,buffer,FONT_SYSTEM_8,6,1);
 	GFXGetStringExtent(buffer,FONT_SYSTEM_8,1,&w,&y1,&y2);;
 	GFXFrameRect(NULL,210,100+y1,210+w-1,100+y2-1,7);
 
-
-	GFXDrawString(NULL,210,130,buffer,FONT_SCRIPT_12,3,1);
-
-	GFXGetStringExtent(buffer,FONT_SCRIPT_12,1,&w,&y1,&y2);;
-	GFXFrameRect(NULL,210,130+y1,210+w-1,130+y2-1,7);
-
-	GFXFillRect(NULL,10,10,200,90,1);
+	GFXDrawString(NULL,210,130,buffer,FONT_SCRIPT_12,0x100403,1);
 
     while (1) {
   
         if (KBDEscapePressed(true)) {                                               // Escaped ?
             CONWriteString("Escape !\r");
-			GFXFillRect(NULL,100,40,250,120,0x103);
+			GFXFillRect(NULL,100,40,250,120,0x10003);
         }
 
 	

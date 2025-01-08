@@ -72,7 +72,7 @@ static int _DrawCharacter(GFXPort *vp,int xPos,int yPos,int ch,int fontid,int co
 	xPos = xPos + scale * glyph->xOffset;  											// Drawing pos for font.
 	yPos = yPos + scale * glyph->yOffset;
 	_DrawCharacterFromBitmap(vp,xPos,yPos,glyph->width,glyph->height,bitmapData,colour,scale);
-	return glyph->xAdvance;
+	return glyph->xAdvance*scale;
 }
 
 
@@ -84,6 +84,12 @@ static int _DrawCharacter(GFXPort *vp,int xPos,int yPos,int ch,int fontid,int co
 
 void GFXDrawString(GFXPort *vp,int xPos,int yPos,char *s,int font,int colour,int scale) {
 	int xWidth;
+	if (GFXACTION(colour) == GFXA_SOLID) {  										// Solid background
+		int w,y1,y2;
+		GFXGetStringExtent(s,font,scale,&w,&y1,&y2);  								// Get bounding box
+		GFXFillRect(vp,xPos,yPos+y1,xPos+w,yPos+y2,(colour >> 8) & 0xFF);
+		colour = colour & 0xFFFFF;
+	}
 	DVIGetScreenExtent(&xWidth,NULL);  												// No point in drawing if off right of viewport/screen
 	if (vp != NULL) xWidth = vp->width;
 	while (*s != '\0' && xPos < xWidth) {
@@ -93,6 +99,30 @@ void GFXDrawString(GFXPort *vp,int xPos,int yPos,char *s,int font,int colour,int
 	}
 }
 
-void GFXGetStringExtent(char *s,int font,int scale,int *w, int *y1,int *y2) {
-	*w = *y1 = *y2 = 0;
+// ***************************************************************************************
+//
+//                               Get upper/lower extent
+//
+// ***************************************************************************************
+
+void GFXGetStringExtent(char *s,int fontid,int scale,int *w, int *y1,int *y2) {
+	uint8_t ch;
+	*w = 0;*y1 = 0;*y2 = 0;  														// W is additive , 
+	while (ch = (uint8_t)(*s++), ch != '\0') {  									// Scan the string
+		if (ch >= FONT_FIRST_UDG && ch <= FONT_LAST_UDG) {  						// UDGs are a special case	
+			*w += scale * 8;
+			*y1 = min(*y1,-scale);
+		} else {
+			if (fontid >= 0 && fontid < FONT_COUNT) {  								// Known font.
+				const FONTInfo *font = _dictionary[fontid];   						// Get the font data for the font.
+				if (ch >= font->first && ch < font->last) {  						// Valid character.
+					FONTGlyph *glyph = &(font->glyph[ch - font->first]);   			// Point to the glyph
+					*w += glyph->xAdvance * scale;
+					*y1 = min(*y1,glyph->yOffset*scale);  								
+					*y2 = max(*y2,glyph->yOffset*scale+glyph->height * scale);
+				}
+			}
+		}
+	}
 }
+

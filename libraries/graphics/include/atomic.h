@@ -34,13 +34,13 @@ void GFXARight(void);
 //
 //						0  		draw in foreground
 //						1  		xor with foreground
-//						2..14 	reserved
-// 						15 		draw in foreground or background (fonts only)
+//						2..15 	reserved
+//		bit 20  	solid.
 //
 #define 	GFXAFGR(n)  	((n) & 0xFF)
 #define  	GFXABGR(n)  	(((n) >> 8) & 0xFF)
-#define  	GFXACTION(a) 	((a) & 0xF0000)
+#define  	GFXACTION(a) 	((a) & 0x1F0000)
 
 #define 	GFXA_NORMAL 	(0x00000)
 #define 	GFXA_XOR  		(0x10000)
-#define 	GFXA_SOLID 		(0xF0000)
+#define 	GFXA_SOLID 		(0x100000)
