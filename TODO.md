@@ -1,5 +1,5 @@
 # TODO stuff
 
-- Font back solid.
-- Externally configurable 640x480x8
+- Measure font extent
+- Externally configurable 640x480x8, allowable at compile time.
 - Mouse code

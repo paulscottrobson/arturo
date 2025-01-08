@@ -39,8 +39,8 @@ void GFXARight(void);
 //
 #define 	GFXAFGR(n)  	((n) & 0xFF)
 #define  	GFXABGR(n)  	(((n) >> 8) & 0xFF)
-#define  	GFXACTION(a) 	((a) & 0xF00)
+#define  	GFXACTION(a) 	((a) & 0xF0000)
 
-#define 	GFXA_NORMAL 	(0x000)
-#define 	GFXA_XOR  		(0x100)
-#define 	GFXA_SOLID 		(0xF00)
+#define 	GFXA_NORMAL 	(0x00000)
+#define 	GFXA_XOR  		(0x10000)
+#define 	GFXA_SOLID 		(0xF0000)

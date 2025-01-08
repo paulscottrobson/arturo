@@ -34,9 +34,16 @@ void ApplicationRun(void) {
 	CONDefineUDG(225,gr2);
 	CONWriteString(buffer);
 	CONEnableConsole(false);
+	int w,y1,y2;
 	GFXDrawString(NULL,210,100,buffer,FONT_SYSTEM_8,6,1);
-	GFXDrawString(NULL,210,130,buffer,FONT_SCRIPT_12,5,1);
+	GFXGetStringExtent(buffer,FONT_SYSTEM_8,1,&w,&y1,&y2);;
+	GFXFrameRect(NULL,210,100+y1,210+w-1,100+y2-1,7);
 
+
+	GFXDrawString(NULL,210,130,buffer,FONT_SCRIPT_12,3,1);
+
+	GFXGetStringExtent(buffer,FONT_SCRIPT_12,1,&w,&y1,&y2);;
+	GFXFrameRect(NULL,210,130+y1,210+w-1,130+y2-1,7);
 
 	GFXFillRect(NULL,10,10,200,90,1);
 
