@@ -24,6 +24,7 @@ void ApplicationRun(void) {
 	uint8_t gr2[8] = {0xAA,0x55,0xAA,0x55,0xAA,0x55,0xAA,0x55 };
 	char buffer[32];
 	sprintf(buffer,"Chars (%c%c)",224,225);;
+//	GFXSetMode(DVI_MODE_640_480_8);
 	GFXSetMode(DVI_MODE_640_240_8);
 //	GFXSetMode(DVI_MODE_640_480_2);
 //	GFXSetMode(DVI_MODE_320_240_8);
@@ -48,7 +49,6 @@ void ApplicationRun(void) {
             CONWriteString("Escape !\r");
 			GFXFillRect(NULL,100,40,250,120,0x10003);
         }
-
 	
         if (HASTICK50_FIRED()) {                                                    // Time to do a 50Hz tick (Don't use this for timing !)
             TICK50_RESET();                                                         // Reset the tick flag

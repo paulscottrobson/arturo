@@ -1,4 +1,4 @@
 # TODO stuff
 
-- Externally configurable 640x480x8, allowable at compile time.
+- 640x480x8 hardware.
 - Mouse code

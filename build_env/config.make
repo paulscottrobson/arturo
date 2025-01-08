@@ -52,6 +52,11 @@ ARTURO_PROCESS_SOUND = 1
 #		Set the default locale, the list is in the locale directory
 #
 ARTURO_KBD_LOCALE = "gb"
+#
+#		Allow the 640x480x8 mode. This requires 115200 bytes of the RAM - about half of it
+# 		so this may well exclude stock RP2040
+#
+DVI_SUPPORT_640_480_8 = 1
 
 # *******************************************************************************************
 #
@@ -95,4 +100,5 @@ CONFIG_DATA="\
 \#define ARTURO_MONO_SOUND    $(ARTURO_MONO_SOUND) 				|\
 \#define ARTURO_PROCESS_SOUND $(ARTURO_PROCESS_SOUND) 			|\
 \#define ARTURO_KBD_LOCALE 	  $(ARTURO_KBD_LOCALE) 				|\
+\#define DVI_SUPPORT_640_480_8 (1)  							|\
 "

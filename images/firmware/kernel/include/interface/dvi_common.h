@@ -19,8 +19,9 @@
 #define DVI_MODE_640_480_2      (2)
 #define DVI_MODE_320_240_64     (3)            
 #define DVI_MODE_320_256_8      (4)            										// Trick mode to get BBC Basic compatible 32 text rows.
+#define DVI_MODE_640_480_8      (5)
 
-#define DVI_MODE_MAX 			(4)
+#define DVI_MODE_MAX 			(5)
 //
 //		DVI Mode information structure
 //

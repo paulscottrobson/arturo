@@ -101,6 +101,14 @@ bool DVISetMode(int mode) {
 			dvi_modeInfo.width = 320;dvi_modeInfo.height = 256;
 			dvi_modeInfo.bitPlaneSize = sizeof(redPlane);
 			break;
+
+		#if DVI_SUPPORT_640_480_8 == 1  										// Controllable (memory constraints)
+		case DVI_MODE_640_480_8:  													// 640x480x8 information.
+			dvi_modeInfo.width = 640;dvi_modeInfo.height = 480;
+			dvi_modeInfo.bitPlaneSize = sizeof(redPlane);
+			break;
+		#endif
+
 		default:
 			dvi_modeInfo.mode = -1;  												// Failed.
 	}
