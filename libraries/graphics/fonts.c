@@ -93,11 +93,6 @@ void GFXDrawString(GFXPort *vp,int xPos,int yPos,char *s,int font,int colour,int
 	}
 }
 
-// ***************************************************************************************
-//
-//                               Get space string uses
-//
-// ***************************************************************************************
-
-void GFXGetStringExtent(char *s,int fontid,int scale,int *w, int *y1,int *y2) { 
+void GFXGetStringExtent(char *s,int font,int scale,int *w, int *y1,int *y2) {
+	*w = *y1 = *y2 = 0;
 }
