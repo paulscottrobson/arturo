@@ -7,6 +7,7 @@ def fixup(fileName):
 
 	if source[0][:3] != "/**":
 		return
+	print(fileName,len(source[1]))
 	if len(source[1]) > 8:
 		return
 
@@ -29,6 +30,7 @@ def fixup(fileName):
 
 for root,dirs,files in os.walk("."):
 	for f in files:
-		tgt = root + os.sep+f
-		print(tgt)
+		if f.endswith(".c"):
+			tgt = root + os.sep+f
+			fixup(tgt)
 

@@ -1,23 +1,13 @@
 /**
- * @file 
+ * @file sound.c
  *
- * @brief      
+ * @brief      Sound suport library for SDL
  *
  * @author     Paul Robson
  *
  * @date       07/01/2025
  *
  */
-
-
-//
-//		Name:		sound.cpp
-//		Purpose:	SoundSupport library for SDL.
-//		Created:	25th December 2024.
-//		Author:		qxxxb (https://github.com/qxxxb/sdl2-beeper)
-//					Paul Robson (paul@robsons.org.uk)
-//
-
 
 
 #include <artsim.h>

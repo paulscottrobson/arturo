@@ -1,7 +1,7 @@
 /**
- * @file 
+ * @file   snes_usb.c
  *
- * @brief      
+ * @brief      Driver for SNES type USB gamepads (like the Olimex standard one)
  *
  * @author     Paul Robson
  *

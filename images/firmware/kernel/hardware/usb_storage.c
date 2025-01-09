@@ -1,7 +1,7 @@
 /**
- * @file 
+ * @file   usb_storage.c
  *
- * @brief      
+ * @brief      USB MSC Storage / FATFS link from Apple/Oric emulators.
  *
  * @author     Paul Robson
  *
@@ -32,7 +32,7 @@ bool msc_inquiry_complete = false;
 
 
 //
-//    Wait for USB to 'settle' ; not quite sure why this is required, time to process 
+//    Wait for USB to 'settle' ; not quite sure why this is required, time to process
 //    USB Messages ?
 //
 

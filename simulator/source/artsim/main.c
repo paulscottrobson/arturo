@@ -1,7 +1,7 @@
 /**
- * @file 
+ * @file main.c
  *
- * @brief      
+ * @brief      Simulator main program
  *
  * @author     Paul Robson
  *

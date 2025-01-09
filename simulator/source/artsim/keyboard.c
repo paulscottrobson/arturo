@@ -1,7 +1,7 @@
 /**
- * @file 
+ * @file keyboard.c
  *
- * @brief      
+ * @brief      Keyboard event processor.
  *
  * @author     Paul Robson
  *

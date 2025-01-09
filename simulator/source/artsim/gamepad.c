@@ -1,7 +1,7 @@
 /**
- * @file 
+ * @file gamepad.c
  *
- * @brief      
+ * @brief      Gamepad access code
  *
  * @author     Paul Robson
  *

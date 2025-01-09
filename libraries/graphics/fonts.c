@@ -1,7 +1,7 @@
 /**
- * @file 
+ * @file   fonts.c
  *
- * @brief      
+ * @brief      Monochrome Font Rendering
  *
  * @author     Paul Robson
  *
@@ -27,7 +27,7 @@
 
 
 //
-//                          Include the font data in Flash memory. 
+//                          Include the font data in Flash memory.
 //
 
 
@@ -47,7 +47,7 @@ static void _DrawCharacterFromBitmap(GFXPort *vp,int xPos,int yPos,int w,int h,u
                 } else {
                     GFXFillRect(vp,xPos+x*scale,yPos,xPos+x*scale+scale-1,yPos+scale-1,colour);
                 }
-            }            
+            }
             bitMask >>= 1;                                                          // Next bit
             if (bitMask == 0) {
                 bitMask = 0x80;bitmapData++;
@@ -63,14 +63,14 @@ static void _DrawCharacterFromBitmap(GFXPort *vp,int xPos,int yPos,int w,int h,u
 //
 
 
-static int _DrawCharacter(GFXPort *vp,int xPos,int yPos,int ch,int fontid,int colour,int scale) {   
+static int _DrawCharacter(GFXPort *vp,int xPos,int yPos,int ch,int fontid,int colour,int scale) {
 
     if (fontid < 0 || fontid >= FONT_COUNT) return 0;                               // Unknown font
     const FONTInfo *font = _dictionary[fontid];                                     // Get the font data for the font.
 
     if (ch >= FONT_FIRST_UDG && ch <= FONT_LAST_UDG) {                              // So, it might be a UDG
         _DrawCharacterFromBitmap(vp,xPos,yPos-8*scale,8,8,                          // Draw it using that UDG. it sort of works :)
-                                        CONGetUDGGraphicData(ch),colour,scale); 
+                                        CONGetUDGGraphicData(ch),colour,scale);
         return 8;                                                                   // Return the horizontal advance (which is 8)
     }
 
@@ -117,9 +117,9 @@ void GFXDrawString(GFXPort *vp,int xPos,int yPos,char *s,int font,int colour,int
 
 void GFXGetStringExtent(char *s,int fontid,int scale,int *w, int *y1,int *y2) {
     uint8_t ch;
-    *w = 0;*y1 = 0;*y2 = 0;                                                         // W is additive , 
+    *w = 0;*y1 = 0;*y2 = 0;                                                         // W is additive ,
     while (ch = (uint8_t)(*s++), ch != '\0') {                                      // Scan the string
-        if (ch >= FONT_FIRST_UDG && ch <= FONT_LAST_UDG) {                          // UDGs are a special case  
+        if (ch >= FONT_FIRST_UDG && ch <= FONT_LAST_UDG) {                          // UDGs are a special case
             *w += scale * 8;
             *y1 = min(*y1,-scale);
         } else {
@@ -128,11 +128,10 @@ void GFXGetStringExtent(char *s,int fontid,int scale,int *w, int *y1,int *y2) {
                 if (ch >= font->first && ch < font->last) {                         // Valid character.
                     FONTGlyph *glyph = &(font->glyph[ch - font->first]);            // Point to the glyph
                     *w += glyph->xAdvance * scale;
-                    *y1 = min(*y1,glyph->yOffset*scale);                                
+                    *y1 = min(*y1,glyph->yOffset*scale);
                     *y2 = max(*y2,glyph->yOffset*scale+glyph->height * scale);
                 }
             }
         }
     }
 }
-

@@ -1,7 +1,7 @@
 /**
- * @file 
+ * @file   timing.c
  *
- * @brief      
+ * @brief      Timing stuff
  *
  * @author     Paul Robson
  *
@@ -34,10 +34,10 @@ bool tick50HzHasFired = false;
 //
 
 
-#pragma GCC push_options      
+#pragma GCC push_options
 #pragma GCC optimize ("O0")
 static void _tmrSetTick(void) {
-    tick50HzHasFired = true;                                                    // Set tick flag.    
+    tick50HzHasFired = true;                                                    // Set tick flag.
 }
 #pragma GCC pop_options
 

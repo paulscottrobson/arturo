@@ -1,7 +1,7 @@
 /**
- * @file 
+ * @file   port.c
  *
- * @brief      
+ * @brief      Graphic Port functions
  *
  * @author     Paul Robson
  *
@@ -47,5 +47,4 @@ void GFXPortInitialise(GFXPort *vp,int x0,int y0,int x1,int y1) {
 void GFXScrollPort(GFXPort *vp,int xo,int yo) {
     vp->xOffset = xo;vp->yOffset = yo;
 }
-
 

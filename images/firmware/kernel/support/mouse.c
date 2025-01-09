@@ -1,7 +1,7 @@
 /**
- * @file 
+ * @file   mouse.c
  *
- * @brief      
+ * @brief      Mouse code.
  *
  * @author     Paul Robson
  *
@@ -66,7 +66,7 @@ void MSESetPosition(int x,int y) {
 }
 
 void MSEOffsetPosition(int8_t dx, int8_t dy) {
-    struct DVIModeInformation *dmi = DVIGetModeInformation();                      
+    struct DVIModeInformation *dmi = DVIGetModeInformation();
     if(dx < 0 && xCursor < abs(dx)) {
         xCursor = 0;
     } else {
@@ -117,4 +117,3 @@ void MSEGetState(int *pX, int *pY, int *pButtonState, int *pScrollWheelState) {
         *pX = *pY = *pButtonState = *pScrollWheelState = 0;
     }
 }
-

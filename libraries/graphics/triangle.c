@@ -1,7 +1,7 @@
 /**
- * @file 
+ * @file   triangle.c
  *
- * @brief      
+ * @brief      Triangle Drawing functions
  *
  * @author     Paul Robson
  *
@@ -161,4 +161,4 @@ void GFXFrameTriangle(GFXPort *vp,int x0,int y0,int x1,int y1,int x2,int y2,int 
     GFXALine(x0,y0,x1,y1,col);
     GFXALine(x0,y0,x2,y2,col);
     GFXALine(x2,y2,x1,y1,col);
-}        
+}

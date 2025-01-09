@@ -1,7 +1,7 @@
 /**
- * @file 
+ * @file   fileio.c
  *
- * @brief      
+ * @brief      File I/O mapping.
  *
  * @author     Paul Robson
  *
@@ -24,7 +24,7 @@
 
 static struct _FileInfo {
     bool isInUse;
-    bool isReadOnly;    
+    bool isReadOnly;
 } files[FIO_MAX_HANDLES];
 
 #define VALID_AND_OPEN(n) ((n) >= 0 && (n) < FIO_MAX_HANDLES && files[n].isInUse)
@@ -52,7 +52,7 @@ int FIOOpen(char *fileName) {
     if (i == FIO_MAX_HANDLES) return FIO_ERR_MAXFILES;                              // None found.
     files[i].isInUse = true;
     files[i].isReadOnly = false;
-    return FSYSOpen(i,fileName); 
+    return FSYSOpen(i,fileName);
 }
 
 
@@ -133,8 +133,8 @@ int FIOFileInformation(char *name,FIOInfo *info) {
         info->length = 0;
         info->isDirectory = false;
     }
-    return FSYSFileInformation(name,info); 
-}                               
+    return FSYSFileInformation(name,info);
+}
 
 
 //
@@ -144,13 +144,13 @@ int FIOFileInformation(char *name,FIOInfo *info) {
 
 
 int FIOOpenDirectory(char *directory) {
-    return FSYSOpenDirectory(directory); 
-}       
+    return FSYSOpenDirectory(directory);
+}
 
 int FIOReadDirectory(int handle,char *fileName) {
-    return FSYSReadDirectory(fileName); 
+    return FSYSReadDirectory(fileName);
 }
 
 int FIOCloseDirectory(int handle) {
-    return FSYSCloseDirectory(); 
+    return FSYSCloseDirectory();
 }

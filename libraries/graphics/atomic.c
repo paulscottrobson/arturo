@@ -1,7 +1,7 @@
 /**
- * @file 
+ * @file   atomic.c
  *
- * @brief      
+ * @brief      Lowest level graphics routines
  *
  * @author     Paul Robson
  *
@@ -33,7 +33,7 @@ static void _GFXAValidate(void);
 
 
 //
-//      These functions are atomic. They assume once you've selected the viewport 
+//      These functions are atomic. They assume once you've selected the viewport
 //      the mode, port will not change for the duration of any function that uses them
 //      e.g. to draw rectangles you set the viewport and draw multiple horizontal lines
 //      that sort of thing :)
@@ -119,9 +119,9 @@ static void _GFXAValidate(void) {
       bitMask = (0x80 >> (xc & 7));                                                 // Work out the bitmask for the current pixel.
     }
     pl0 = _dmi->bitPlane[0]+offset;                                                 // Set up bitmap plane pointers.
-    pl1 = _dmi->bitPlane[1]+offset;  
-    pl2 = _dmi->bitPlane[2]+offset;  
-                            
+    pl1 = _dmi->bitPlane[1]+offset;
+    pl2 = _dmi->bitPlane[2]+offset;
+
     dataValid = true;                                                               // We have valid data
 }
 
@@ -139,12 +139,12 @@ void GFXAHorizLine(int x1,int x2,int y,int colour) {
     if (x2 < 0 || x1 >= width) return;                                              // On screen area (e.g. lower off right, higher off left)
     x1 = max(x1,0);x2 = min(x2,width-1);                                            // Trim horizontal line to port.
     xPixel = x1;yPixel = y;dataValid = false;                                       // First pixel.
-    _GFXAValidate();  
-    int pixelCount = x2-x1+1;                                                       // Pixels to draw 
+    _GFXAValidate();
+    int pixelCount = x2-x1+1;                                                       // Pixels to draw
 
     //
     //      First, we go to a byte boundary, if there are enough pixels.
-    //  
+    //
     while (pixelCount > 0 && (bitMask & 0x80) == 0) {                               // Shift until reached byte boundary
         _GFXDrawBitmap(colour);
         GFXARight();
@@ -183,7 +183,7 @@ void GFXAVertLine(int x,int y1,int y2,int colour) {
     y1 = max(y1,0);y2 = max(y2,height-1);                                           // Clip into region.
     xPixel = x;yPixel = y1;dataValid = false;                                       // Set start and validate
     _GFXAValidate();
-    int pixelCount = y2-y1+1;                                                       // Pixels to draw 
+    int pixelCount = y2-y1+1;                                                       // Pixels to draw
     while (pixelCount-- > 0) {                                                      // Shift until reached byte boundary
         _GFXDrawBitmap(colour);GFXADown();
     }
@@ -199,16 +199,16 @@ void GFXAVertLine(int x,int y1,int y2,int colour) {
 void GFXAUp(void) {
     yPixel--;                                                                       // Pixel up
     pl0 -= _dmi->bytesPerLine;                                                      // Shift pointers to next line up.
-    pl1 -= _dmi->bytesPerLine;  
-    pl2 -= _dmi->bytesPerLine;  
+    pl1 -= _dmi->bytesPerLine;
+    pl2 -= _dmi->bytesPerLine;
     if (dataValid) dataValid = (yPixel >= 0);                                       // Still in window
 }
 
 void GFXADown(void) {
     yPixel++;                                                                       // Pixel down
     pl0 += _dmi->bytesPerLine;                                                      // Shift pointers to next line down
-    pl1 += _dmi->bytesPerLine;  
-    pl2 += _dmi->bytesPerLine;  
+    pl1 += _dmi->bytesPerLine;
+    pl2 += _dmi->bytesPerLine;
     if (dataValid) dataValid = (yPixel < height);                                   // Still in window
 }
 
@@ -218,14 +218,14 @@ void GFXALeft(void) {
       bitMask = (bitMask << 2) & 0xFF;                                              // Shift bitmap left
       if (bitMask == 0) {                                                           // Off the left side.
         bitMask = 0x03;                                                             // Reset bitmap
-        pl0--;pl1--;pl2--;                                                          // Bump plane pointers      
+        pl0--;pl1--;pl2--;                                                          // Bump plane pointers
       }
     } else {
-    
+
       bitMask = (bitMask << 1) & 0xFF;                                              // Shift bitmap left
       if (bitMask == 0) {                                                           // Off the left side.
         bitMask = 0x01;                                                             // Reset bitmap
-        pl0--;pl1--;pl2--;                                                          // Bump plane pointers      
+        pl0--;pl1--;pl2--;                                                          // Bump plane pointers
       }
     }
     if (dataValid) dataValid = (xPixel >= 0);                                       // Still in window
@@ -237,13 +237,13 @@ void GFXARight(void) {
       bitMask >>= 2;                                                                // Shift bitmap right
       if (bitMask == 0) {                                                           // Off the right side.
         bitMask = 0xC0;                                                             // Reset bitmap
-        pl0++;pl1++;pl2++;                                                          // Bump plane pointers      
+        pl0++;pl1++;pl2++;                                                          // Bump plane pointers
       }
     } else {
       bitMask >>= 1;                                                                // Shift bitmap right
       if (bitMask == 0) {                                                           // Off the right side.
         bitMask = 0x80;                                                             // Reset bitmap
-        pl0++;pl1++;pl2++;                                                          // Bump plane pointers      
+        pl0++;pl1++;pl2++;                                                          // Bump plane pointers
       }
     }
     if (dataValid) dataValid = (xPixel < width);                                    // Still in window
@@ -264,13 +264,13 @@ void GFXALine(int x0, int y0, int x1, int y1,int colour) {
          GFXAVertLine(x0,y0,y1,colour);
          return;
     }
-    
+
     int dx = abs(x1 - x0);
     int sx = x0 < x1 ? 1 : -1;
     int dy = -abs(y1 - y0);
     int sy = y0 < y1 ? 1 : -1;
     int error = dx + dy;
-    
+
     xPixel = x0;yPixel = y0;                                                        // Start at x0,y0
 
     _GFXAValidate();                                                                // Validate the current
@@ -304,9 +304,9 @@ static inline void _GFXDrawBitmap(int colour) {
     if (_dmi->bitPlaneCount == 1) {                                                 // Draw the bitmap.
         _GFXDrawBitmap1(colour);
     } else if (_dmi->bitPlaneDepth == 2) {
-        _GFXDrawBitmap6(colour);      
+        _GFXDrawBitmap6(colour);
     } else {
-        _GFXDrawBitmap3(colour); 
+        _GFXDrawBitmap3(colour);
     }
 }
 
@@ -383,4 +383,3 @@ static inline void _GFXDrawBitmap6(int colour) {
     }
 
 }
-

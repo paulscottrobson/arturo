@@ -1,7 +1,7 @@
 /**
- * @file 
+ * @file fileio,c
  *
- * @brief      
+ * @brief      FSYS level file interface
  *
  * @author     Paul Robson
  *

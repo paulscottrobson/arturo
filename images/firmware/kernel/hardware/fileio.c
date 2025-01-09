@@ -1,7 +1,7 @@
 /**
- * @file 
+ * @file   fileio.c
  *
- * @brief      
+ * @brief      File I/O (FSYS Level interface)
  *
  * @author     Paul Robson
  *
@@ -96,7 +96,7 @@ int FSYSCreateFile(char *name) {
     if (fr != FR_OK) return _FSYSMapError(fr);                                  // Creation failed.
     f_close(&fRec);                                                             // Close it.
     return FIO_OK;
-}   
+}
 
 
 //
@@ -108,7 +108,7 @@ int FSYSDeleteFile(char *name) {
     FRESULT fr = f_unlink(name);
     if (fr == FR_OK) return FIO_OK;                                             // Delete worked okay.
     if (fr == FR_NO_FILE || fr == FR_NO_PATH) return FIO_OK;                    // Does not exist
-    return _FSYSMapError(fr);   
+    return _FSYSMapError(fr);
 }
 
 
@@ -117,7 +117,7 @@ int FSYSDeleteFile(char *name) {
 //
 
 
-int FSYSCreateDirectory(char *name) {                                           
+int FSYSCreateDirectory(char *name) {
     FRESULT fr = f_mkdir(name);
     if (fr == FR_OK) return FIO_OK;                                             // Create worked okay.
     if (fr == FR_EXIST) return FIO_OK;                                          // It already exists, not an error
@@ -144,7 +144,7 @@ int FSYSChangeDirectory(char *directory) {
 
 int FSYSDeleteDirectory(char *name) {
     return FSYSDeleteFile(name);                                                // Same as delete file :)
-}                                           
+}
 
 
 //
@@ -153,7 +153,7 @@ int FSYSDeleteDirectory(char *name) {
 
 
 int FSYSOpen(int handle,char *name) {
-    FRESULT fr = f_open(&files[handle],name,FA_READ|FA_WRITE|FA_OPEN_EXISTING);     // Open read/write                                      
+    FRESULT fr = f_open(&files[handle],name,FA_READ|FA_WRITE|FA_OPEN_EXISTING);     // Open read/write
     if (fr != FR_OK) return _FSYSMapError(fr);                                      // Error occurred of some sort.
     fr = f_lseek(&files[handle],0);                                                 // Rewind
     return _FSYSMapError(fr);
@@ -184,7 +184,7 @@ int FSYSRead(int handle,void *data,int size) {
 
 
 //
-//                              Write data to the file. 
+//                              Write data to the file.
 //
 
 
@@ -219,7 +219,7 @@ int FSYSGetSetPosition(int handle,int newPosition) {
         if (fr != FR_OK) return _FSYSMapError(fr);
     }
     return current;
-}   
+}
 
 
 //
@@ -248,7 +248,7 @@ int FSYSReadDirectory(char *fileName) {
     fi.fname[MAX_FILENAME_SIZE] = '\0';                                             // Truncate file name.
     strcpy(fileName,fi.fname);
     return FIO_OK;
-}   
+}
 
 
 //
@@ -257,6 +257,5 @@ int FSYSReadDirectory(char *fileName) {
 
 
 int FSYSCloseDirectory(void) {
-    return _FSYSMapError(f_closedir(&currentDirectory));        
+    return _FSYSMapError(f_closedir(&currentDirectory));
 }
-

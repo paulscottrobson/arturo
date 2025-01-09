@@ -1,7 +1,7 @@
 /**
- * @file 
+ * @file   cpu6502.c
  *
- * @brief      
+ * @brief      6502 Emulation Main Code
  *
  * @author     Paul Robson
  *
@@ -24,7 +24,7 @@
 #include "libraries.h"
 
 
-//  
+//
 //                                      CPU Status
 //
 
@@ -49,7 +49,7 @@ uint8_t _dummyRead(uint16_t a) { return 0; }                                    
 void    _dummyWrite(uint16_t a,uint8_t d) {}
 
 static CPU6502READFUNC readFunc = _dummyRead;                                       // Set the read and write functions to the dummies
-static CPU6502WRITEFUNC writeFunc = _dummyWrite;                                    
+static CPU6502WRITEFUNC writeFunc = _dummyWrite;
 
 #define READ8(a)        ((*readFunc)(a))
 #define WRITE8(a,d)     ((*writeFunc)(a,d))
@@ -85,7 +85,7 @@ void CPU6502GetStatus(CPU6502STATUS *stat) {
 
 
 int CPU6502ExecuteOne(void) {
-    
+
     switch(FETCH8()) {                                                              // Execute one 6502 opcode
         #include "generator/__6502opcodes.h"
     }

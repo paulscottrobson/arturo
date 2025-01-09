@@ -1,7 +1,7 @@
 /**
- * @file 
+ * @file   gamepad.c
  *
- * @brief      
+ * @brief      Gamepad controller class
  *
  * @author     Paul Robson
  *
@@ -49,7 +49,7 @@ int  CTLControllerCount(void) {
 
 
 //
-//      Read a specified controller, NULL if not found, -1 reads the first controller or 
+//      Read a specified controller, NULL if not found, -1 reads the first controller or
 //      emulated gamepad
 //
 
@@ -82,7 +82,7 @@ void CTLAddController(uint8_t dev_addr,uint8_t instance,uint16_t vid,uint16_t pi
         if (CTLSendMessage(CTLM_REGISTER,cs->_hardwareID,NULL) == 0) {              // Identify it, if failed remove from list.
             controllerCount--;
         }
-    } 
+    }
 }
 
 
@@ -116,4 +116,3 @@ int CTLSendMessage(int command,uint16_t hwid,struct _CTL_MessageData *msg) {
     }
     return 0;
 }
-

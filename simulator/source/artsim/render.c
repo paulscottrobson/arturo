@@ -1,7 +1,7 @@
 /**
- * @file 
- *
- * @brief      
+ * @file  render.c
+ * 
+ * @brief      Display Rendering
  *
  * @author     Paul Robson
  *

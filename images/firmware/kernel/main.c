@@ -1,7 +1,7 @@
 /**
- * @file 
+ * @file   main.c
  *
- * @brief      
+ * @brief      Main Program.
  *
  * @author     Paul Robson
  *

@@ -1,7 +1,7 @@
 /**
- * @file 
+ * @file   mouse.c
  *
- * @brief      
+ * @brief      Mouse routines
  *
  * @author     Paul Robson
  *
@@ -15,7 +15,7 @@
 //      Authors :   Paul Robson (paul@robsons.org.uk)
 //      Date :      8th January 2025
 //      Reviewed :  No
-//      Purpose :   Mouse routines 
+//      Purpose :   Mouse routines
 //
 
 

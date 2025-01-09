@@ -1,7 +1,7 @@
 /**
- * @file 
+ * @file   ellipse.c
  *
- * @brief      
+ * @brief      Ellipse Drawing functions
  *
  * @author     Paul Robson
  *
@@ -101,8 +101,8 @@ static void _GFXDrawEllipse(int colour, bool fill) {
     d1 = (ry * ry) - (rx * rx * ry) + (0.25 * rx * rx);
     dx = 2 * ry * ry * x;
     dy = 2 * rx * rx * y;
- 
-    while (dx < dy) 
+
+    while (dx < dy)
     {
         if (fill) {
             _GFXLinePart(x,y,colour);
@@ -122,11 +122,11 @@ static void _GFXDrawEllipse(int colour, bool fill) {
             d1 = d1 + dx - dy + (ry * ry);
         }
     }
- 
-    d2 = ((ry * ry) * ((x + 0.5) * (x + 0.5))) + 
+
+    d2 = ((ry * ry) * ((x + 0.5) * (x + 0.5))) +
          ((rx * rx) * ((y - 1) * (y - 1))) -
           (rx * rx * ry * ry);
- 
+
     while (y >= 0)
     {
         if (fill) {
@@ -134,7 +134,7 @@ static void _GFXDrawEllipse(int colour, bool fill) {
         } else {
             _GFXFramePart(x,y,colour);
         }
-        if (d2 > 0) 
+        if (d2 > 0)
         {
             y--;
             dy = dy - (2 * rx * rx);
@@ -148,5 +148,4 @@ static void _GFXDrawEllipse(int colour, bool fill) {
         }
     }
 }
- 
- 
+

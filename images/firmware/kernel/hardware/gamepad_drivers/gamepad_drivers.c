@@ -1,7 +1,7 @@
 /**
- * @file 
+ * @file   gamepad_drivers.c
  *
- * @brief      
+ * @brief      Gamepad individual handlers.
  *
  * @author     Paul Robson
  *
@@ -46,7 +46,7 @@ int  CTLDispatchMessage(int command,CTLState *cs,struct _CTL_MessageData *msg) {
         //      Unknown Device
         //
         default:
-            CTLAnnounceDevice(cs,"Unknown hardware device");        
+            CTLAnnounceDevice(cs,"Unknown hardware device");
             break;
     }
     return retVal;
@@ -61,4 +61,3 @@ int  CTLDispatchMessage(int command,CTLState *cs,struct _CTL_MessageData *msg) {
 void CTLAnnounceDevice(CTLState *cs,const char *name) {
     CONWriteString("USB Device: [%04x:%04x] %s\r",cs->_hardwareTypeID >> 16,cs->_hardwareTypeID & 0xFFFF,name);
 }
-

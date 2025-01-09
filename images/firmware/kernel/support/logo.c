@@ -1,7 +1,7 @@
 /**
- * @file 
+ * @file   logo.c
  *
- * @brief      
+ * @brief      Draw Logo
  *
  * @author     Paul Robson
  *

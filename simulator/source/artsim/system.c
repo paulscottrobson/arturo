@@ -1,21 +1,13 @@
 /**
- * @file 
+ * @file    system.c
  *
- * @brief      
+ * @brief      Open SDL, Close SDL, Process polling.
  *
  * @author     Paul Robson
  *
  * @date       07/01/2025
  *
  */
-
-//
-//      Name :      system.c
-//      Authors :   Paul Robson (paul@robsons.org.uk)
-//      Date :      23rd December 2024
-//      Reviewed :  No
-//      Purpose :   Open SDL, Close SDL, Process polling.
-//
 
 
 

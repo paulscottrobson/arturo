@@ -1,7 +1,7 @@
 /**
- * @file 
+ * @file   keyboard.c
  *
- * @brief      
+ * @brief      Converts keyboard events to a queue and key state array.
  *
  * @author     Paul Robson
  *
@@ -60,7 +60,7 @@ void KBDReceiveEvent(uint8_t isDown,uint8_t keyCode,uint8_t modifiers) {
     if (keyCode == 0xFF) {                                                      // Reset request
         queueSize = 0;                                                          // Empty keyboard queue
         for (unsigned int i = 0;i < sizeof(keyboardState);i++) {                // No keys down.
-            keyboardState[i] = 0; 
+            keyboardState[i] = 0;
         escapeFlag = false;                                                     // Reset escape.
         }
         return;
@@ -208,10 +208,10 @@ static uint8_t KBDMapToASCII(uint8_t keyCode,uint8_t modifiers) {
     }
 
     if (ascii == 0) {                                                           // This maps all the other ASCII keys.
-        ascii = KBDDefaultASCIIKeys(keyCode,modifiers);                         
+        ascii = KBDDefaultASCIIKeys(keyCode,modifiers);
     }
     if (ascii == 0) {                                                           // This maps all the control keys
-        ascii = KBDDefaultControlKeys(keyCode,modifiers);                       
+        ascii = KBDDefaultControlKeys(keyCode,modifiers);
     }
 
     return LOCLocaleMapping(ascii,keyCode,modifiers);                           // Special mapping for locales.
@@ -226,12 +226,12 @@ static uint8_t KBDMapToASCII(uint8_t keyCode,uint8_t modifiers) {
 #define KEY(code,normal,shifted) code,normal,shifted
 
 static const uint8_t defaultShift[] = {
-    KEY(KEY_MINUS,'-','_'),         KEY(KEY_EQUAL,'=','+'),         KEY(KEY_LEFTBRACE,'[','{'), 
+    KEY(KEY_MINUS,'-','_'),         KEY(KEY_EQUAL,'=','+'),         KEY(KEY_LEFTBRACE,'[','{'),
     KEY(KEY_RIGHTBRACE,']','}'),    KEY(KEY_BACKSLASH,'\\','|'),    KEY(KEY_HASHTILDE,'#','~'),
     KEY(KEY_SEMICOLON,';',':'),     KEY(KEY_APOSTROPHE,'\'','"'),   KEY(KEY_GRAVE,'`','~'),
     KEY(KEY_COMMA,',','<'),         KEY(KEY_DOT,'.','>'),           KEY(KEY_SLASH,'/','?'),
     KEY(KEY_SPACE,' ',' '),         KEY(KEY_102ND,'\\','|'),
-    0   
+    0
 };
 
 static uint8_t KBDDefaultASCIIKeys(uint8_t keyCode,uint8_t isShift) {
@@ -240,7 +240,7 @@ static uint8_t KBDDefaultASCIIKeys(uint8_t keyCode,uint8_t isShift) {
     while (defaultShift[index] != 0 && defaultShift[index] != keyCode)          // Look up in table of standard mappings (US)
         index += 3;
     if (defaultShift[index] == keyCode) {                                       // found a match.
-        ascii = isShift ? defaultShift[index+2] : defaultShift[index+1];    
+        ascii = isShift ? defaultShift[index+2] : defaultShift[index+1];
     }
     return ascii;
 }
@@ -255,9 +255,9 @@ static const uint8_t defaultControlKeys[] = {
     KEY_LEFT,CC_LEFT,KEY_RIGHT,CC_RIGHT,KEY_INSERT,CC_INSERT,
     KEY_PAGEDOWN,CC_PAGEDOWN,KEY_END,CC_END,KEY_DELETE,CC_DELETE,
     KEY_TAB,CC_TAB,KEY_ENTER,CC_ENTER,KEY_PAGEUP,CC_PAGEUP,KEY_DOWN,CC_DOWN,
-    KEY_HOME,CC_HOME,KEY_UP,CC_UP,KEY_ESC,CC_ESC, 
+    KEY_HOME,CC_HOME,KEY_UP,CC_UP,KEY_ESC,CC_ESC,
     KEY_BACKSPACE, CC_BACKSPACE, 0
-};  
+};
 
 static uint8_t KBDDefaultControlKeys(uint8_t keyCode,uint8_t isShift) {
     uint8_t index = 0;
@@ -266,6 +266,6 @@ static uint8_t KBDDefaultControlKeys(uint8_t keyCode,uint8_t isShift) {
             return defaultControlKeys[index+1];
         }
         index += 2;
-    } 
+    }
     return 0;
-}   
+}

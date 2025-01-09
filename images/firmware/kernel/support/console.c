@@ -1,7 +1,7 @@
 /**
- * @file 
+ * @file   console.c
  *
- * @brief      
+ * @brief      Console output code, for debugging primarily.
  *
  * @author     Paul Robson
  *
@@ -42,10 +42,10 @@ void CONDrawPixel(int x, int y, int rgb) {
     if (dmi == NULL) return;
     uint8_t mask;
     if (dmi->bitPlaneDepth == 2) {
-      
+
       mask = 0x80 >> (2*(x % 4));                             for (uint component = 0; component < dmi->bitPlaneCount; ++component) {       // Do each bitplane
         uint8_t *idx = (x / 4) + y * dmi->bytesPerLine + dmi->bitPlane[component];  // Work out byte.
-        
+
         if (rgb & (1u << component))                                                // Set or clear the bit in the plane.
           *idx = *idx | mask;
         else
@@ -60,7 +60,7 @@ void CONDrawPixel(int x, int y, int rgb) {
 
       for (uint component = 0; component < dmi->bitPlaneCount; ++component) {       // Do each bitplane
         uint8_t *idx = (x / 8) + y * dmi->bytesPerLine + dmi->bitPlane[component];  // Work out byte.
-        
+
         if (rgb & (1u << component))                                                // Set or clear the bit in the plane.
           *idx = *idx | mask;
         else
@@ -127,14 +127,14 @@ void CONWrite(int c) {
         case 12:                                                                    // Clear Screen.
             for (uint x = 0; x < dmi->width; ++x)
                 for (uint y = 0; y < dmi->height; ++y)
-                    CONDrawPixel(x, y, CON_COL_BLACK);          
+                    CONDrawPixel(x, y, CON_COL_BLACK);
             x0 = y0 = 0;                                                            // Home cursor
             break;
         case 10:
         case 13:                                                                    // New line
             x0 = 0;y0 = y0 + 8;
             if (y0 == dmi->height) {                                                // Scrolling.
-                y0 = y0 - 8;                                        
+                y0 = y0 - 8;
                 for (int i = 0;i < dmi->bitPlaneCount;i++) {
                     uint8_t *s = dmi->bitPlane[i];
                     memcpy(s,s+8*dmi->bytesPerLine,dmi->bytesPerLine*(dmi->height-8));
@@ -143,14 +143,14 @@ void CONWrite(int c) {
             }
             break;
 
-        default:            
+        default:
             bool isUDG = (c >= FONT_FIRST_UDG && c <= FONT_LAST_UDG);
             if ((c>=FONT_FIRST_ASCII && c<FONT_FIRST_ASCII+FONT_N_CHARS)||isUDG) {  // ASCII character set or UDGs
                 for (int y = y0; y < y0 + 8; ++y) {
                     uint8_t font_bits = isUDG ? CONGetUDGGraphicData(c)[y-y0] : font_8x8[(c - FONT_FIRST_ASCII) * FONT_CHAR_HEIGHT+y-y0];
                     for (int i = 0; i < 8; ++i) {
                         CONDrawPixel(x0 + i, y, font_bits & (0x80 >> i) ? fgcol : bgcol);
-                        }                       
+                        }
                     }
                 x0 = x0 + 8;
                 if (x0 == dmi->width) CONWrite(13);

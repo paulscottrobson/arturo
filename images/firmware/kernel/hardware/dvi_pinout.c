@@ -1,7 +1,7 @@
 /**
- * @file 
+ * @file   dvi_pinout.c
  *
- * @brief      
+ * @brief      DVI HDMI setup function.
  *
  * @author     Paul Robson
  *

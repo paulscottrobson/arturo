@@ -1,7 +1,7 @@
 /**
- * @file 
+ * @file miscellany.c
  *
- * @brief      
+ * @brief      Miscellaneous simulator routines
  *
  * @author     Paul Robson
  *
