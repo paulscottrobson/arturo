@@ -10,24 +10,17 @@
  */
 
 
-//
-//      Name :      snes_usb.c
-//      Authors :   Paul Robson (paul@robsons.org.uk), based on work by Sascha Schneider
-//      Date :      20th December 2024
-//      Reviewed :  No
-//      Purpose :   Driver for SNES type USB gamepads (like the Olimex standard one)
-//
-
-
-
 #include "common.h"
 
-
-//
-//                      SNES USB PC compatible Game Controller
-//
-
-
+/**
+ * @brief      Driver for a SNES compatible USB connected controller
+ *
+ * @param[in]  command  Command for driver
+ * @param      cs       Controller State
+ * @param      msg      Message pcket
+ *
+ * @return     -1 always
+ */
 int  CTLDriverSNESType(int command,CTLState *cs,struct _CTL_MessageData *msg) {
     int retVal = 0;
     switch(command) {

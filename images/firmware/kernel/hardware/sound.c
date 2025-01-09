@@ -9,30 +9,17 @@
  *
  */
 
-
-//
-//      Name :      sound.c
-//      Authors :   Paul Robson (paul@robsons.org.uk)
-//      Date :      18th August 2024
-//      Reviewed :  No
-//      Purpose :   PWM Audio support for Neo6502
-//
-
-
-
 #include "common.h"
 #include "dvi.h"
-
 
 static int sampleFrequency = -1;
 static bool combineSoundChannels = false;
 
-
-//
-//      Function that returns the sample rate in Hz of the implementeing hardware
-//
-
-
+/**
+ * @brief      Returns the sample rate of the underlying hardware
+ *
+ * @return     Frequency in Khz
+ */
 int SNDGetSampleFrequency(void) {
     if (sampleFrequency < 0) {                                                      // Only do this once.
         sampleFrequency = DVI_TIMING.bit_clk_khz * 1024 / SAMPLE_DIVIDER / 255;     // the 255 is the wrap interrupt count.
@@ -40,12 +27,9 @@ int SNDGetSampleFrequency(void) {
     return sampleFrequency;
 }
 
-
-//
-//                             Interrupt Handler : output sound
-//
-
-
+/**
+ * @brief      PWM Interrupt handler
+ */
 void pwm_interrupt_handler() {
     pwm_clear_irq(pwm_gpio_to_slice_num(AUDIO_PIN_L));                              // Acknowledge interrupt
     #if ARTURO_PROCESS_SOUND==1
@@ -69,12 +53,12 @@ void pwm_interrupt_handler() {
 }
 
 
-//
-//          Initialise a specific channel, only doing the interrupt for the first
-//                      (both driven off the same interrupt)
-//
-
-
+/**
+ * @brief      Initialise a Pico PWM channel
+ *
+ * @param[in]  pin              The pin to use
+ * @param[in]  enableInterrupt  Enable interrupts on this pin ?
+ */
 static void _SND_Initialise_Channel(int pin,bool enableInterrupt) {
     gpio_set_function(pin, GPIO_FUNC_PWM);
     int pin_slice = pwm_gpio_to_slice_num(pin);
@@ -95,12 +79,11 @@ static void _SND_Initialise_Channel(int pin,bool enableInterrupt) {
     pwm_set_gpio_level(pin, 0);
 }
 
-
-//
-//                                Initialise sound system
-//
-
-
+/**
+ * @brief      Initialise the whole sound system
+ *
+ * @param[in]  _combineChannels  Play 2 channels as one.
+ */
 void SNDInitialise(bool _combineChannels) {
     combineSoundChannels = _combineChannels;                                        // Record if we are supposed to add them.
     _SND_Initialise_Channel(AUDIO_PIN_L,true);                                      // Initialise 1 or 2 channels.

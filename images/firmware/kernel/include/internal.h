@@ -19,4 +19,5 @@
 #include "internal/miscellany.h"
 #include "internal/usb_interface.h"
 #include "internal/keyboard.h"
+#include "internal/tmds_encode_custom.h"
 

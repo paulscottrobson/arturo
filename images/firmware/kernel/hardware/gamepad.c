@@ -10,50 +10,43 @@
  */
 
 
-//
-//      Name :      gamepad.c
-//      Authors :   Paul Robson (paul@robsons.org.uk), based on work by Sascha Schneider
-//      Date :      20th December 2024
-//      Reviewed :  No
-//      Purpose :   Gamepad controller class
-//
-
-
-
 #include "common.h"
 
+//
+//      Controller state data
+//
 #define MAX_CONTROLLERS     (4)                                                     // In practice, only one can plug in !
 
 static int controllerCount;                                                         // Number of controllers
 static CTLState controllers[MAX_CONTROLLERS];                                       // Controller states.
 
 
-//
-//                              Initialise the controller system
-//
-
-
+/**
+ * @brief      Initialise the controller system
+ */
 void CTLInitialise(void) {
     controllerCount = 0;
 }
 
 
-//
-//                          Get the number of controllers plugged in.
-//
-
-
+/**
+ * @brief      Get the number of controllers
+ *
+ * @return     Number of controllers (does not include default keypad)
+ */
 int  CTLControllerCount(void) {
     return controllerCount;
 }
 
 
-//
-//      Read a specified controller, NULL if not found, -1 reads the first controller or
-//      emulated gamepad
-//
-
-
+/**
+ * @brief      Read a controller
+ *
+ * @param[in]  n     Controller ID. If -1 uses the first or keyboard if none
+ *                   plugged in.
+ *
+ * @return     The controller state
+ */
 CTLState *CTLReadController(int n) {
     if (n < 0) {                                                                    // Autoselect
         if (controllerCount > 0) return &controllers[0];                            // If there is a plugged in controller, use that.
@@ -67,11 +60,14 @@ CTLState *CTLReadController(int n) {
 }
 
 
-//
-//                  Add a specific controller device to the device lists
-//
-
-
+/**
+ * @brief      Add a specific controller device to the device lists
+ *
+ * @param[in]  dev_addr  The device address
+ * @param[in]  instance  The instance
+ * @param[in]  vid       The USB vid
+ * @param[in]  pid       The USB pid
+ */
 void CTLAddController(uint8_t dev_addr,uint8_t instance,uint16_t vid,uint16_t pid) {
     if (controllerCount < MAX_CONTROLLERS) {                                        // If not reached the end.
         //CONWriteString("%04x:%04x %02x %02x\r",vid,pid,dev_addr,instance);
@@ -86,11 +82,14 @@ void CTLAddController(uint8_t dev_addr,uint8_t instance,uint16_t vid,uint16_t pi
 }
 
 
-//
-//                  Update a controller, using the report and length.
-//
-
-
+/**
+ * @brief      { function_description }
+ *
+ * @param[in]  dev_addr  The device address
+ * @param[in]  instance  The instance
+ * @param      report    The USB report
+ * @param[in]  len       The length of the report
+ */
 void CTLUpdateController(uint8_t dev_addr,uint8_t instance,uint8_t const *report,uint8_t len) {
     if (false) {                                                                    // "true" here allows you to know exactly what data is being sent.
         CONWriteString("%d : ",len);
@@ -103,11 +102,15 @@ void CTLUpdateController(uint8_t dev_addr,uint8_t instance,uint8_t const *report
 }
 
 
-//
-//                                  Dispatch message
-//
-
-
+/**
+ * @brief      Dispatch message to drivers
+ *
+ * @param[in]  command  The command
+ * @param[in]  hwid     The hwid
+ * @param      msg      The message structure
+ *
+ * @return     { description_of_the_return_value }
+ */
 int CTLSendMessage(int command,uint16_t hwid,struct _CTL_MessageData *msg) {
     for (int i = 0;i < controllerCount;i++) {                                       // Identify which controller is in receipt of the message.
         if (controllers[i]._hardwareID == hwid) {

@@ -9,34 +9,20 @@
  *
  */
 
-
-//
-//      Name :      usbdriver.cpp
-//      Authors :   Tsvetan Usunov (Olimex)
-//                  Paul Robson (paul@robsons.org.uk)
-//                  Sascha Schneider
-//      Date :      18th December 2024
-//      Reviewed :  No
-//      Purpose :   USB interface and HID->Event mapper.
-//
-
-
-
 #include "common.h"
 #include "tusb.h"
 
 static void usbResetSystem(void);
 
-
-//
-//                          Process USB HID Keyboard Report
-//
-//                  This converts it to a series of up/down key events
-//
-
-
 static short lastReport[KBD_MAX_KEYCODE] = { 0 };                               // state at last HID report.
 
+/**
+ * @brief      Process USB HID Keyboard Report
+ *
+ *             This converts it to a series of up/down key events
+ *
+ * @param      report  The USB HID report
+ */
 static void usbProcessReport(uint8_t const *report) {
 
     for (int i = 0;i < KBD_MAX_KEYCODE;i++) lastReport[i] = -lastReport[i];     // So if -ve was present last time.
@@ -66,11 +52,12 @@ static void usbProcessReport(uint8_t const *report) {
 }
 
 
-//
-//                          Process USB HID Mouse Report
-//
-
-
+/**
+ * @brief      Process USB HID Mouse Report
+ *
+ * @param      report  The USB report
+ * @param[in]  len     The Report length
+ */
 static void usbProcessMouseReport(uint8_t const *report, uint16_t len) {
     if(len < 3) return;                                                         // Some mice return three things, some four.
     MSEOffsetPosition(report[1], report[2]);
@@ -81,11 +68,14 @@ static void usbProcessMouseReport(uint8_t const *report, uint16_t len) {
 }
 
 
-//
-//                              USB Callback functions
-//
-
-
+/**
+ * @brief      USB mount callback
+ *
+ * @param[in]  dev_addr     The dev address
+ * @param[in]  instance     The instance
+ * @param      desc_report  The description report
+ * @param[in]  desc_len     The description length
+ */
 void tuh_hid_mount_cb(uint8_t dev_addr, uint8_t instance, uint8_t const* desc_report, uint16_t desc_len) {
     uint16_t vid, pid;
     tuh_vid_pid_get(dev_addr, &vid, &pid);
@@ -107,9 +97,23 @@ void tuh_hid_mount_cb(uint8_t dev_addr, uint8_t instance, uint8_t const* desc_re
     tuh_hid_receive_report(dev_addr, instance);
 }
 
+/**
+ * @brief      USB unmount call back
+ *
+ * @param[in]  dev_addr  The dev address
+ * @param[in]  instance  The instance
+ */
 void tuh_hid_umount_cb(uint8_t dev_addr, uint8_t instance) {
 }
 
+/**
+ * @brief      HID Report received
+ *
+ * @param[in]  dev_addr  The dev address
+ * @param[in]  instance  The instance
+ * @param      report    The report
+ * @param[in]  len       The length
+ */
 void tuh_hid_report_received_cb(uint8_t dev_addr, uint8_t instance, uint8_t const* report, uint16_t len) {
 
     switch(tuh_hid_interface_protocol(dev_addr, instance)) {
@@ -128,34 +132,29 @@ void tuh_hid_report_received_cb(uint8_t dev_addr, uint8_t instance, uint8_t cons
     tuh_hid_receive_report(dev_addr, instance);
 }
 
-
-//
-//                               USB initialisation
-//
-
-
+/**
+ * @brief      Any initialisation not done by tinyUSB
+ */
 void USBInitialise(void) {
     for (int i = 0;i < KBD_MAX_KEYCODE;i++) lastReport[i] = 0;                  // No keys currently known
     tusb_init();                                                                // Set up tinyUSB
 }
 
 
-//
-//                 Update the USB system (returns 0 to exit, which doesn't happen)
-//
-
-
+/**
+ * @brief      Update the USB system
+ *
+ * @return     -1
+ */
 int USBUpdate(void) {
     tuh_task();
     return -1;
 }
 
 
-//
-//                                  Reset the RP2040
-//
-
-
+/**
+ * @brief      Reset the Pico by crashing the WDT.
+ */
 static void usbResetSystem(void) {
     CONWriteString("Resetting.\n");
     watchdog_enable(1,1);                                                       // Enable the watchdog timer

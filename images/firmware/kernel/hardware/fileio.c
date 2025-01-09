@@ -9,19 +9,6 @@
  *
  */
 
-
-//
-//      Name :      fileio.c
-//      Author :    Paul Robson (paul@robsons.org.uk)
-//      Date :      21st December 2024
-//      Reviewed :  No
-//      Purpose :   File I/O (FSYS Level interface)
-//                  This level does not check things like valid handles. It's purpose
-//                  is to precisely perform the required task.
-//
-
-
-
 #include "common.h"
 #include "ff.h"
 
@@ -29,16 +16,15 @@
 //
 //                              Current open files.
 //
-
-
 static FIL files[FIO_MAX_HANDLES];
 
-
-//
-//                          Map FATFS error onto FIO error
-//
-
-
+/**
+ * @brief      Map FatFS errors onto our FSYS Error types
+ *
+ * @param[in]  r     FatFS error
+ *
+ * @return     FIO Error Code
+ */
 static int _FSYSMapError(FRESULT r) {
     int err;
 
@@ -60,20 +46,21 @@ static int _FSYSMapError(FRESULT r) {
 }
 
 
-//
-//                          Reset all file objects etc.
-//
-
-
+/**
+ * @brief      Reset all file objects etc.
+ */
 void FSYSInitialise(void) {
 }
 
 
-//
-//              Get file information. Fills structure if provided and no error.
-//
-
-
+/**
+ * @brief      Get file information. Fills structure if provided
+ *
+ * @param      name  The name of the file
+ * @param      info  The structure containing the information
+ *
+ * @return     Error code if non zero
+ */
 int FSYSFileInformation(char *name,FIOInfo *info) {
     FILINFO ffi;
     FRESULT r = f_stat(name,&ffi);                                                  // Read the information
@@ -84,12 +71,13 @@ int FSYSFileInformation(char *name,FIOInfo *info) {
     return _FSYSMapError(r);
 }
 
-
-//
-//                  Create a new file, deleting any currently existing file
-//
-
-
+/**
+ * @brief      Create a new file, deleting any currently existing file
+ *
+ * @param      name  The name of the file
+ *
+ * @return     Error code if nonzero
+ */
 int FSYSCreateFile(char *name) {
     FIL fRec;
     FRESULT fr = f_open(&fRec,name,FA_CREATE_ALWAYS|FA_WRITE);                  // Try to create a file
@@ -99,11 +87,13 @@ int FSYSCreateFile(char *name) {
 }
 
 
-//
-//                      Delete file, ignoring if it does not exist
-//
-
-
+/**
+ * @brief      Delete a file
+ *
+ * @param      name  The name of the file
+ *
+ * @return     Error code if non zero
+ */
 int FSYSDeleteFile(char *name) {
     FRESULT fr = f_unlink(name);
     if (fr == FR_OK) return FIO_OK;                                             // Delete worked okay.
@@ -112,11 +102,13 @@ int FSYSDeleteFile(char *name) {
 }
 
 
-//
-//                  Create a new directory if it does not already exist
-//
-
-
+/**
+ * @brief      Create a new directory if it does not already exist
+ *
+ * @param      name  The name of the directory
+ *
+ * @return     Error code if nonzero
+ */
 int FSYSCreateDirectory(char *name) {
     FRESULT fr = f_mkdir(name);
     if (fr == FR_OK) return FIO_OK;                                             // Create worked okay.
@@ -125,33 +117,38 @@ int FSYSCreateDirectory(char *name) {
 }
 
 
-//
-//                              Change to a new directory
-//
-
-
+/**
+ * @brief      Change to a new directory
+ *
+ * @param      directory  The directory to change to
+ *
+ * @return     Error code if non-zero
+ */
 int FSYSChangeDirectory(char *directory) {
     FRESULT fr = f_chdir(directory);
     return _FSYSMapError(fr);
 }
 
-
-
-//
-//              Delete directory, ignoring if it does not exist/not empty
-//
-
-
+/**
+ * @brief      Delete directory, ignoring if it does not exist/not empty
+ *
+ * @param      name  The name of the directory
+ *
+ * @return     Error code if non-zero
+ */
 int FSYSDeleteDirectory(char *name) {
     return FSYSDeleteFile(name);                                                // Same as delete file :)
 }
 
 
-//
-//                          Open File in R/W mode, rewind to start
-//
-
-
+/**
+ * @brief      Open File in R/W mode, rewind to start
+ *
+ * @param[in]  handle  The handle to use
+ * @param      name    The name of the file.
+ *
+ * @return     Error code if non-zero
+ */
 int FSYSOpen(int handle,char *name) {
     FRESULT fr = f_open(&files[handle],name,FA_READ|FA_WRITE|FA_OPEN_EXISTING);     // Open read/write
     if (fr != FR_OK) return _FSYSMapError(fr);                                      // Error occurred of some sort.
@@ -160,21 +157,27 @@ int FSYSOpen(int handle,char *name) {
 };
 
 
-//
-//                                      Close the file
-//
-
-
+/**
+ * @brief      Close the file
+ *
+ * @param[in]  handle  The handle of the file
+ *
+ * @return     Error code if non-zero
+ */
 int FSYSClose(int handle) {
     return _FSYSMapError(f_close(&files[handle]));                                  // Close file.
 }
 
 
-//
-//              Read data from the file. Returns error or # of bytes read.
-//
-
-
+/**
+ * @brief      Read data from the file. Returns error or # of bytes read.
+ *
+ * @param[in]  handle  The handle of the file
+ * @param      data    The location of the data to be read to
+ * @param[in]  size    The size in bytes
+ *
+ * @return     +ve bytes read, or Error code if non-zero
+ */
 int FSYSRead(int handle,void *data,int size) {
     UINT count;
     FRESULT fr = f_read(&files[handle],data,size,&count);                           // Attempt to read data from file.
@@ -183,11 +186,15 @@ int FSYSRead(int handle,void *data,int size) {
 }
 
 
-//
-//                              Write data to the file.
-//
-
-
+/**
+ * @brief      Write data to the file.
+ *
+ * @param[in]  handle  The handle of the file
+ * @param      data    The data to write
+ * @param[in]  size    The size in bytes
+ *
+ * @return     Error code if non-zero
+ */
 int FSYSWrite(int handle,void *data,int size) {
     UINT count;
     FRESULT fr = f_write(&files[handle],data,size,&count);                          // Attempt to write data to file.
@@ -197,21 +204,26 @@ int FSYSWrite(int handle,void *data,int size) {
 }
 
 
-//
-//      Check end of file. Return -ve on error, 0 if more data, +ve if eof
-//
-
-
+/**
+ * @brief      Check end of file
+ *
+ * @param[in]  handle  The handle to check
+ *
+ * @return     0 if more data, +ve if EOF or Error code if non-zero
+ */
 int FSYSEndOfFile(int handle) {
     return f_eof(&files[handle]) ? FIO_EOF : FIO_OK;                                // Seems not to be able to error :)
 }
 
 
-//
-//              Returns current position, and sets new position if >= 0
-//
-
-
+/**
+ * @brief      Gets and/or sets position in file.
+ *
+ * @param[in]  handle       The handle
+ * @param[in]  newPosition  The new position in the file if >= 0
+ *
+ * @return     the position in the file at the start.
+ */
 int FSYSGetSetPosition(int handle,int newPosition) {
     int current = f_tell(&files[handle]);                                           // Where are we now (cannot error in fatfs)
     if (newPosition >= 0) {                                                         // Moving ?
@@ -222,13 +234,17 @@ int FSYSGetSetPosition(int handle,int newPosition) {
 }
 
 
-//
-//                              Open Directory for reading
-//
 
 
 static DIR currentDirectory;
 
+/**
+ * @brief      Opens directory to be read
+ *
+ * @param      directory  The directory to be read
+ *
+ * @return     Error code if non-zero
+ */
 int FSYSOpenDirectory(char *directory) {
     return _FSYSMapError(f_opendir(&currentDirectory,directory));                   // Open directory
 }
@@ -240,6 +256,13 @@ int FSYSOpenDirectory(char *directory) {
 //
 
 
+/**
+ * @brief      Read next directory entry
+ *
+ * @param      fileName  The file name read from the directory
+ *
+ * @return     Error code if non-zero
+ */
 int FSYSReadDirectory(char *fileName) {
     FILINFO fi;
     FRESULT fr = f_readdir(&currentDirectory,&fi);                                  // Read next
@@ -251,11 +274,11 @@ int FSYSReadDirectory(char *fileName) {
 }
 
 
-//
-//                              Close directory being read
-//
-
-
+/**
+ * @brief      Close directory being read
+ *
+ * @return     Error code if non-zero
+ */
 int FSYSCloseDirectory(void) {
     return _FSYSMapError(f_closedir(&currentDirectory));
 }

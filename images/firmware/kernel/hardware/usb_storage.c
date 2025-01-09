@@ -3,23 +3,11 @@
  *
  * @brief      USB MSC Storage / FATFS link from Apple/Oric emulators.
  *
- * @author     Paul Robson
+ * @author     Veselin Sladkov & Paul Robson
  *
  * @date       07/01/2025
  *
  */
-
-
-//
-//      Name :      usb_storage.c
-//      Author :    Veselin Sladkov
-//                  Paul Robson (paul@robsons.org.uk)
-//      Date :      18th December 2024
-//      Reviewed :  No
-//      Purpose :   USB MSC Storage / FATFS link from Apple/Oric emulators.
-//
-
-
 
 #include "common.h"
 #include "tusb.h"
@@ -31,12 +19,10 @@ static scsi_inquiry_resp_t msc_inquiry_resp;
 bool msc_inquiry_complete = false;
 
 
-//
-//    Wait for USB to 'settle' ; not quite sure why this is required, time to process
-//    USB Messages ?
-//
 
-
+/**
+ * @brief      Waits for USB to settle the filesystem.
+ */
 void USBSynchronise(void) {
     CONWriteString("Waiting for USB to stabilise..\r");
     uint16_t timeOut = 100;                                                         // 10 seconds waiting for timeout.
@@ -47,12 +33,14 @@ void USBSynchronise(void) {
     }
 }
 
-
-//
-//                              USB Key found, initialised.
-//
-
-
+/**
+ * @brief      Handle a new USB key device
+ *
+ * @param[in]  dev_addr  The dev address
+ * @param      cb_data   The cb data
+ *
+ * @return     { description_of_the_return_value }
+ */
 bool inquiry_complete_cb(uint8_t dev_addr, tuh_msc_complete_data_t const *cb_data) {
     if (cb_data->csw->status != 0) {
         //CONWriteString("MSC SCSI inquiry failed\r\n");
@@ -83,17 +71,22 @@ bool inquiry_complete_cb(uint8_t dev_addr, tuh_msc_complete_data_t const *cb_dat
 }
 
 
-//
-//                              Mount and unmount devices
-//
-
-
+/**
+ * @brief      Mount device
+ *
+ * @param[in]  dev_addr  The dev address
+ */
 void tuh_msc_mount_cb(uint8_t dev_addr) {
     uint8_t const lun = 0;
     //CONWriteString("MSC mounted, inquiring\r\n");
     tuh_msc_inquiry(dev_addr, lun, &msc_inquiry_resp, inquiry_complete_cb, 0);
 }
 
+/**
+ * @brief      Unmount device
+ *
+ * @param[in]  dev_addr  The dev address
+ */
 void tuh_msc_umount_cb(uint8_t dev_addr) {
     char drive_path[3] = "0:";
     drive_path[0] += dev_addr;
@@ -101,33 +94,65 @@ void tuh_msc_umount_cb(uint8_t dev_addr) {
 }
 
 
-//
-//                                  sInterface to FATFS
-//
-
-
+/**
+ * @brief      Fatfs interface , wait for disk IO
+ *
+ * @param[in]  pdrv  The pdrv
+ */
 static void wait_for_disk_io(BYTE pdrv) {
     while (msc_volume_busy[pdrv]) {
         tuh_task();
     }
 }
 
+/**
+ * @brief      Check if disk finished
+ *
+ * @param[in]  dev_addr  The dev address
+ * @param      cb_data   The cb data
+ *
+ * @return     True if finished
+ */
 static bool disk_io_complete(uint8_t dev_addr, tuh_msc_complete_data_t const *cb_data) {
     (void)cb_data;
     msc_volume_busy[dev_addr] = false;
     return true;
 }
 
+/**
+ * @brief      Get Disk status
+ *
+ * @param[in]  pdrv  The pdrv
+ *
+ * @return     DSTATUS object
+ */
 DSTATUS disk_status(BYTE pdrv) {
     uint8_t dev_addr = pdrv;
     return tuh_msc_mounted(dev_addr) ? 0 : STA_NODISK;
 }
 
+/**
+ * @brief      Initialise a drive
+ *
+ * @param[in]  pdrv  The pdrv
+ *
+ * @return     DSTATUS object
+ */
 DSTATUS disk_initialize(BYTE pdrv) {
     (void)(pdrv);
     return 0;
 }
 
+/**
+ * @brief      Read disk
+ *
+ * @param[in]  pdrv    The pdrv
+ * @param      buff    The buffer
+ * @param[in]  sector  The sector
+ * @param[in]  count   The count
+ *
+ * @return     DRESULT object
+ */
 DRESULT disk_read(BYTE pdrv, BYTE *buff, LBA_t sector, UINT count) {
     uint8_t const dev_addr = pdrv;
     uint8_t const lun = 0;
@@ -137,6 +162,16 @@ DRESULT disk_read(BYTE pdrv, BYTE *buff, LBA_t sector, UINT count) {
     return RES_OK;
 }
 
+/**
+ * @brief      Write to disk
+ *
+ * @param[in]  pdrv    The pdrv
+ * @param[in]  buff    The buffer
+ * @param[in]  sector  The sector
+ * @param[in]  count   The count
+ *
+ * @return     DRESULT object
+ */
 DRESULT disk_write(BYTE pdrv, const BYTE *buff, LBA_t sector, UINT count) {
     uint8_t const dev_addr = pdrv;
     uint8_t const lun = 0;
@@ -146,6 +181,15 @@ DRESULT disk_write(BYTE pdrv, const BYTE *buff, LBA_t sector, UINT count) {
     return RES_OK;
 }
 
+/**
+ * @brief      Handle IODRV commands
+ *
+ * @param[in]  pdrv  The pdrv
+ * @param[in]  cmd   The command
+ * @param      buff  The buffer
+ *
+ * @return     The value requested.
+ */
 DRESULT disk_ioctl(BYTE pdrv, BYTE cmd, void *buff) {
     uint8_t const dev_addr = pdrv;
     uint8_t const lun = 0;

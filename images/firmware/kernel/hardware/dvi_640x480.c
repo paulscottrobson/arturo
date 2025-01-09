@@ -9,24 +9,11 @@
  *
  */
 
-
-//
-//    Name :      dvi_640x480.c
-//    Author :    Paul Robson (paul@robsons.org.uk)
-//              Lennart Benschop
-//    Date :      18th December 2024
-//    Reviewed :  No
-//    Purpose :   DVI Driver 640x480 frame size.
-//
-
-
-
 #include "common.h"
 
 #include "dvi.h"
 #include "dvi_serialiser.h"
 #include "common_dvi_pin_configs.h"
-#include "tmds_encode_custom.h"
 
 struct dvi_serialiser_cfg *DVIGetHDMIConfig(void);
 
@@ -35,11 +22,10 @@ struct dvi_serialiser_cfg *DVIGetHDMIConfig(void);
 //        Frame buffer, these are 3 planar bitmaps for 640x480
 //
 
-
-#define FRAME_WIDTH 640                                               // Not the *pixels*, it's the display setting.
+#define FRAME_WIDTH 640                                                             // Not the *pixels*, it's the display setting.
 #define FRAME_HEIGHT 480
 
-#define PLANE_SIZE(x,y) ((x) * (y) / 8)                       // Memory usage one bitplane x by y
+#define PLANE_SIZE(x,y) ((x) * (y) / 8)                                             // Memory usage one bitplane x by y
 
 //
 //    Memory requirements for video RAM. Normally the max is 640x240x8 colours, but we do allow 640x480x8 colours
@@ -51,21 +37,28 @@ struct dvi_serialiser_cfg *DVIGetHDMIConfig(void);
 #define VIDEO_BYTES (PLANE_SIZE(640,240) * 3)
 #endif
 
-static uint8_t framebuf[VIDEO_BYTES];                                 // Bitplane memory
+static uint8_t framebuf[VIDEO_BYTES];                                               // Bitplane memory
 
-struct dvi_inst dvi0;                                               // PicoDVI structure
-struct DVIModeInformation dvi_modeInfo;                                   // Mode information structure.
+struct dvi_inst dvi0;                                                               // PicoDVI structure
+struct DVIModeInformation dvi_modeInfo;                                             // Mode information structure.
 
-
-//
-//                          Get mode information
-//
-
-
+/**
+ * @brief      Get mode information
+ *
+ * @return     Pointer to a mode information structure
+ */
 struct DVIModeInformation *DVIGetModeInformation(void) {
   return &dvi_modeInfo;
 }
 
+/**
+ * @brief      Gets the screen size and mode
+ *
+ * @param      pWidth   if not NULL, store width in int here
+ * @param      pHeight  if not NULL, store height in int here
+ *
+ * @return     current mode
+ */
 int  DVIGetScreenExtent(int *pWidth,int *pHeight) {
   if (pWidth != NULL) *pWidth = dvi_modeInfo.width;
   if (pHeight != NULL) *pHeight = dvi_modeInfo.height;
@@ -78,15 +71,22 @@ int  DVIGetScreenExtent(int *pWidth,int *pHeight) {
 //
 
 
+/**
+ * @brief      Set current mode
+ *
+ * @param[in]  mode  The mode to set.
+ *
+ * @return     0 if switched ok.
+ */
 bool DVISetMode(int mode) {
   bool supported = true;
 
-  dvi_modeInfo.mode = mode;                             // Record mode
+  dvi_modeInfo.mode = mode;                                                         // Record mode
 
   switch(mode) {
 
     #if DVI_SUPPORT_640_480_8==1
-    case DVI_MODE_640_480_8:                          // 640x480x8 information if enabled.
+    case DVI_MODE_640_480_8:                                                        // 640x480x8 information if enabled.
       dvi_modeInfo.width = 640;dvi_modeInfo.height = 480;
       dvi_modeInfo.bitPlaneCount = 3;
       dvi_modeInfo.bitPlaneSize = PLANE_SIZE(640,480);
@@ -97,7 +97,7 @@ bool DVISetMode(int mode) {
     break;
     #endif
 
-    case DVI_MODE_640_240_8:                          // 640x240x8 information.
+    case DVI_MODE_640_240_8:                                                        // 640x240x8 information.
       dvi_modeInfo.width = 640;dvi_modeInfo.height = 240;
       dvi_modeInfo.bitPlaneCount = 3;
       dvi_modeInfo.bitPlaneSize = PLANE_SIZE(640,240);
@@ -107,7 +107,7 @@ bool DVISetMode(int mode) {
       dvi_modeInfo.bytesPerLine = dvi_modeInfo.width / 8;
     break;
 
-    case DVI_MODE_640_480_2:                          // 640x480x2 information.
+    case DVI_MODE_640_480_2:                                                        // 640x480x2 information.
       dvi_modeInfo.width = 640;dvi_modeInfo.height = 480;
       dvi_modeInfo.bitPlaneCount = 1;
       dvi_modeInfo.bitPlaneSize = PLANE_SIZE(640,480);
@@ -116,7 +116,7 @@ bool DVISetMode(int mode) {
       dvi_modeInfo.bytesPerLine = dvi_modeInfo.width / 8;
     break;
 
-    case DVI_MODE_320_240_8:                            // 320x240x8 information.
+    case DVI_MODE_320_240_8:                                                        // 320x240x8 information.
       dvi_modeInfo.width = 320;dvi_modeInfo.height = 240;
       dvi_modeInfo.bitPlaneCount = 3;
       dvi_modeInfo.bitPlaneSize = PLANE_SIZE(320,240);
@@ -126,7 +126,7 @@ bool DVISetMode(int mode) {
       dvi_modeInfo.bytesPerLine = dvi_modeInfo.width / 8;
     break;
 
-    case DVI_MODE_320_256_8:                            // 320x240x8 information.
+    case DVI_MODE_320_256_8:                                                        // 320x240x8 information.
       dvi_modeInfo.width = 320;dvi_modeInfo.height = 256;
       dvi_modeInfo.bitPlaneCount = 3;
       dvi_modeInfo.bitPlaneSize = PLANE_SIZE(320,256);
@@ -136,39 +136,41 @@ bool DVISetMode(int mode) {
       dvi_modeInfo.bytesPerLine = dvi_modeInfo.width / 8;
     break;
 
-    case DVI_MODE_320_240_64:                           // 320x240x6 information.
+    case DVI_MODE_320_240_64:                                                       // 320x240x6 information.
       dvi_modeInfo.width = 320;dvi_modeInfo.height = 240;
       dvi_modeInfo.bitPlaneCount = 3;
       dvi_modeInfo.bitPlaneSize = PLANE_SIZE(320,240)*2;
       dvi_modeInfo.bitPlaneDepth = 2;
       for (int i = 0;i <dvi_modeInfo.bitPlaneCount;i++)
       dvi_modeInfo.bitPlane[i] = framebuf + dvi_modeInfo.bitPlaneSize * i;
-      dvi_modeInfo.bytesPerLine = dvi_modeInfo.width / 4;           // Calculate bytes per line.
+      dvi_modeInfo.bytesPerLine = dvi_modeInfo.width / 4;        
       break;
     default:
       supported = false;
-      dvi_modeInfo.mode = -1;                         // Failed.
+      dvi_modeInfo.mode = -1;                                                       // Failed.
+      break;
     }
   return supported;
 }
 
 
-//
-//            Set the current colours, monochrome mode
-//
-
-
+/**
+ * @brief      Set monochrome mode fgr and bgr
+ *
+ * @param[in]  fg    The foreground
+ * @param[in]  bg    The background
+ */
 static uint8_t mono_fg_bg = 0x43;                           // Current colours for 640x480x2 colour
-
 void DVISetMonoColour(int fg, int bg) {
   mono_fg_bg = fg | (bg << 3);
 }
 
 
 //
+//
 //                  The main line renderer
 //
-
+//
 
 static uint8_t _buffer[80];                               // Buffer for line
 static uint16_t _mapping[256];                            // Table mapping 320 bits to 640 bits
@@ -309,11 +311,9 @@ void __not_in_flash("main") dvi_core1_main() {
 }
 
 
-//
-//                            Start the DVI driver
-//
-
-
+/**
+ * @brief      Start the DVI driver on Core1.
+ */
 void DVIStart(void) {
   DVISetMode(DVI_MODE_640_240_8);
   //DVISetMode(DVI_MODE_320_240_8);
