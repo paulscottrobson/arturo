@@ -9,25 +9,13 @@
  *
  */
 
-
-//
-//		Name : 		main.c
-//		Author :	Paul Robson (paul@robsons.org.uk)
-//		Date : 		18th December 2024
-//		Reviewed :	No
-//		Purpose :	Main Program.
-//
-
-
-
 #include "common.h"
 
-
-//
-//                        Display unused RAM memory. This may be RP2040 only.
-//
-
-
+/**
+ * @brief      Shows the ram available.
+ * 
+ * May only work on RP2040
+ */
 static void _showRAMAvailable(void) {
     extern char __StackLimit, __bss_end__;
     int ramLeft =  &__StackLimit  - &__bss_end__;
@@ -35,11 +23,11 @@ static void _showRAMAvailable(void) {
 }
 
 
-//
-//										Start the kernel
-//
-
-
+/**
+ * @brief      Start the main Kernel
+ *
+ * @return     Doesn't !
+ */
 int main() {
 	DVIStart();																	// Start DVI running.
 	CONInitialise();  															// Initialise the console.

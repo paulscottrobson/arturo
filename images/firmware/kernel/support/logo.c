@@ -9,37 +9,30 @@
  *
  */
 
-
-//
-//      Name :      logo.c
-//      Authors :   Paul Robson (paul@robsons.org.uk)
-//      Date :      26th December 2024
-//      Reviewed :  No
-//      Purpose :   Draw Logo
-//
-
-
-
 #include "common.h"
 #include "support/__logo_data.h"
 #include "support/__config.h"
 
 
-//
-//                              Draw logos on boot screen
-//
-
-
+/**
+ * @brief       Draw logos on boot screen
+ */
 void LOGODrawTitle(void) {
     LOGODraw(DVIGetModeInformation()->width-LOGO_WIDTH_BYTES*8-4,4,LOGO_WIDTH_BYTES,LOGO_HEIGHT,logoData,1,0);
 }
 
 
-//
-//                                  Draw a specific logo
-//
-
-
+/**
+ * @brief      Draw a specific logo
+ *
+ * @param[in]  x          x pos
+ * @param[in]  y          y pos
+ * @param[in]  w          width
+ * @param[in]  h          height
+ * @param[in]  pixelData  The pixel data
+ * @param[in]  fgr        foreground col
+ * @param[in]  bgr        background col
+ */
 void LOGODraw(int x,int y,int w,int h,const uint8_t *pixelData,int fgr,int bgr) {
     for (int yc = 0;yc < h;yc++) {
         for (int xb = 0;xb < w;xb++) {
@@ -52,11 +45,9 @@ void LOGODraw(int x,int y,int w,int h,const uint8_t *pixelData,int fgr,int bgr) 
 }
 
 
-//
-//                                  Display text header
-//
-
-
+/**
+ * @brief      Display text header
+ */
 void LOGOTextHeader(void) {
     CONSetColour(CON_COL_CYAN,CON_COL_BLACK);
     CONWriteString("*** Arturo Kernel ***\r\r");

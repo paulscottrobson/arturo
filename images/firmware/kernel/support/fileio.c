@@ -1,22 +1,13 @@
 /**
  * @file   fileio.c
  *
- * @brief      File I/O mapping.
+ * @brief      File I/O wrapper for the FSYS interface
  *
  * @author     Paul Robson
  *
  * @date       07/01/2025
  *
  */
-
-
-//
-//      Name :      fileio.c
-//      Author :    Paul Robson (paul@robsons.org.uk)
-//      Date :      21st December 2024
-//      Reviewed :  No
-//      Purpose :   File I/O mapping.
-//
 
 
 
@@ -30,22 +21,24 @@ static struct _FileInfo {
 #define VALID_AND_OPEN(n) ((n) >= 0 && (n) < FIO_MAX_HANDLES && files[n].isInUse)
 
 
-//
-//                                  Initialise support I/O
-//
 
-
+/**
+ * @brief      Initialise support I/O
+ */
 void FIOInitialise(void) {
     FSYSInitialise();
     for (int i = 0;i < FIO_MAX_HANDLES;i++) files[i].isInUse = false;
 }
 
 
-//
-//                                  Open file read/write
-//
 
-
+/**
+ * @brief      Open file read/write
+ *
+ * @param      fileName  The file name
+ *
+ * @return     ECINZ
+ */
 int FIOOpen(char *fileName) {
     int i = 0;
     while (i < FIO_MAX_HANDLES && files[i].isInUse) i++;                            // Find an unused handle.
@@ -56,34 +49,43 @@ int FIOOpen(char *fileName) {
 }
 
 
-//
-//                                      Close file
-//
-
-
+/**
+ * @brief      Close file
+ *
+ * @param[in]  handle  The handle
+ *
+ * @return     ECINZ
+ */
 int FIOClose(int handle) {
     if (!VALID_AND_OPEN(handle)) return FIO_ERR_HANDLE;                             // Bad handle
     files[handle].isInUse = false;                                                  // About to close it.
     return FSYSClose(handle);
 }
 
-
-//
-//                                      Read Data
-//
-
-
+/**
+ * @brief      Read data from open file
+ *
+ * @param[in]  handle  Handle on which to place.
+ * @param      data    The data
+ * @param[in]  size    The size
+ *
+ * @return     ECINZ 
+ */
 int FIORead(int handle,void *data,int size) {
     if (!VALID_AND_OPEN(handle)) return FIO_ERR_HANDLE;                             // Bad handle
     return FSYSRead(handle,data,size);
 }
 
 
-//
-//                                      Write data
-//
-
-
+/**
+ * @brief      Write data tp am p[emo;e/]
+ *
+ * @param[in]  handle  The handle
+ * @param      data    The data
+ * @param[in]  size    The size
+ *
+ * @return     { description_of_the_return_value }
+ */
 int FIOWrite(int handle,void *data,int size) {
     if (!VALID_AND_OPEN(handle)) return FIO_ERR_HANDLE;                             // Bad handle
     if (files[handle].isReadOnly) return FIO_ERR_READONLY;                          // Read only (not actually implemented)
@@ -91,26 +93,38 @@ int FIOWrite(int handle,void *data,int size) {
 }
 
 
-//
-//                           Get and optionally set position
-//
-
-
+/**
+ * @brief      Get and enhances anyway
+ *
+ * @param[in]  handle       Handle
+ * @param[in]  newPosition  The new position or -1 to leave
+ *
+ * @return     Position from the start or EVIN
+ */
 int FIOGetSetPosition(int handle,int newPosition) {
     if (!VALID_AND_OPEN(handle)) return FIO_ERR_HANDLE;                             // Bad handle
     return FSYSGetSetPosition(handle,newPosition);
 }
 
 
-//
-//                                  These are direct wrappers
-//
-
-
+/**
+ * @brief      FIOCre
+ *  *
+ * @param      fileName  The file name
+ *
+ * @return     { description_of_the_return_value }
+ */
 int FIOCreateFile(char *fileName) {
     return FSYSCreateFile(fileName);
 }
 
+/**
+ * @brief      { function_description }
+ *
+ * @param      fileName  The file name
+ *
+ * @return     { description_of_the_return_value }
+ */
 int FIOCreateDirectory(char *fileName) {
     return FSYSCreateDirectory(fileName);
 }

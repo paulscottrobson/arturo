@@ -9,17 +9,6 @@
  *
  */
 
-
-//
-//      Name :      soundsystem.c
-//      Authors :   Paul Robson (paul@robsons.org.uk)
-//      Date :      3rd January 2025
-//      Reviewed :  No
-//      Purpose :   Waveform generator, default sound system.
-//
-
-
-
 #include "common.h"
 
 #define CHANNEL_COUNT   (4)
@@ -35,21 +24,24 @@ struct _ChannelStatus {
 
 
 
-//
-//            Return number of channels supported by this implementation
-//
-
-
+/**
+ * @brief      Return number of supported Channels
+ *
+ * @return     Channels availbale
+ */
 int SNDGetChannelCount(void) {
     return CHANNEL_COUNT;
 }
 
 
 //
-//                                  Mute all channels
+//                               
 //
 
 
+/**
+ * @brief      Mute all channels
+ */
 void SNDMuteAllChannels(void) {
     for (int i = 0;i < CHANNEL_COUNT;i++) {
         struct _ChannelStatus *cs = &audio[i];
@@ -63,6 +55,13 @@ void SNDMuteAllChannels(void) {
 //
 
 
+/**
+ * @brief      Get the next sound sample
+ *
+ * @param[in]  channel  dummy ?.
+ *
+ * @return     Sound level -128 .. 127
+ */
 int8_t SNDGetChannelSample(int channel) {
 
     static int activeCount = 0;
@@ -102,6 +101,12 @@ int8_t SNDGetChannelSample(int channel) {
 //
 
 
+/**
+ * @brief      Play a square wave on the channe l ?
+ *
+ * @param[in]  channel  The channel to change the note.
+ * @param      c        Channel to update.
+ */
 void SNDUpdate(int channel,SNDCHANNEL *c) {
     if (channel >= CHANNEL_COUNT) return;
     if (c->frequency != 0) {

@@ -9,17 +9,6 @@
  *
  */
 
-
-//
-//      Name :      console.c
-//      Author :    Paul Robson (paul@robsons.org.uk)
-//      Date :      18th December 2024
-//      Reviewed :  No
-//      Purpose :   Console output code, for debugging primarily.
-//
-
-
-
 #include "common.h"
 
 #include "support/font_8x8.h"
@@ -32,11 +21,13 @@
 static uint8_t udgData[(FONT_LAST_UDG-FONT_FIRST_UDG+1) * 8];                       // the data for the 32 (currently) 8x8 UDGs
 
 
-//
-//                      Set one pixel at x,y in the given colour.
-//
-
-
+/**
+ * @brief      Set one pixel on
+ *
+ * @param[in]  x     x position
+ * @param[in]  y     y position
+ * @param[in]  rgb   RGB 3 bit colour
+ */
 void CONDrawPixel(int x, int y, int rgb) {
     struct DVIModeInformation *dmi = DVIGetModeInformation();                       // Identify mode data.
     if (dmi == NULL) return;
@@ -74,19 +65,15 @@ void CONDrawPixel(int x, int y, int rgb) {
 //                              Console setup - very simple here.
 //
 
-
 static uint x0 = 0;                                                                 // Posiiton in pixels
 static uint y0 = 0;
 static uint fgcol = CON_COL_WHITE;                                                  // Text colour
 static uint bgcol = CON_COL_BLACK;
 static bool conIsEnabled = true;                                                    // Console is enabled
 
-
-//
-//                                  Console Initialise
-//
-
-
+/**
+ * @brief      Console system initialise
+ */
 void CONInitialise(void) {
     CONEnableConsole(true);
     CONWrite(12);                                                                   // CHR(12) is clear screen.
@@ -94,31 +81,31 @@ void CONInitialise(void) {
 }
 
 
-//
-//                                  Enable/Disable console
-//
-
-
+/**
+ * @brief      Enable / Disable console output
+ *
+ * @param[in]  isOn  Consol is on ?
+ */
 void CONEnableConsole(bool isOn) {
     conIsEnabled = isOn;
 }
 
-
-//
-//                                  Set Colour
-//
-
-
+/**
+ * @brief      Set console colours
+ *
+ * @param[in]  foreground  The foreground
+ * @param[in]  background  The background
+ */
 void CONSetColour(int foreground,int background) {
     fgcol = foreground;bgcol = background;
 }
 
 
-//
-//                          Write one character or control code.
-//
-
-
+/**
+ * @brief      Write one character or control code.
+ *
+ * @param[in]  c     Character code
+ */
 void CONWrite(int c) {
     struct DVIModeInformation *dmi = DVIGetModeInformation();                       // Identify mode data.
     if (dmi == NULL) return;
@@ -160,11 +147,13 @@ void CONWrite(int c) {
 }
 
 
-//
-//                                  Define the UDG
-//
 
-
+/**
+ * @brief      UDG Definition
+ *
+ * @param[in]  udg      UDG Code (224-255)
+ * @param      bitData  8 bytes of pixel data
+ */
 void CONDefineUDG(int udg,uint8_t *bitData) {
     if (udg >= FONT_FIRST_UDG && udg <= FONT_LAST_UDG) {
         uint8_t *udgRAMData = udgData + (udg-FONT_FIRST_UDG) * 8;                   // Address of RAM
@@ -173,23 +162,25 @@ void CONDefineUDG(int udg,uint8_t *bitData) {
 }
 
 
-//
-//          Get the graphic data for the given UDG (bad values return solid block)
-//
-
-
+/**
+ * @brief      Read the data for a specific UDG
+ *
+ * @param[in]  c     Character code
+ *
+ * @return     Address of first character data.
+ */
 uint8_t *CONGetUDGGraphicData(int c) {
     static uint8_t _duffUDG[] = { 0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF};         // Used for a bad graphic.
     if (c < FONT_FIRST_UDG || c > FONT_LAST_UDG) return _duffUDG;                   // Bad UDG return solid block graphic
     return udgData + (c - FONT_FIRST_UDG) * 8;                                      // Return offset to graphic
 }
 
-
-//
-//                              Write a string in varargs format
-//
-
-
+/**
+ * @brief      Write string to debug console
+ *
+ * @param[in]  fmt        The format (as printf)
+ * @param[in]  <unnamed>  Varags paramete
+ */
 void CONWriteString(const char *fmt, ...) {
     char buf[128];
     va_list args;
