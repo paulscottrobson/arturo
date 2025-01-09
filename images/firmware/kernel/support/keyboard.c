@@ -9,17 +9,6 @@
  *
  */
 
-
-//
-//      Name :      keyboard.cpp
-//      Authors :   Paul Robson (paul@robsons.org.uk)
-//      Date :      18th December 2024
-//      Reviewed :  No
-//      Purpose :   Converts keyboard events to a queue and key state array.
-//
-
-
-
 #include "common.h"
 
 #define MAX_QUEUE_SIZE (64)                                                     // Max size of keyboard queue.
@@ -46,11 +35,13 @@ static uint8_t KBDDefaultASCIIKeys(uint8_t keyCode,uint8_t isShift);
 static uint8_t KBDDefaultControlKeys(uint8_t keyCode,uint8_t isShift);
 
 
-//
-//                  Handle a key event. Note keyCode = 0xFF is reset
-//
-
-
+/**
+ * @brief      Handle event from USB handler
+ *
+ * @param[in]  isDown     Indicates if down
+ * @param[in]  keyCode    The key code, $FF resets
+ * @param[in]  modifiers  The modifiers held at the time of pressing
+ */
 void KBDReceiveEvent(uint8_t isDown,uint8_t keyCode,uint8_t modifiers) {
 
     if (isDown && keyCode == KEY_ESC) {                                         // Pressed ESC
@@ -86,11 +77,9 @@ void KBDReceiveEvent(uint8_t isDown,uint8_t keyCode,uint8_t modifiers) {
 }
 
 
-//
-//                              Handle auto Repeat
-//
-
-
+/**
+ * @brief      Called externally to do autorepeat
+ */
 void KBDCheckTimer(void) {
     #if ARTURO_PROCESS_KEYS != 0                                                // If not processing keys this is a no-operation.
     if (currentASCII != 0) {                                                    // Key pressed
@@ -103,27 +92,33 @@ void KBDCheckTimer(void) {
 }
 
 
-//
-//                              Access the keyboard state
-//
 
-
+/**
+ * @brief      Access key states
+ *
+ * @return     Returns a uint8_t *array indicating the state of each key
+ */
 uint8_t *KBDGetStateArray(void) {
     return keyboardState;
 }
 
+/**
+ * @brief      Get the most recent state of the modifiers
+ *
+ * @return     Array of bits
+ */
 int KBDGetModifiers(void) {
     return keyboardModifiers;
 };
 
 
-//
-//                  Read the faux controller built out of keyboard keys
-//
 
-
+/**
+ * @brief      Read the faux controller that uses keyboard keys.
+ *
+ * @return     pointer to CTLState structure showing gamepad button states.
+ */
 static CTLState kbCt;                                                               // Used to return result
-
 #define CHECK(k,v)  (keyboardState[k] ? (v) : 0)
 
 CTLState *KBDReadController(void) {
@@ -137,11 +132,13 @@ CTLState *KBDReadController(void) {
 }
 
 
-//
-//                      Check if escape pressed, with optional reset
-//
-
-
+/**
+ * @brief      Check if escape pressed
+ *
+ * @param[in]  resetEscape  Reset the flag on read
+ *
+ * @return     true if Escape pressed
+ */
 int KBDEscapePressed(int resetEscape) {
     bool state = escapeFlag;
     if (resetEscape) escapeFlag = false;
@@ -149,11 +146,11 @@ int KBDEscapePressed(int resetEscape) {
 }
 
 
-//
-//                      Insert ASCII character into keyboard queue
-//
-
-
+/**
+ * @brief      Insert key into keyboard queue
+ *
+ * @param[in]  ascii  The ascii value
+ */
 void KBDInsertQueue(int ascii) {
     if (queueSize < MAX_QUEUE_SIZE) {                                           // Do we have a full queue ?
         queue[queueSize] = ascii;                                               // If not insert it.
@@ -162,21 +159,21 @@ void KBDInsertQueue(int ascii) {
 }
 
 
-//
-//                            Key available in ASCII queue
-//
-
-
+/**
+ * @brief      Check keyboard queue
+ *
+ * @return     Returns non -zero if key available
+ */
 int KBDIsKeyAvailable(void) {
     return queueSize != 0;
 }
 
 
-//
-//                      Dequeue first key, or 0 if no key available
-//
-
-
+/**
+ * @brief      Get the first key in the queue
+ *
+ * @return     ASCII value or 0 if no key
+ */
 int KBDGetKey(void) {
     if (queueSize == 0) return 0;                                               // Queue empty.
     uint8_t key = queue[0];
@@ -186,11 +183,14 @@ int KBDGetKey(void) {
 }
 
 
-//
-//                          Map scancode and modifier to ASCII
-//
-
-
+/**
+ * @brief      Coonvert key code and modifiers to ASCII, apply localisation
+ *
+ * @param[in]  keyCode    The key code
+ * @param[in]  modifiers  The modifiers
+ *
+ * @return     { description_of_the_return_value }
+ */
 static uint8_t KBDMapToASCII(uint8_t keyCode,uint8_t modifiers) {
     uint8_t ascii = 0;
     uint8_t isShift = (modifiers & KEY_SHIFT) != 0;
@@ -234,6 +234,14 @@ static const uint8_t defaultShift[] = {
     0
 };
 
+/**
+ * @brief      Work out standard ASCII keys
+ *
+ * @param[in]  keyCode  The key code used
+ * @param[in]  isShift  Indicates if shift pressed
+ *
+ * @return     ASCII value
+ */
 static uint8_t KBDDefaultASCIIKeys(uint8_t keyCode,uint8_t isShift) {
     uint8_t ascii = 0;
     uint8_t index = 0;
@@ -245,10 +253,14 @@ static uint8_t KBDDefaultASCIIKeys(uint8_t keyCode,uint8_t isShift) {
     return ascii;
 }
 
-
-//
-//                      Work out standard controls (include CHR(127))
-//
+/**
+ * @brief      Work out control keys
+ *
+ * @param[in]  keyCode  The key code
+ * @param[in]  isShift  Indicates if shift
+ *
+ * @return     ASCII / Control code
+ */
 
 
 static const uint8_t defaultControlKeys[] = {
@@ -269,3 +281,4 @@ static uint8_t KBDDefaultControlKeys(uint8_t keyCode,uint8_t isShift) {
     }
     return 0;
 }
+

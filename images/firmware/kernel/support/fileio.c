@@ -1,15 +1,12 @@
 /**
- * @file   fileio.c
+ * @file fileio.c
  *
  * @brief      File I/O wrapper for the FSYS interface
  *
  * @author     Paul Robson
  *
  * @date       07/01/2025
- *
  */
-
-
 
 #include "common.h"
 
@@ -37,7 +34,7 @@ void FIOInitialise(void) {
  *
  * @param      fileName  The file name
  *
- * @return     ECINZ
+ * @return     Error code if non-zero
  */
 int FIOOpen(char *fileName) {
     int i = 0;
@@ -54,7 +51,7 @@ int FIOOpen(char *fileName) {
  *
  * @param[in]  handle  The handle
  *
- * @return     ECINZ
+ * @return     Error code if non-zero
  */
 int FIOClose(int handle) {
     if (!VALID_AND_OPEN(handle)) return FIO_ERR_HANDLE;                             // Bad handle
@@ -69,7 +66,7 @@ int FIOClose(int handle) {
  * @param      data    The data
  * @param[in]  size    The size
  *
- * @return     ECINZ 
+ * @return     Error code if non-zero 
  */
 int FIORead(int handle,void *data,int size) {
     if (!VALID_AND_OPEN(handle)) return FIO_ERR_HANDLE;                             // Bad handle
@@ -84,7 +81,7 @@ int FIORead(int handle,void *data,int size) {
  * @param      data    The data
  * @param[in]  size    The size
  *
- * @return     { description_of_the_return_value }
+ * @return     Error code if non-zero
  */
 int FIOWrite(int handle,void *data,int size) {
     if (!VALID_AND_OPEN(handle)) return FIO_ERR_HANDLE;                             // Bad handle
@@ -99,7 +96,7 @@ int FIOWrite(int handle,void *data,int size) {
  * @param[in]  handle       Handle
  * @param[in]  newPosition  The new position or -1 to leave
  *
- * @return     Position from the start or EVIN
+ * @return     Position from the start or Error Code
  */
 int FIOGetSetPosition(int handle,int newPosition) {
     if (!VALID_AND_OPEN(handle)) return FIO_ERR_HANDLE;                             // Bad handle
@@ -108,39 +105,68 @@ int FIOGetSetPosition(int handle,int newPosition) {
 
 
 /**
- * @brief      FIOCre
+ * @brief      Create a File
  *  *
  * @param      fileName  The file name
  *
- * @return     { description_of_the_return_value }
+ * @return     Handle or Error code if non-zero
  */
 int FIOCreateFile(char *fileName) {
     return FSYSCreateFile(fileName);
 }
 
 /**
- * @brief      { function_description }
+ * @brief      Create a directory
  *
- * @param      fileName  The file name
+ * @param      fileName  The name of the directory to create
  *
- * @return     { description_of_the_return_value }
+ * @return     Error code if non-zero
  */
 int FIOCreateDirectory(char *fileName) {
     return FSYSCreateDirectory(fileName);
 }
 
+/**
+ * @brief      Delete a file
+ *
+ * @param      fileName  The filename
+ *
+ * @return     Error code if non-zero
+ */
 int FIODeleteFile(char *fileName) {
     return FSYSDeleteFile(fileName);
 }
 
+/**
+ * @brief      Delete Directory
+ *
+ * @param      fileName  The file name to directory
+ *
+ * @return     Error code if non-zero
+ */
 int FIODeleteDirectory(char *fileName) {
     return FSYSDeleteDirectory(fileName);
 }
 
+/**
+ * @brief      Change to a new directory
+ *
+ * @param      fileName  The change (.. /dir dir etc)
+ *
+ * @return     Error code if non-zero
+ */
 int FIOChangeDirectory(char *fileName) {
     return FSYSChangeDirectory(fileName);
 }
 
+/**
+ * @brief      Get information on a file
+ *
+ * @param      name  The name of the file
+ * @param      info  The information structure
+ *
+ * @return     Error code if non-zero
+ */
 int FIOFileInformation(char *name,FIOInfo *info) {
     if (info != NULL) {                                                             // FSYSFileInformation doesn't clear FIOInfo
         strcpy(info->name,"?");
@@ -157,14 +183,36 @@ int FIOFileInformation(char *name,FIOInfo *info) {
 //
 
 
+/**
+ * @brief      Open a directory
+ *
+ * @param      directory  The directory to read
+ *
+ * @return     Error code if non-zero
+ */
 int FIOOpenDirectory(char *directory) {
     return FSYSOpenDirectory(directory);
 }
 
+/**
+ * @brief      Read next directory 
+ *
+ * @param[in]  handle    The handle
+ * @param      fileName  The file name read
+ *
+ * @return     Error code if non-zero
+ */
 int FIOReadDirectory(int handle,char *fileName) {
     return FSYSReadDirectory(fileName);
 }
 
+/**
+ * @brief      Close a directory
+ *
+ * @param[in]  handle  The handle
+ *
+ * @return     Error code if non-zero
+ */
 int FIOCloseDirectory(int handle) {
     return FSYSCloseDirectory();
 }
