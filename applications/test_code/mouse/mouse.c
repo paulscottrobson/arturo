@@ -1,7 +1,7 @@
 /**
- * @file 
+ * @file   mouse.c
  *
- * @brief      
+ * @brief      Mouse testcode
  *
  * @author     Paul Robson
  *
@@ -9,26 +9,12 @@
  *
  */
 
-
-//
-//      Name :      mouse.c
-//      Authors :   Paul Robson (paul@robsons.org.uk)
-//      Date :      6th January 2025
-//      Reviewed :  No
-//      Purpose :   Mouse testcode
-//
-
-
-
 #include "common.h"
 #include <libraries.h>
 
-
-//
-//                      Start and run the CPU. Does not have to return.
-//
-
-
+/**
+ * @brief      Run main program
+ */
 void ApplicationRun(void) {
 
 
@@ -37,13 +23,13 @@ void ApplicationRun(void) {
     }
 
     MMGRDrawPointer(320,120,10);
-    
+
     while (1) {
 
-  
+
         if (KBDEscapePressed(true)) {                                               // Escaped ?
         }
-    
+
         if (HASTICK50_FIRED()) {                                                    // Time to do a 50Hz tick (Don't use this for timing !)
             TICK50_RESET();                                                         // Reset the tick flag
             if (USBUpdate() == 0) return;                                           // Update USB
@@ -51,4 +37,3 @@ void ApplicationRun(void) {
         }
     }
 }
-

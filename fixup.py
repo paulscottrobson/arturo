@@ -27,5 +27,8 @@ def fixup(fileName):
 	print("Fixed up "+fileName)
 
 
-fixup ("applications/test_code/mouse/mouse.c")
+for root,dirs,files in os.walk("."):
+	for f in files:
+		tgt = root + os.sep+f
+		print(tgt)
 
