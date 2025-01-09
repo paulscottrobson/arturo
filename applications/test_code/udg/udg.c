@@ -1,7 +1,7 @@
 /**
- * @file 
+ * @file udg.c
  *
- * @brief      
+ * @brief      Test UDG on Graphic fonts, also checks extents and backgrounds
  *
  * @author     Paul Robson
  *
@@ -9,26 +9,13 @@
  *
  */
 
-
-//
-//      Name :      udg.c
-//      Authors :   Paul Robson (paul@robsons.org.uk)
-//      Date :      6th January 2025
-//      Reviewed :  Yes
-//      Purpose :   Test UDG on Graphic fonts, also checks extents and backgrounds
-//
-
-
-
 #include "common.h"
 #include <libraries.h>
 
 
-//
-//                      Start and run the CPU. Does not have to return.
-//
-
-
+/**
+ * @brief      Run the main application
+ */
 void ApplicationRun(void) {
     uint8_t gr1[8] = {0xFF,0x81,0x81,0x81,0x8F,0x88,0x88,0xF8 };                    // Two 8x8 UDGs
     uint8_t gr2[8] = {0xAA,0x55,0xAA,0x55,0xAA,0x55,0xAA,0x55 };

@@ -1,22 +1,13 @@
 /**
- * @file 
+ * @file graphics.c
  *
- * @brief      
+ * @brief      Graphics test program
  *
  * @author     Paul Robson
  *
  * @date       07/01/2025
  *
  */
-
-
-//
-//      Name :      graphics.c
-//      Authors :   Paul Robson (paul@robsons.org.uk)
-//      Date :      28th December 2024
-//      Reviewed :  Yes
-//      Purpose :   Graphics core test
-//
 
 
 
@@ -31,20 +22,17 @@ void Test64Colours(void);
 
 
 //
-//                      Start and run the CPU. Does not have to return.
-//
-
-
-//
 //      640x480 x 3 planes will ONLY work if DVI_SUPPORT_640_480_8 is set to 1
 //
 static GFXPort vp;
 static int action = -1;
 static int width,height;
 
-//
-//      Set the mode 
-//
+/**
+ * @brief      Update the mode being used
+ *
+ * @param[in]  mode  The mode to be used
+ */
 void UpdateMode(int mode) {
     GFXSetMode(mode);
     DVIGetScreenExtent(&width,&height);
@@ -54,6 +42,10 @@ void UpdateMode(int mode) {
     GFXPortInitialise(&vp,10,10,width-10,height-10);
 }
 
+
+/**
+ * @brief      Run the main program
+ */
 void ApplicationRun(void) {
     int n = 0;
     int nextSkip = 0;
@@ -102,16 +94,17 @@ void ApplicationRun(void) {
 
 
 //
-//                                  Horizontal line test code
+//      Simple support functions
 //
-
-
 static int randx() { return rand() % width; }
 static int randy() { return rand() % height; }
 static int randColour() { return rand() % 64; }
 
 static int ctr = 0;
 
+/**
+ * @brief      Draw some elements , type defpendent on 'action'
+ */
 void TestDrawStuff(void) {
     int x = randx(),y = randy(),x1 = randx(),y1 = randy(),x2 = randx(),y2 = randy();
     switch(action) {
@@ -139,13 +132,13 @@ void TestDrawStuff(void) {
 }
 
 
-//
-//                                  Tests scrolling and frame/rect
-//
-
-
 static int nextDraw = 0;
 
+/**
+ * @brief      This is specific to viewports scrolling, it adjusts the scrolling
+ *             and keeps redrawing the rectangle so it looks like the scrolling
+ *             is going up/left
+ */
 void TestScrollAndRect(void) {
     if (TMRReadTimeMS() < nextDraw) return;
     nextDraw = TMRReadTimeMS()+3;
@@ -158,11 +151,9 @@ void TestScrollAndRect(void) {
 }
 
 
-//
-//                      Test of all 64 colours in 320x240x64
-//
-
-
+/**
+ * @brief      A specific test for 320x240x64 colour mode
+ */
 void Test64Colours(void)
 {
   DVISetMode(DVI_MODE_320_240_64);                                                    

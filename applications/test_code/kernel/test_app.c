@@ -1,7 +1,7 @@
 /**
- * @file 
+ * @file test_app.c
  *
- * @brief      
+ * @brief      Test various kernel functions
  *
  * @author     Paul Robson
  *
@@ -9,30 +9,17 @@
  *
  */
 
-
-//
-//      Name :      test_app.c
-//      Authors :   Paul Robson (paul@robsons.org.uk)
-//      Date :      18th December 2024
-//      Reviewed :  Yes
-//      Purpose :   Test application
-//
-
-
-
 #include "common.h"
 #include "testapp.h"
-
-
-//
-//                      Start and run the CPU. Does not have to return.
-//
 
 
 static int mode;
 static int fg=3;                                                                    // 2 colour mode, you can change what they are.
 static int bg=0;
 
+/**
+ * @brief      Run the main program
+ */
 void ApplicationRun(void) {
     int n = 0;
     CONWriteString("Kernel Demo Application\r");                                          

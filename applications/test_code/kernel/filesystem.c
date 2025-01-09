@@ -1,7 +1,7 @@
 /**
- * @file 
+ * @file filesystem.c
  *
- * @brief      
+ * @brief      Check File System functions work
  *
  * @author     Paul Robson
  *
@@ -9,27 +9,13 @@
  *
  */
 
-
-//
-//      Name :      filesystem.c
-//      Authors :   Paul Robson (paul@robsons.org.uk)
-//      Date :      27th December 2024
-//      Reviewed :  Yes
-//      Purpose :   Check File System
-//
-
-
-
 #include "common.h"
 #include <libraries.h>
 #include "testapp.h"
 
-
-//
-//                          This tests the USB key is working.
-//
-
-
+/**
+ * @brief      Check file system functionality
+ */
 void DemoApp_CheckFileIO(void) {
 	FIOInfo fi;int e;char *s;
 	char buffer[42];
