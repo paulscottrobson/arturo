@@ -26,7 +26,7 @@ sw:
 	make -C simulator run
 
 #
-#									Build the font data
+#		Build the font data
 #
 fonts:
 	make -B -C libraries/graphics/fonts convert
@@ -34,8 +34,17 @@ fonts:
 	rm -f libraries/graphics/fonts.o
 
 #
-#									Compile the libraries.
+#		Compile the libraries.
 #
 lib:
 	make -C libraries
 		
+#
+#		Build Doxygen documentation
+#
+docs:
+	rm -Rf documents/htmldocs
+	doxygen
+
+view: docs
+	firefox file://$(ROOTDIR)/documents/htmldocs/html/index.html &

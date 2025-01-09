@@ -9,17 +9,6 @@
  *
  */
 
-
-//
-//      Name :      gamepad.c
-//      Authors :   Paul Robson (paul@robsons.org.uk)
-//      Date :      25th December 2024
-//      Reviewed :  No
-//      Purpose :   Controller code.
-//
-
-
-
 #include <common.h>
 #include <artsim.h>
 
@@ -28,22 +17,25 @@
 static int controllerCount = 0;
 static SDL_Joystick *controllers[MAX_CONTROLLERS];
 
-
-//
-//                                                  Get controller count
-//
-
+/**
+ * @brief      Get the number of controllers
+ *
+ * @return     Number of controllers (does not include default keypad)
+ */
 
 int CTLControllerCount(void) {
     return controllerCount;
 }
 
 
-//
-//                                      Read controller, format compatible with Firmware
-//
-
-
+/**
+ * @brief      Read a controller
+ *
+ * @param[in]  n     Controller ID. If -1 uses the first or keyboard if none
+ *                   plugged in.
+ *
+ * @return     The controller state
+ */
 CTLState *CTLReadController(int n) {
 
     if (n < 0) {
@@ -81,11 +73,9 @@ CTLState *CTLReadController(int n) {
 }
 
 
-//
-//                                                  Search for controllers
-//
-
-
+/**
+ * @brief      Look for controllers iplugged into the system.
+ */
 void CTLFindControllers(void) {
     controllerCount = 0;                                                            // Discover controllers. 
     for (int i = 0; i < SDL_NumJoysticks(); i++) {

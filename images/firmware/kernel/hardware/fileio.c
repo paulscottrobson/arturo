@@ -12,7 +12,6 @@
 #include "common.h"
 #include "ff.h"
 
-
 //
 //                              Current open files.
 //
@@ -44,7 +43,6 @@ static int _FSYSMapError(FRESULT r) {
     }
     return err;
 }
-
 
 /**
  * @brief      Reset all file objects etc.
@@ -140,7 +138,6 @@ int FSYSDeleteDirectory(char *name) {
     return FSYSDeleteFile(name);                                                // Same as delete file :)
 }
 
-
 /**
  * @brief      Open File in R/W mode, rewind to start
  *
@@ -155,7 +152,6 @@ int FSYSOpen(int handle,char *name) {
     fr = f_lseek(&files[handle],0);                                                 // Rewind
     return _FSYSMapError(fr);
 };
-
 
 /**
  * @brief      Close the file
@@ -233,9 +229,6 @@ int FSYSGetSetPosition(int handle,int newPosition) {
     return current;
 }
 
-
-
-
 static DIR currentDirectory;
 
 /**
@@ -248,12 +241,6 @@ static DIR currentDirectory;
 int FSYSOpenDirectory(char *directory) {
     return _FSYSMapError(f_opendir(&currentDirectory,directory));                   // Open directory
 }
-
-
-//
-//          Read next directory entry. This does not exclude .. or . at this level.
-//          Returns FIO_EOF if there is no directory information to read
-//
 
 
 /**

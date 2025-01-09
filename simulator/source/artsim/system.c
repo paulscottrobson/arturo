@@ -23,6 +23,15 @@ static void SYSUpdateMouse(void);
 #define BLUE(x) ((((x) >> 0) & 0xF) * 17)
 
 /**
+ * @brief      Get elapsed time since start
+ *
+ * @return     time in 1khz ticks
+ */
+int TMRReadTimeMS(void) {
+    return SDL_GetTicks();
+}
+
+/**
  * @brief      Open the main window and start everything off
  *
  * @param[in]  muteSound  Mute sound on simulator
