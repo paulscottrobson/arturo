@@ -9,17 +9,6 @@
  *
  */
 
-
-//
-//      Name :      render.c
-//      Authors :   Paul Robson (paul@robsons.org.uk)
-//      Date :      23rd December 2024
-//      Reviewed :  No
-//      Purpose :   Display Rendering.
-//
-
-
-
 #include <artsim.h>
 
 static uint8_t redPlane[640*480/8];
@@ -61,25 +50,25 @@ static int palette_64[64] = {
   0x0FF, 0x5FF, 0xAFF, 0xFFF,
 };
 
-
-
-//
-//                      Set 2 colour foreground/background
-//
-
-
+/**
+ * @brief      Set colour for monochrome modes
+ *
+ * @param[in]  fg    The foreground
+ * @param[in]  bg    The background
+ */
 void DVISetMonoColour(int fg, int bg)
 {
   palette_mono[0] = fg & 0x7;
   palette_mono[1] = bg & 0x7;
 }
 
-
-//
-//                            Set current mode.
-//
-
-
+/**
+ * @brief      Set the current mode
+ *
+ * @param[in]  mode  The mode, an integer value
+ *
+ * @return     true if successful
+ */
 bool DVISetMode(int mode) {
   dvi_modeInfo.mode = mode;                             // Record mode
   dvi_modeInfo.bitPlaneCount = 3;
@@ -126,28 +115,35 @@ bool DVISetMode(int mode) {
   return true;
 }
 
-
-//
-//                        Return mode data.
-//
-
-
+/**
+ * @brief      Get information about the current mode
+ *
+ * @return     DVIModeInformation structure pointer with information about how the mode is set up.
+ */
 struct DVIModeInformation *DVIGetModeInformation(void) {
   return &dvi_modeInfo;
 }
 
+
+/**
+ * @brief      Shorthand way of getting screen size, can return width and/or height in 2 referenced
+ *
+ * @param      pWidth   pointer to width or NULL
+ * @param      pHeight  pointer to height or NULL
+ *
+ * @return     the current mode number
+ */
 int  DVIGetScreenExtent(int *pWidth,int *pHeight) { 
   if (pWidth != NULL) *pWidth = dvi_modeInfo.width;
   if (pHeight != NULL) *pHeight = dvi_modeInfo.height;
   return dvi_modeInfo.mode;
 }
 
-
-//
-//                        Get elapsed time in 100Hz ticks.
-//
-
-
+/**
+ * @brief      Render the display
+ *
+ * @param      surface  The surface to render it on
+ */
 void RNDRender(SDL_Surface *surface) {  
   struct DVIModeInformation *dm = DVIGetModeInformation();
   uint8_t *pr,*pg,*pb,r,g,b;

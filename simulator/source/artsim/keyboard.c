@@ -10,24 +10,15 @@
  */
 
 
-//
-//      Name :      keyboard.c
-//      Authors :   Paul Robson (paul@robsons.org.uk)
-//      Date :      24th December 2024
-//      Reviewed :  No
-//      Purpose :   Process scan codes.
-//
-
-
-
 #include "artsim.h"
 
-
-//
-//              Convert an SDL event to one suitable for the keyboard system
-//
-
-
+/**
+ * @brief      Convert an SDL event to one suitable for the keyboard system
+ *
+ * @param[in]  scanCode   The scan code 
+ * @param[in]  modifiers  The modifiers
+ * @param[in]  isDown     Indicates if key down
+ */
 void KBDProcessEvent(int scanCode,int modifiers,bool isDown) {
     int procMod = 0;
     //

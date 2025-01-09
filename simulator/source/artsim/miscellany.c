@@ -10,24 +10,14 @@
  */
 
 
-//
-//      Name :      miscellany.c
-//      Authors :   Paul Robson (paul@robsons.org.uk)
-//      Date :      23rd December 2024
-//      Reviewed :  No
-//      Purpose :   Miscellaneous stuff.
-//
-
-
-
 #include <artsim.h>
 
 
-//
-//                                              Get elapsed time in 1kHz ticks.
-//
-
-
+/**
+ * @brief      Get elapsed time since start
+ *
+ * @return     time in 1khz ticks
+ */
 int TMRReadTimeMS(void) {
     return SDL_GetTicks();
 }

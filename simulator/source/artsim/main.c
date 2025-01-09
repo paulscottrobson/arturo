@@ -10,16 +10,6 @@
  */
 
 
-//
-//      Name :      main.c
-//      Authors :   Paul Robson (paul@robsons.org.uk)
-//      Date :      23rd December 2024
-//      Reviewed :  No
-//      Purpose :   Main program for Simulator.
-//
-
-
-
 #include "artsim.h"
 
 bool tick50HzHasFired = true;
@@ -45,12 +35,14 @@ int USBUpdate(void) {
     return -1;
 }
 
-
-//
-//                                          Main program
-//
-
-
+/**
+ * @brief      Main program.
+ *
+ * @param[in]  argc  The count of arguments
+ * @param      argv  The arguments array
+ *
+ * @return     { description_of_the_return_value }
+ */
 int main(int argc,char *argv[]) {
     DVISetMode(DVI_MODE_640_240_8);                                                 // Initialise display
     CONInitialise();                                                                // Initialise console

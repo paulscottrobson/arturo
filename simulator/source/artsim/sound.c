@@ -18,34 +18,41 @@ static SDL_AudioSpec audioSpec;
 void (*m_writeData)(uint8_t* ptr, double data);
 int (*m_calculateOffset)(int sample, int channel);
 
-
-// 
-// 		Calculate the offset in bytes from the start of the audio stream to the
-// 		memory address at `sample` and `channel`.
-//
-// 		Channels are interleaved.
-//
-
-
+/**
+ * @brief      Calculates the offset for s16 format
+ *
+ * @param[in]  sample   The sample count
+ * @param[in]  channel  The channel number
+ *
+ * @return     The offset s 16.
+ */
 static int calculateOffset_s16(int sample, int channel) {
 	return
 		(sample * sizeof(int16_t) * audioSpec.channels) +
 		(channel * sizeof(int16_t));
 }
 
+/**
+ * @brief      Calculates the offset for f32 format
+ *
+ * @param[in]  sample   The sample count
+ * @param[in]  channel  The channel offset
+ *
+ * @return     The offset f 32.
+ */
 static int calculateOffset_f32(int sample, int channel) {
 	return
 		(sample * sizeof(float) * audioSpec.channels) +
 		(channel * sizeof(float));
 }
 
-
-//
-// 		Convert a normalized data value (range: 0.0 .. 1.0) to a data value matching
-// 		the audio format.
-//
-
-
+/**
+ * @brief      Writes the normalised data value (0-1) to the output stream
+ *             matching the audio format
+ *
+ * @param      ptr   pointer into queue
+ * @param[in]  data  Data
+ */
 static void writeData_s16(uint8_t* ptr, double data) {
 	int16_t* ptrTyped = (int16_t*)ptr;
 	double range = (double)INT16_MAX - (double)INT16_MIN;
@@ -53,17 +60,25 @@ static void writeData_s16(uint8_t* ptr, double data) {
 	*ptrTyped = dataScaled;
 }
 
+/**
+ * @brief      Writes the normalised data value (0-1) to the output stream
+ *             matching the audio format
+ *
+ * @param      ptr   pointer into queue
+ * @param[in]  data  Data
+ */
 static void writeData_f32(uint8_t* ptr, double data) {
 	float* ptrTyped = (float*)ptr;
 	*ptrTyped = data;
 }
 
-
-//
-//						Callback when requesting buffer be filled
-//
-
-
+/**
+ * @brief      Callback to repopulatoe sound buffer
+ *
+ * @param      userdata   User data passed
+ * @param      stream    Stream address
+ * @param[in]  len       The length size in bytes
+ */
 static void audioCallback(void* userdata,uint8_t* stream,int len) {
 	// Unused parameters
 	(void)userdata;
@@ -86,12 +101,9 @@ static void audioCallback(void* userdata,uint8_t* stream,int len) {
 	}
 }
 
-
-//
-//								Open a sound device
-//
-
-
+/**
+ * @brief      Open the sound device
+ */
 void SOUNDOpen(void) {
 	char *formatName = "<unknown>";
 
@@ -179,32 +191,25 @@ void SOUNDOpen(void) {
 	}
 }
 
-
-//
-//								End the Sound system
-//
-
-
+/**
+ * @brief      Close the sound device
+ */
 void SOUNDClose(void) {
 	SDL_CloseAudioDevice(audioDevice);
 }
 
 
-//
-//								Start playing sound
-//
-
-
+/**
+ * @brief      Start playing audio
+ */
 void SOUNDPlay(void) {
 	SDL_PauseAudioDevice(audioDevice, 0);
 }
 
 
-//
-//								Stop playing sound
-//
-
-
+/**
+ * @brief      Stop playing audio
+ */
 void SOUNDStop(void) {
 	SDL_PauseAudioDevice(audioDevice, 1);
 }
@@ -215,6 +220,14 @@ void SOUNDStop(void) {
 //
 
 
+/**
+ * @brief      Get the sample rate
+ *
+ *             This returns the sample rate required by the sound system and is
+ *             read by audio systems to know the signal to send
+ *
+ * @return     Sample rate in Hz
+ */
 int SNDGetSampleFrequency(void) {
     return audioSpec.freq;
 }

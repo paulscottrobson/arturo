@@ -9,8 +9,6 @@
  *
  */
 
-
-
 #include <artsim.h>
 
 static SDL_Window *mainWindow = NULL;
@@ -24,12 +22,12 @@ static void SYSUpdateMouse(void);
 #define GREEN(x) ((((x) >> 4) & 0xF) * 17)
 #define BLUE(x) ((((x) >> 0) & 0xF) * 17)
 
-
-//
-//                                          Open Window and start everything off
-//
-
-
+/**
+ * @brief      Open the main window and start everything off
+ *
+ * @param[in]  muteSound  Mute sound on simulator
+ *
+ */
 void SYSOpen(bool muteSound) {
 
     if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_AUDIO|SDL_INIT_GAMECONTROLLER) < 0)    {   // Try to initialise SDL Video and Audio
@@ -54,13 +52,13 @@ void SYSOpen(bool muteSound) {
 }
 
 
-//
-//                                  Handle any messages in the queue and render the display
-//
-
-
 static int isRunning = -1;                                                          // Is app running
 
+/**
+ * @brief      Check the SDL2 message queue, update mouse and keyboard, update display.
+ *
+ * @return     { description_of_the_return_value }
+ */
 int SYSPollUpdate(void) {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {                                                 // While events in event queue.
@@ -91,12 +89,9 @@ int SYSPollUpdate(void) {
     return isRunning;
 }
 
-
-//
-//                                                  Close the system down.
-//
-
-
+/**
+ * @brief      Close down everything
+ */
 void SYSClose(void) {
     endTime = TMRReadTimeMS();
     SDL_DestroyWindow(mainWindow);                                                  // Destroy working window
@@ -107,22 +102,20 @@ void SYSClose(void) {
 }
 
 
-//
-//                                          Support Routine - Draw solid rectangle
-//
-
-
+/**
+ * @brief      Draw arectangle on the working surface
+ *
+ * @param      rc      Rectangle dimensions
+ * @param[in]  colour  Fill Colour
+ */
 void SYSRectangle(SDL_Rect *rc,int colour) {
     SDL_FillRect(mainSurface,rc,SDL_MapRGB(mainSurface->format,RED(colour),GREEN(colour),BLUE(colour)));
 }
 
 
-
-//
-//                          Update mouse state - move or buttons
-//
-
-
+/**
+ * @brief      Convert mouse data to correct format and update mouse system
+ */
 static void SYSUpdateMouse(void) {
     int x,y;
     SDL_Rect r;
