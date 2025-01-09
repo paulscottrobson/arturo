@@ -1,29 +1,28 @@
-// ***************************************************************************************
-// ***************************************************************************************
-//
-//      Name :      sound.h
-//      Authors :   Paul Robson (paul@robsons.org.uk)
-//      Date :      23rd December 2024
-//      Reviewed :  No
-//      Purpose :   Sound interface headers (internal)
-//
-// ***************************************************************************************
-// ***************************************************************************************
+/**
+ * @file sound.h
+ *
+ * @brief      Header file, sound interface
+ *
+ * @author     Paul Robson
+ *
+ * @date       07/01/2025
+ *
+ */
 
 #pragma once
 
 void SNDInitialise(bool _combineChannels);
 //
-//		Sound hardware setup.
+//      Sound hardware setup.
 //
 #if PICO_HARDWARE==PICO_HW_RP2040PC
-#define AUDIO_HARDWARE_CHANNELS		(2)
-#define AUDIO_PIN_L 				(20) 
-#define AUDIO_PIN_R 				(21) 
+#define AUDIO_HARDWARE_CHANNELS     (2)
+#define AUDIO_PIN_L                 (20) 
+#define AUDIO_PIN_R                 (21) 
 #elif PICO_HARDWARE==PIC_HW_NEO602
-#define AUDIO_HARDWARE_CHANNELS		(1)
-#define AUDIO_PIN_L 				(20) 
-#define AUDIO_PIN_R 				(-1)
+#define AUDIO_HARDWARE_CHANNELS     (1)
+#define AUDIO_PIN_L                 (20) 
+#define AUDIO_PIN_R                 (-1)
 #else
 #error("Unsupported hardware")
 #endif

@@ -1,5 +1,5 @@
-// ***************************************************************************************
-// ***************************************************************************************
+
+
 //
 //      Name :      sound.c
 //      Authors :   Paul Robson (paul@robsons.org.uk)
@@ -7,8 +7,8 @@
 //      Reviewed :  No
 //      Purpose :   PWM Audio support for Neo6502
 //
-// ***************************************************************************************
-// ***************************************************************************************
+
+
 
 #include "common.h"
 #include "dvi.h"
@@ -17,11 +17,11 @@
 static int sampleFrequency = -1;
 static bool combineSoundChannels = false;
 
-// ***************************************************************************************
+
 //
 //      Function that returns the sample rate in Hz of the implementeing hardware
 //
-// ***************************************************************************************
+
 
 int SNDGetSampleFrequency(void) {
 	if (sampleFrequency < 0) {                                                      // Only do this once.
@@ -30,11 +30,11 @@ int SNDGetSampleFrequency(void) {
 	return sampleFrequency;
 }
 
-// ***************************************************************************************
+
 //
 //                             Interrupt Handler : output sound
 //
-// ***************************************************************************************
+
 
 void pwm_interrupt_handler() {
 	pwm_clear_irq(pwm_gpio_to_slice_num(AUDIO_PIN_L));                           	// Acknowledge interrupt   
@@ -58,12 +58,12 @@ void pwm_interrupt_handler() {
 	}
 }
 
-// ***************************************************************************************
+
 //
 //          Initialise a specific channel, only doing the interrupt for the first
 //                      (both driven off the same interrupt)
 //
-// ***************************************************************************************
+
 
 static void _SND_Initialise_Channel(int pin,bool enableInterrupt) {
 	gpio_set_function(pin, GPIO_FUNC_PWM);  
@@ -85,11 +85,11 @@ static void _SND_Initialise_Channel(int pin,bool enableInterrupt) {
 	pwm_set_gpio_level(pin, 0);
 }
 
-// ***************************************************************************************
+
 //
 //				                  Initialise sound system
 //
-// ***************************************************************************************
+
 
 void SNDInitialise(bool _combineChannels) {
 	combineSoundChannels = _combineChannels;  										// Record if we are supposed to add them.

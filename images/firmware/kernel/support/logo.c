@@ -1,5 +1,5 @@
-// ***************************************************************************************
-// ***************************************************************************************
+
+
 //
 //      Name :      logo.c
 //      Authors :   Paul Robson (paul@robsons.org.uk)
@@ -7,28 +7,28 @@
 //      Reviewed :  No
 //      Purpose :   Draw Logo
 //
-// ***************************************************************************************
-// ***************************************************************************************
+
+
 
 #include "common.h"
 #include "support/__logo_data.h"
 #include "support/__config.h"
 
-// ***************************************************************************************
+
 //
 //                              Draw logos on boot screen
 //
-// ***************************************************************************************
+
 
 void LOGODrawTitle(void) {
     LOGODraw(DVIGetModeInformation()->width-LOGO_WIDTH_BYTES*8-4,4,LOGO_WIDTH_BYTES,LOGO_HEIGHT,logoData,1,0);
 }
 
-// ***************************************************************************************
+
 //
 //                                  Draw a specific logo
 //
-// ***************************************************************************************
+
 
 void LOGODraw(int x,int y,int w,int h,const uint8_t *pixelData,int fgr,int bgr) {
     for (int yc = 0;yc < h;yc++) {
@@ -41,11 +41,11 @@ void LOGODraw(int x,int y,int w,int h,const uint8_t *pixelData,int fgr,int bgr) 
     }
 }
 
-// ***************************************************************************************
+
 //
 //                                  Display text header
 //
-// ***************************************************************************************
+
 
 void LOGOTextHeader(void) {
     CONSetColour(CON_COL_CYAN,CON_COL_BLACK);

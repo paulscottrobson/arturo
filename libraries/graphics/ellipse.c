@@ -1,5 +1,5 @@
-// ***************************************************************************************
-// ***************************************************************************************
+
+
 //
 //      Name :      ellipse.c
 //      Authors :   Paul Robson (paul@robsons.org.uk)
@@ -8,8 +8,8 @@
 //      Reviewed :  No
 //      Purpose :   Ellipse Drawing functions
 //
-// ***************************************************************************************
-// ***************************************************************************************
+
+
 
 #include "common.h"
 #include <libraries.h>
@@ -22,11 +22,11 @@ static void _GFXDrawEllipse(int colour, bool fill);
 static void _GFXFrameEllipseMain(GFXPort *vp,int x0,int y0,int x1,int y1,int colour,bool fill);
 static void _GFXDrawEllipseMain(GFXPort *vp,int x0,int y0,int x1,int y1,int colour,bool fill);
 
-// ***************************************************************************************
+
 //
 //						Wrapper functions minimising code duplication
 //
-// ***************************************************************************************
+
 
 void GFXFrameEllipse(GFXPort *vp,int x0,int y0,int x1,int y1,int colour) {
 	_GFXDrawEllipseMain(vp,x0,y0,x1,y1,colour,false);
@@ -36,11 +36,11 @@ void GFXFillEllipse(GFXPort *vp,int x0,int y0,int x1,int y1,int colour) {
 	_GFXDrawEllipseMain(vp,x0,y0,x1,y1,colour,true);
 }
 
-// ***************************************************************************************
+
 //
 //						Main drawing program, supporting fill & frame
 //
-// ***************************************************************************************
+
 
 static void _GFXDrawEllipseMain(GFXPort *vp,int x0,int y0,int x1,int y1,int colour,bool fill) {
 	GFXASetPort(vp);
@@ -49,11 +49,11 @@ static void _GFXDrawEllipseMain(GFXPort *vp,int x0,int y0,int x1,int y1,int colo
 	_GFXDrawEllipse(colour,fill);
 }
 
-// ***************************************************************************************
+
 //
 //									Draw the frame part
 //
-// ***************************************************************************************
+
 
 static void _GFXFramePart(int x,int y,int colour) {
 	GFXAPlot(xc+x,yc+y,colour);
@@ -66,11 +66,11 @@ static void _GFXFramePart(int x,int y,int colour) {
 	}
 }
 
-// ***************************************************************************************
+
 //
 //                                  Draw the line
 //
-// ***************************************************************************************
+
 
 static void _GFXLinePart(int x,int y,int colour) {
     GFXAHorizLine(xc-x,xc+x,yc+y,colour);
@@ -79,11 +79,11 @@ static void _GFXLinePart(int x,int y,int colour) {
     }
 }
 
-// ***************************************************************************************
+
 //
 //								Midpoint Ellipse Algorithm
 //
-// ***************************************************************************************
+
 
 static void _GFXDrawEllipse(int colour, bool fill) {
     float dx, dy, d1, d2, x, y;

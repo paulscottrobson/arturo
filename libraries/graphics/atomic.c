@@ -1,5 +1,5 @@
-// ***************************************************************************************
-// ***************************************************************************************
+
+
 //
 //      Name :      atomic.c
 //      Authors :   Paul Robson (paul@robsons.org.uk)
@@ -7,8 +7,8 @@
 //      Reviewed :  No
 //      Purpose :   Lowest level graphics routines
 //
-// ***************************************************************************************
-// ***************************************************************************************
+
+
 
 #include "common.h"
 #include <libraries.h>
@@ -21,14 +21,14 @@ static inline void _GFXDrawBitmap(int colour);
 
 static void _GFXAValidate(void);
 
-// ***************************************************************************************
+
 //
 //		These functions are atomic. They assume once you've selected the viewport 
 //		the mode, port will not change for the duration of any function that uses them
 //		e.g. to draw rectangles you set the viewport and draw multiple horizontal lines
 //		that sort of thing :)
 //
-// ***************************************************************************************
+
 
 static GFXPort *_currentPort = NULL;  												// Current viewport
 static struct DVIModeInformation *_dmi = NULL;  									// Current mode information.
@@ -46,11 +46,11 @@ static int width,height;  															// Size
 
 static GFXPort _fullScreen;  														// Used for full screen viewport
 
-// ***************************************************************************************
+
 //
 //						Set the current mode, clear the screen
 //
-// ***************************************************************************************
+
 
 void GFXSetMode(int mode) {
 	DVISetMode(mode);  																// Set the mode.
@@ -60,11 +60,11 @@ void GFXSetMode(int mode) {
 	}
 }
 
-// ***************************************************************************************
+
 //
 //								Set the current viewport
 //
-// ***************************************************************************************
+
 
 void GFXASetPort(GFXPort *vp) {
 	_currentPort = vp;  															// Save viewport
@@ -77,11 +77,11 @@ void GFXASetPort(GFXPort *vp) {
 	dataValid = false;  															// Nothing is set up.
 }
 
-// ***************************************************************************************
+
 //
 //							Plot a pixel in the current port
 //
-// ***************************************************************************************
+
 
 void GFXAPlot(int x,int y,int colour) {
 	xPixel = CONV_X(x);yPixel = CONV_Y(y);  										// Update the pixel positions.
@@ -89,11 +89,11 @@ void GFXAPlot(int x,int y,int colour) {
 	if (dataValid) _GFXDrawBitmap(colour);  										// Draw pixel if valid.
 }
 
-// ***************************************************************************************
+
 //
 //							Try to validate pixel position
 //
-// ***************************************************************************************
+
 
 static void _GFXAValidate(void) {
 	dataValid = false;
@@ -115,11 +115,11 @@ static void _GFXAValidate(void) {
 	dataValid = true;  																// We have valid data
 }
 
-// ***************************************************************************************
+
 //
 //									Horizontal line
 //
-// ***************************************************************************************
+
 
 void GFXAHorizLine(int x1,int x2,int y,int colour) {
         int ppb = _dmi->bitPlaneDepth==2 ? 4 : 8;
@@ -159,11 +159,11 @@ void GFXAHorizLine(int x1,int x2,int y,int colour) {
 	}
 }
 
-// ***************************************************************************************
+
 //
 //									Vertical line code.
 //
-// ***************************************************************************************
+
 
 void GFXAVertLine(int x,int y1,int y2,int colour) {
 	x = CONV_X(x);y1 = CONV_Y(y1);y2 = CONV_Y(y2);  								// Convert coordinates.
@@ -180,11 +180,11 @@ void GFXAVertLine(int x,int y1,int y2,int colour) {
 }
 
 
-// ***************************************************************************************
+
 //
 //			Move current position. These avoid change location/recalculate
 //
-// ***************************************************************************************
+
 
 void GFXAUp(void) {
 	yPixel--;  																		// Pixel up
@@ -239,11 +239,11 @@ void GFXARight(void) {
 	if (dataValid) dataValid = (xPixel < width);  									// Still in window
 }
 
-// ***************************************************************************************
+
 //
 //					Line drawing algorithm (currently straight Bresenham)
 //
-// ***************************************************************************************
+
 
 void GFXALine(int x0, int y0, int x1, int y1,int colour) {
 	if (y0 == y1) { 							  									// Use the horizontal one.
@@ -283,11 +283,11 @@ void GFXALine(int x0, int y0, int x1, int y1,int colour) {
     }
 }
 
-// ***************************************************************************************
+
 //
 //								Draw the current pixel
 //
-// ***************************************************************************************
+
 
 static inline void _GFXDrawBitmap(int colour) {
 	if (!dataValid) return;              											// Not valid drawing.
@@ -300,11 +300,11 @@ static inline void _GFXDrawBitmap(int colour) {
 	}
 }
 
-// ***************************************************************************************
+
 //
 //							Draw the current pixel (3 planes)
 //
-// ***************************************************************************************
+
 
 static inline void _GFXDrawBitmap3(int colour) {
 
@@ -325,11 +325,11 @@ static inline void _GFXDrawBitmap3(int colour) {
 }
 
 
-// ***************************************************************************************
+
 //
 //							Draw the current pixel (1 plane)
 //
-// ***************************************************************************************
+
 
 static inline void _GFXDrawBitmap1(int colour) {
 
@@ -345,11 +345,11 @@ static inline void _GFXDrawBitmap1(int colour) {
 	}
 }
 
-// ***************************************************************************************
+
 //
 //					Draw the current pixel (2 plane, e.g. 64 colours)
 //
-// ***************************************************************************************
+
 
 static inline void _GFXDrawBitmap6(int colour) {
 

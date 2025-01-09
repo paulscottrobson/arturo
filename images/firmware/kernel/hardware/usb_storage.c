@@ -1,5 +1,5 @@
-// ***************************************************************************************
-// ***************************************************************************************
+
+
 //
 //      Name :      usb_storage.c
 //      Author :    Veselin Sladkov
@@ -8,8 +8,8 @@
 //      Reviewed :  No
 //      Purpose :   USB MSC Storage / FATFS link from Apple/Oric emulators.
 //
-// ***************************************************************************************
-// ***************************************************************************************
+
+
 
 #include "common.h"
 #include "tusb.h"
@@ -20,12 +20,12 @@ static volatile bool msc_volume_busy[CFG_TUH_DEVICE_MAX];
 static scsi_inquiry_resp_t msc_inquiry_resp;
 bool msc_inquiry_complete = false;
 
-// ***************************************************************************************
+
 //
 //    Wait for USB to 'settle' ; not quite sure why this is required, time to process 
 //    USB Messages ?
 //
-// ***************************************************************************************
+
 
 void USBSynchronise(void) {
     CONWriteString("Waiting for USB to stabilise..\r");
@@ -37,11 +37,11 @@ void USBSynchronise(void) {
     }
 }
 
-// ***************************************************************************************
+
 //
 //                              USB Key found, initialised.
 //
-// ***************************************************************************************
+
 
 bool inquiry_complete_cb(uint8_t dev_addr, tuh_msc_complete_data_t const *cb_data) {
     if (cb_data->csw->status != 0) {
@@ -72,11 +72,11 @@ bool inquiry_complete_cb(uint8_t dev_addr, tuh_msc_complete_data_t const *cb_dat
     return true;
 }
 
-// ***************************************************************************************
+
 //
 //                              Mount and unmount devices
 //
-// ***************************************************************************************
+
 
 void tuh_msc_mount_cb(uint8_t dev_addr) {
     uint8_t const lun = 0;
@@ -90,11 +90,11 @@ void tuh_msc_umount_cb(uint8_t dev_addr) {
     f_unmount(drive_path);
 }
 
-// ***************************************************************************************
+
 //
 //                                  sInterface to FATFS
 //
-// ***************************************************************************************
+
 
 static void wait_for_disk_io(BYTE pdrv) {
     while (msc_volume_busy[pdrv]) {

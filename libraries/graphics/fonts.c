@@ -1,5 +1,5 @@
-// ***************************************************************************************
-// ***************************************************************************************
+
+
 //
 //      Name :      fonts.c
 //      Authors :   Paul Robson (paul@robsons.org.uk)
@@ -8,18 +8,18 @@
 //      Reviewed :  No
 //      Purpose :   Monochrome Font Rendering
 //
-// ***************************************************************************************
-// ***************************************************************************************
+
+
 
 #include "common.h"
 #include <libraries.h>
 #include "include/atomic.h"
 
-// ***************************************************************************************
+
 //
 //		                    Include the font data in Flash memory. 
 //
-// ***************************************************************************************
+
 
 #include "fontstructures.h"
 #include "fonts/fontdata.h"
@@ -47,11 +47,11 @@ static void _DrawCharacterFromBitmap(GFXPort *vp,int xPos,int yPos,int w,int h,u
 	}
 }
 
-// ***************************************************************************************
+
 //
 //          Draw a single character, return the x adjustment to the next character.
 //
-// ***************************************************************************************
+
 
 static int _DrawCharacter(GFXPort *vp,int xPos,int yPos,int ch,int fontid,int colour,int scale) {	
 
@@ -76,11 +76,11 @@ static int _DrawCharacter(GFXPort *vp,int xPos,int yPos,int ch,int fontid,int co
 }
 
 
-// ***************************************************************************************
+
 //
 //                                      Draw font
 //
-// ***************************************************************************************
+
 
 void GFXDrawString(GFXPort *vp,int xPos,int yPos,char *s,int font,int colour,int scale) {
 	int xWidth;
@@ -99,11 +99,11 @@ void GFXDrawString(GFXPort *vp,int xPos,int yPos,char *s,int font,int colour,int
 	}
 }
 
-// ***************************************************************************************
+
 //
 //                               Get upper/lower extent
 //
-// ***************************************************************************************
+
 
 void GFXGetStringExtent(char *s,int fontid,int scale,int *w, int *y1,int *y2) {
 	uint8_t ch;

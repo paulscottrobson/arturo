@@ -1,5 +1,5 @@
-// ***************************************************************************************
-// ***************************************************************************************
+
+
 //
 //      Name :      triangle.c
 //      Authors :   Paul Robson (paul@robsons.org.uk)
@@ -8,8 +8,8 @@
 //      Reviewed :  No
 //      Purpose :   Triangle Drawing functions
 //
-// ***************************************************************************************
-// ***************************************************************************************
+
+
 
 #include "common.h"
 #include <libraries.h>
@@ -25,11 +25,11 @@ static int colour = 2;
 #define TOFIXED(n)          ((n) << 16)
 #define FROMFIXED(n)        ((n) >> 16)
 
-// ***************************************************************************************
+
 //
 //                                      Sort the vertices
 //
-// ***************************************************************************************
+
 
 static void sortVerticesAscendingByY(void)
 {
@@ -54,11 +54,11 @@ static void sortVerticesAscendingByY(void)
     }
 }
 
-// ***************************************************************************************
+
 //
 //                           Fill a triangle with a flat bottom
 //
-// ***************************************************************************************
+
 
 
 static void fillBottomFlatTriangle(Vertice v1,Vertice v2,Vertice v3) {
@@ -76,11 +76,11 @@ static void fillBottomFlatTriangle(Vertice v1,Vertice v2,Vertice v3) {
     }
 }
 
-// ***************************************************************************************
+
 //
 //                           Fill a triangle with a flat top
 //
-// ***************************************************************************************
+
 
 static void fillTopFlatTriangle(Vertice v1,Vertice v2,Vertice v3)
 {
@@ -97,11 +97,11 @@ static void fillTopFlatTriangle(Vertice v1,Vertice v2,Vertice v3)
     }
 }
 
-// ***************************************************************************************
+
 //
 //                           Draw a filled triangle
 //
-// ***************************************************************************************
+
 
 static void drawFilledTriangle() {
     /* at first sort the three vertices by y-coordinate ascending so v1 is the topmost vertice */
@@ -125,11 +125,11 @@ static void drawFilledTriangle() {
     }
 }
 
-// ***************************************************************************************
+
 //
 //                           Link in draw filled triangle function
 //
-// ***************************************************************************************
+
 
 void GFXFillTriangle(GFXPort *vp,int x0,int y0,int x1,int y1,int x2,int y2,int col) {
     GFXASetPort(vp);
@@ -140,11 +140,11 @@ void GFXFillTriangle(GFXPort *vp,int x0,int y0,int x1,int y1,int x2,int y2,int c
     drawFilledTriangle();
 }
 
-// ***************************************************************************************
+
 //
 //                           Draw framed triangle (e.g. outline)
 //
-// ***************************************************************************************
+
 
 void GFXFrameTriangle(GFXPort *vp,int x0,int y0,int x1,int y1,int x2,int y2,int col) {
     GFXASetPort(vp);

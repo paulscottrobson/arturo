@@ -1,18 +1,17 @@
-// ***************************************************************************************
-// ***************************************************************************************
-//
-//		Name : 		console.h
-//		Author :	Paul Robson (paul@robsons.org.uk)
-//		Date : 		18th December 2024
-//		Reviewed :	No
-//		Purpose :	Console output for debugging, header file.
-//
-// ***************************************************************************************
-// ***************************************************************************************
+/**
+ * @file console.h
+ *
+ * @brief      Header file console debugging
+ *
+ * @author     Paul Robson
+ *
+ * @date       07/01/2025
+ *
+ */
 
 #pragma once
 //
-//		Standard colours RGB format, same as the BBC Micro.
+//      Standard colours RGB format, same as the BBC Micro.
 //
 #define CON_COL_BLACK 0x0
 #define CON_COL_RED 0x1
@@ -23,12 +22,12 @@
 #define CON_COL_CYAN 0x6
 #define CON_COL_WHITE 0x7
 //
-//		Range of UDG for 8x8 fonts only.
+//      Range of UDG for 8x8 fonts only.
 //
-#define FONT_FIRST_UDG 		(224)
-#define FONT_LAST_UDG 		(255)
+#define FONT_FIRST_UDG      (224)
+#define FONT_LAST_UDG       (255)
 //
-//		Console output functionality.
+//      Console output functionality.
 //
 void CONInitialise(void);
 void CONWrite(int c);

@@ -1,5 +1,5 @@
-// ***************************************************************************************
-// ***************************************************************************************
+
+
 //
 //		Name : 		fileio.c
 //		Author :	Paul Robson (paul@robsons.org.uk)
@@ -7,8 +7,8 @@
 //		Reviewed :	No
 //		Purpose :	File I/O mapping.
 //
-// ***************************************************************************************
-// ***************************************************************************************
+
+
 
 #include "common.h"
 
@@ -19,22 +19,22 @@ static struct _FileInfo {
 
 #define VALID_AND_OPEN(n) ((n) >= 0 && (n) < FIO_MAX_HANDLES && files[n].isInUse)
 
-// ***************************************************************************************
+
 //
 //									Initialise support I/O
 //
-// ***************************************************************************************
+
 
 void FIOInitialise(void) {
 	FSYSInitialise();
 	for (int i = 0;i < FIO_MAX_HANDLES;i++) files[i].isInUse = false;
 }
 
-// ***************************************************************************************
+
 //
 //									Open file read/write
 //
-// ***************************************************************************************
+
 
 int FIOOpen(char *fileName) {
 	int i = 0;
@@ -45,11 +45,11 @@ int FIOOpen(char *fileName) {
 	return FSYSOpen(i,fileName); 
 }
 
-// ***************************************************************************************
+
 //
 //										Close file
 //
-// ***************************************************************************************
+
 
 int FIOClose(int handle) {
 	if (!VALID_AND_OPEN(handle)) return FIO_ERR_HANDLE;  							// Bad handle
@@ -57,22 +57,22 @@ int FIOClose(int handle) {
 	return FSYSClose(handle);
 }
 
-// ***************************************************************************************
+
 //
 //										Read Data
 //
-// ***************************************************************************************
+
 
 int FIORead(int handle,void *data,int size) {
 	if (!VALID_AND_OPEN(handle)) return FIO_ERR_HANDLE;  							// Bad handle
 	return FSYSRead(handle,data,size);
 }
 
-// ***************************************************************************************
+
 //
 //										Write data
 //
-// ***************************************************************************************
+
 
 int FIOWrite(int handle,void *data,int size) {
 	if (!VALID_AND_OPEN(handle)) return FIO_ERR_HANDLE;  							// Bad handle
@@ -80,22 +80,22 @@ int FIOWrite(int handle,void *data,int size) {
 	return FSYSWrite(handle,data,size);
 }
 
-// ***************************************************************************************
+
 //
 //							 Get and optionally set position
 //
-// ***************************************************************************************
+
 
 int FIOGetSetPosition(int handle,int newPosition) {
 	if (!VALID_AND_OPEN(handle)) return FIO_ERR_HANDLE;  							// Bad handle
 	return FSYSGetSetPosition(handle,newPosition);
 }
 
-// ***************************************************************************************
+
 //
 //									These are direct wrappers
 //
-// ***************************************************************************************
+
 
 int FIOCreateFile(char *fileName) {
 	return FSYSCreateFile(fileName);
@@ -126,12 +126,12 @@ int FIOFileInformation(char *name,FIOInfo *info) {
 	return FSYSFileInformation(name,info); 
 }								
 
-// ***************************************************************************************
+
 //
 //		This implementation has a 'fake' handle, but it's actually ignored and this
 //		implementation can only do one directory scan at a time.
 //
-// ***************************************************************************************
+
 
 int FIOOpenDirectory(char *directory) {
 	return FSYSOpenDirectory(directory); 

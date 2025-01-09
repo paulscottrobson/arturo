@@ -1,5 +1,5 @@
-// ***************************************************************************************
-// ***************************************************************************************
+
+
 //
 //    Name :    	dvi_640x480.c
 //    Author :  	Paul Robson (paul@robsons.org.uk)
@@ -8,8 +8,8 @@
 //    Reviewed :	No
 //    Purpose : 	DVI Driver 640x480 frame size. 
 //
-// ***************************************************************************************
-// ***************************************************************************************
+
+
 
 #include "common.h"
 
@@ -20,11 +20,11 @@
 
 struct dvi_serialiser_cfg *DVIGetHDMIConfig(void);
 
-// ***************************************************************************************
+
 //
 //        Frame buffer, these are 3 planar bitmaps for 640x480
 //
-// ***************************************************************************************
+
 
 #define FRAME_WIDTH 640                               								// Not the *pixels*, it's the display setting.
 #define FRAME_HEIGHT 480
@@ -46,11 +46,11 @@ static uint8_t framebuf[VIDEO_BYTES];                    							// Bitplane memo
 struct dvi_inst dvi0;                               								// PicoDVI structure
 struct DVIModeInformation dvi_modeInfo;                       						// Mode information structure.
 
-// ***************************************************************************************
+
 //
 //                  				Get mode information
 //
-// ***************************************************************************************
+
 
 struct DVIModeInformation *DVIGetModeInformation(void) {
 	return &dvi_modeInfo;
@@ -62,11 +62,11 @@ int  DVIGetScreenExtent(int *pWidth,int *pHeight) {
 	return dvi_modeInfo.mode;
 }
 
-// ***************************************************************************************
+
 //
 //                  					Set current mode
 //
-// ***************************************************************************************
+
 
 bool DVISetMode(int mode) {
 	bool supported = true;
@@ -142,11 +142,11 @@ bool DVISetMode(int mode) {
 	return supported;
 }
 
-// ***************************************************************************************
+
 //
 //            Set the current colours, monochrome mode
 //
-// ***************************************************************************************
+
 
 static uint8_t mono_fg_bg = 0x43;                           // Current colours for 640x480x2 colour
 
@@ -154,11 +154,11 @@ void DVISetMonoColour(int fg, int bg) {
   mono_fg_bg = fg | (bg << 3);
 }
 
-// ***************************************************************************************
+
 //
 //                  The main line renderer
 //
-// ***************************************************************************************
+
 
 static uint8_t _buffer[80];                               // Buffer for line
 static uint16_t _mapping[256];                            // Table mapping 320 bits to 640 bits
@@ -298,11 +298,11 @@ void __not_in_flash("main") dvi_core1_main() {
 	}
 }
 
-// ***************************************************************************************
+
 //
 //                  					Start the DVI driver
 //
-// ***************************************************************************************
+
 
 void DVIStart(void) {
 	DVISetMode(DVI_MODE_640_240_8);

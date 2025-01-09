@@ -1,5 +1,5 @@
-// ***************************************************************************************
-// ***************************************************************************************
+
+
 //
 //		Name:		sound.cpp
 //		Purpose:	SoundSupport library for SDL.
@@ -7,8 +7,8 @@
 //		Author:		qxxxb (https://github.com/qxxxb/sdl2-beeper)
 //					Paul Robson (paul@robsons.org.uk)
 //
-// ***************************************************************************************
-// ***************************************************************************************
+
+
 
 #include <artsim.h>
 
@@ -18,14 +18,14 @@ static SDL_AudioSpec audioSpec;
 void (*m_writeData)(uint8_t* ptr, double data);
 int (*m_calculateOffset)(int sample, int channel);
 
-// ***************************************************************************************
+
 // 
 // 		Calculate the offset in bytes from the start of the audio stream to the
 // 		memory address at `sample` and `channel`.
 //
 // 		Channels are interleaved.
 //
-// ***************************************************************************************
+
 
 static int calculateOffset_s16(int sample, int channel) {
 	return
@@ -39,12 +39,12 @@ static int calculateOffset_f32(int sample, int channel) {
 		(channel * sizeof(float));
 }
 
-// ***************************************************************************************
+
 //
 // 		Convert a normalized data value (range: 0.0 .. 1.0) to a data value matching
 // 		the audio format.
 //
-// ***************************************************************************************
+
 
 static void writeData_s16(uint8_t* ptr, double data) {
 	int16_t* ptrTyped = (int16_t*)ptr;
@@ -58,11 +58,11 @@ static void writeData_f32(uint8_t* ptr, double data) {
 	*ptrTyped = data;
 }
 
-// ***************************************************************************************
+
 //
 //						Callback when requesting buffer be filled
 //
-// ***************************************************************************************
+
 
 static void audioCallback(void* userdata,uint8_t* stream,int len) {
 	// Unused parameters
@@ -86,11 +86,11 @@ static void audioCallback(void* userdata,uint8_t* stream,int len) {
 	}
 }
 
-// ***************************************************************************************
+
 //
 //								Open a sound device
 //
-// ***************************************************************************************
+
 
 void SOUNDOpen(void) {
 	char *formatName = "<unknown>";
@@ -179,41 +179,41 @@ void SOUNDOpen(void) {
 	}
 }
 
-// ***************************************************************************************
+
 //
 //								End the Sound system
 //
-// ***************************************************************************************
+
 
 void SOUNDClose(void) {
 	SDL_CloseAudioDevice(audioDevice);
 }
 
-// ***************************************************************************************
+
 //
 //								Start playing sound
 //
-// ***************************************************************************************
+
 
 void SOUNDPlay(void) {
 	SDL_PauseAudioDevice(audioDevice, 0);
 }
 
-// ***************************************************************************************
+
 //
 //								Stop playing sound
 //
-// ***************************************************************************************
+
 
 void SOUNDStop(void) {
 	SDL_PauseAudioDevice(audioDevice, 1);
 }
 
-// ***************************************************************************************
+
 //
 //      Function that returns the sample rate in Hz of the implementeing hardware
 //
-// ***************************************************************************************
+
 
 int SNDGetSampleFrequency(void) {
     return audioSpec.freq;

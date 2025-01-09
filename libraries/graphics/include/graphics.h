@@ -1,25 +1,24 @@
-// ***************************************************************************************
-// ***************************************************************************************
-//
-//      Name :      graphics.h
-//      Authors :   Paul Robson (paul@robsons.org.uk)
-//      Date :      28th December 2024
-//      Reviewed :  No
-//      Purpose :   Graphics core header.
-//
-// ***************************************************************************************
-// ***************************************************************************************
+/**
+ * @file graphics.h
+ *
+ * @brief      Header file, graphics functions
+ *
+ * @author     Paul Robson
+ *
+ * @date       07/01/2025
+ *
+ */
 
 #pragma once
 
 #include "fontinclude.h"
 
 //
-//		A drawing area on the display.
+//      A drawing area on the display.
 //
 typedef struct _GFXPort {
-	int x,y,width,height;  															// Viewport position, pixels. 
-	int xOffset,yOffset;  															// Positional offset when drawing.
+    int x,y,width,height;                                                           // Viewport position, pixels. 
+    int xOffset,yOffset;                                                            // Positional offset when drawing.
 } GFXPort;
 
 void GFXSetMode(int mode);

@@ -1,20 +1,16 @@
-// ***************************************************************************************
-// ***************************************************************************************
-//
-//		Name : 		miscellany.h
-//		Author :	Paul Robson (paul@robsons.org.uk)
-//		Date : 		23rd December 2024
-//		Reviewed :	No
-//		Purpose :	Odds and sods (internal)
-//
-// ***************************************************************************************
-// ***************************************************************************************
+/**
+ * @file  miscellany.h
+ *
+ * @brief      Header file, miscellaneous
+ *
+ * @author     Paul Robson
+ *
+ * @date       07/01/2025
+ *
+ */
 
 #pragma once
 //
-//		Timer/Interrupt functions.
+//      Timer/Interrupt functions.
 //
-void TMRStartTickInterrupt(void);
-//
-//		Synchronisation method.
-//
+void TMRStartTickInterrupt(void);   

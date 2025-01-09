@@ -1,5 +1,5 @@
-// ***************************************************************************************
-// ***************************************************************************************
+
+
 //
 //		Name : 		fileio.c
 //		Author :	Paul Robson (paul@robsons.org.uk)
@@ -9,25 +9,25 @@
 //					This level does not check things like valid handles. It's purpose
 //					is to precisely perform the required task.
 //
-// ***************************************************************************************
-// ***************************************************************************************
+
+
 
 #include "common.h"
 #include "ff.h"
 
-// ***************************************************************************************
+
 //
 //								Current open files.
 //
-// ***************************************************************************************
+
 
 static FIL files[FIO_MAX_HANDLES];
 
-// ***************************************************************************************
+
 //
 //							Map FATFS error onto FIO error
 //
-// ***************************************************************************************
+
 
 static int _FSYSMapError(FRESULT r) {
 	int err;
@@ -49,20 +49,20 @@ static int _FSYSMapError(FRESULT r) {
 	return err;
 }
 
-// ***************************************************************************************
+
 //
 //							Reset all file objects etc.
 //
-// ***************************************************************************************
+
 
 void FSYSInitialise(void) {
 }
 
-// ***************************************************************************************
+
 //
 //				Get file information. Fills structure if provided and no error.
 //
-// ***************************************************************************************
+
 
 int FSYSFileInformation(char *name,FIOInfo *info) {
 	FILINFO ffi;
@@ -74,11 +74,11 @@ int FSYSFileInformation(char *name,FIOInfo *info) {
 	return _FSYSMapError(r);
 }
 
-// ***************************************************************************************
+
 //
 //					Create a new file, deleting any currently existing file
 //
-// ***************************************************************************************
+
 
 int FSYSCreateFile(char *name) {
 	FIL fRec;
@@ -88,11 +88,11 @@ int FSYSCreateFile(char *name) {
 	return FIO_OK;
 }  	
 
-// ***************************************************************************************
+
 //
 //						Delete file, ignoring if it does not exist
 //
-// ***************************************************************************************
+
 
 int FSYSDeleteFile(char *name) {
 	FRESULT fr = f_unlink(name);
@@ -101,11 +101,11 @@ int FSYSDeleteFile(char *name) {
 	return _FSYSMapError(fr);	
 }
 
-// ***************************************************************************************
+
 //
 //					Create a new directory if it does not already exist
 //
-// ***************************************************************************************
+
 
 int FSYSCreateDirectory(char *name) {  											
 	FRESULT fr = f_mkdir(name);
@@ -114,11 +114,11 @@ int FSYSCreateDirectory(char *name) {
 	return _FSYSMapError(fr);
 }
 
-// ***************************************************************************************
+
 //
 //								Change to a new directory
 //
-// ***************************************************************************************
+
 
 int FSYSChangeDirectory(char *directory) {
 	FRESULT fr = f_chdir(directory);
@@ -126,21 +126,21 @@ int FSYSChangeDirectory(char *directory) {
 }
 
 
-// ***************************************************************************************
+
 //
 //				Delete directory, ignoring if it does not exist/not empty
 //
-// ***************************************************************************************
+
 
 int FSYSDeleteDirectory(char *name) {
 	return FSYSDeleteFile(name);  												// Same as delete file :)
 }  											
 
-// ***************************************************************************************
+
 //
 //							Open File in R/W mode, rewind to start
 //
-// ***************************************************************************************
+
 
 int FSYSOpen(int handle,char *name) {
 	FRESULT fr = f_open(&files[handle],name,FA_READ|FA_WRITE|FA_OPEN_EXISTING);  	// Open read/write										
@@ -149,21 +149,21 @@ int FSYSOpen(int handle,char *name) {
 	return _FSYSMapError(fr);
 };
 
-// ***************************************************************************************
+
 //
 //										Close the file
 //
-// ***************************************************************************************
+
 
 int FSYSClose(int handle) {
 	return _FSYSMapError(f_close(&files[handle])); 			 						// Close file.
 }
 
-// ***************************************************************************************
+
 //
 //				Read data from the file. Returns error or # of bytes read.
 //
-// ***************************************************************************************
+
 
 int FSYSRead(int handle,void *data,int size) {
 	UINT count;
@@ -172,11 +172,11 @@ int FSYSRead(int handle,void *data,int size) {
 	return (int)count;  															// Bytes read.
 }
 
-// ***************************************************************************************
+
 //
 //								Write data to the file. 
 //
-// ***************************************************************************************
+
 
 int FSYSWrite(int handle,void *data,int size) {
 	UINT count;
@@ -186,21 +186,21 @@ int FSYSWrite(int handle,void *data,int size) {
 	return FIO_OK;  																// It's okay.
 }
 
-// ***************************************************************************************
+
 //
 //		Check end of file. Return -ve on error, 0 if more data, +ve if eof
 //
-// ***************************************************************************************
+
 
 int FSYSEndOfFile(int handle) {
 	return f_eof(&files[handle]) ? FIO_EOF : FIO_OK;  								// Seems not to be able to error :)
 }
 
-// ***************************************************************************************
+
 //
 //				Returns current position, and sets new position if >= 0
 //
-// ***************************************************************************************
+
 
 int FSYSGetSetPosition(int handle,int newPosition) {
 	int current = f_tell(&files[handle]);  											// Where are we now (cannot error in fatfs)
@@ -211,11 +211,11 @@ int FSYSGetSetPosition(int handle,int newPosition) {
 	return current;
 }  	
 
-// ***************************************************************************************
+
 //
 //								Open Directory for reading
 //
-// ***************************************************************************************
+
 
 static DIR currentDirectory;
 
@@ -223,12 +223,12 @@ int FSYSOpenDirectory(char *directory) {
 	return _FSYSMapError(f_opendir(&currentDirectory,directory));  					// Open directory
 }
 
-// ***************************************************************************************
+
 //
 //			Read next directory entry. This does not exclude .. or . at this level.
 // 			Returns FIO_EOF if there is no directory information to read
 //
-// ***************************************************************************************
+
 
 int FSYSReadDirectory(char *fileName) {
 	FILINFO fi;
@@ -240,11 +240,11 @@ int FSYSReadDirectory(char *fileName) {
 	return FIO_OK;
 }  	
 
-// ***************************************************************************************
+
 //
 //								Close directory being read
 //
-// ***************************************************************************************
+
 
 int FSYSCloseDirectory(void) {
 	return _FSYSMapError(f_closedir(&currentDirectory));  		

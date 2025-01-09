@@ -1,19 +1,19 @@
-// ***************************************************************************************
-// ***************************************************************************************
-//
-//		Name : 		dvi_common.h
-//		Author :	Paul Robson (paul@robsons.org.uk)
-//		Date : 		23rd December 2024
-//		Reviewed :	No
-//		Purpose :	Common values, DVI driver (internal)
-//
-// ***************************************************************************************
-// ***************************************************************************************
+/**
+ * @file dvi_common.h
+ *
+ * @brief      Header file, DVI hardware
+ *
+ * @author     Paul Robson
+ *
+ * @date       07/01/2025
+ *
+ */
+
 
 #pragma once
 
 //
-//		PicoDVI Configuration
+//      PicoDVI Configuration
 //
 #define VREG_VSEL VREG_VOLTAGE_1_20
 #define DVI_TIMING dvi_timing_640x480p_60hz

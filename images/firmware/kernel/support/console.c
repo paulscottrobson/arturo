@@ -1,5 +1,5 @@
-// ***************************************************************************************
-// ***************************************************************************************
+
+
 //
 //		Name : 		console.c
 //		Author :	Paul Robson (paul@robsons.org.uk)
@@ -7,8 +7,8 @@
 //		Reviewed :	No
 //		Purpose :	Console output code, for debugging primarily.
 //
-// ***************************************************************************************
-// ***************************************************************************************
+
+
 
 #include "common.h"
 
@@ -21,11 +21,11 @@
 
 static uint8_t udgData[(FONT_LAST_UDG-FONT_FIRST_UDG+1) * 8];  						// the data for the 32 (currently) 8x8 UDGs
 
-// ***************************************************************************************
+
 //
 //						Set one pixel at x,y in the given colour.
 //
-// ***************************************************************************************
+
 
 void CONDrawPixel(int x, int y, int rgb) {
 	struct DVIModeInformation *dmi = DVIGetModeInformation();  						// Identify mode data.
@@ -59,11 +59,11 @@ void CONDrawPixel(int x, int y, int rgb) {
 	}
 }
 
-// ***************************************************************************************
+
 //
 //								Console setup - very simple here.
 //
-// ***************************************************************************************
+
 
 static uint x0 = 0;  																// Posiiton in pixels
 static uint y0 = 0;
@@ -71,11 +71,11 @@ static uint fgcol = CON_COL_WHITE;  												// Text colour
 static uint bgcol = CON_COL_BLACK;
 static bool conIsEnabled = true;  													// Console is enabled
 
-// ***************************************************************************************
+
 //
 //									Console Initialise
 //
-// ***************************************************************************************
+
 
 void CONInitialise(void) {
 	CONEnableConsole(true);
@@ -83,31 +83,31 @@ void CONInitialise(void) {
 	CONSetColour(CON_COL_GREEN,CON_COL_BLACK);
 }
 
-// ***************************************************************************************
+
 //
 //									Enable/Disable console
 //
-// ***************************************************************************************
+
 
 void CONEnableConsole(bool isOn) {
 	conIsEnabled = isOn;
 }
 
-// ***************************************************************************************
+
 //
 //									Set Colour
 //
-// ***************************************************************************************
+
 
 void CONSetColour(int foreground,int background) {
 	fgcol = foreground;bgcol = background;
 }
 
-// ***************************************************************************************
+
 //
 //							Write one character or control code.
 //
-// ***************************************************************************************
+
 
 void CONWrite(int c) {
 	struct DVIModeInformation *dmi = DVIGetModeInformation();  						// Identify mode data.
@@ -149,11 +149,11 @@ void CONWrite(int c) {
 	}
 }
 
-// ***************************************************************************************
+
 //
 //									Define the UDG
 //
-// ***************************************************************************************
+
 
 void CONDefineUDG(int udg,uint8_t *bitData) {
 	if (udg >= FONT_FIRST_UDG && udg <= FONT_LAST_UDG) {
@@ -162,11 +162,11 @@ void CONDefineUDG(int udg,uint8_t *bitData) {
 	}
 }
 
-// ***************************************************************************************
+
 //
 //			Get the graphic data for the given UDG (bad values return solid block)
 //
-// ***************************************************************************************
+
 
 uint8_t *CONGetUDGGraphicData(int c) {
 	static uint8_t _duffUDG[] = { 0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF};  		// Used for a bad graphic.
@@ -174,11 +174,11 @@ uint8_t *CONGetUDGGraphicData(int c) {
 	return udgData + (c - FONT_FIRST_UDG) * 8; 										// Return offset to graphic
 }
 
-// ***************************************************************************************
+
 //
 //								Write a string in varargs format
 //
-// ***************************************************************************************
+
 
 void CONWriteString(const char *fmt, ...) {
 	char buf[128];

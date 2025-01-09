@@ -1,5 +1,5 @@
-// ***************************************************************************************
-// ***************************************************************************************
+
+
 //
 //      Name :      port.c
 //      Authors :   Paul Robson (paul@robsons.org.uk)
@@ -7,17 +7,17 @@
 //      Reviewed :  No
 //      Purpose :   Graphic Port functions
 //
-// ***************************************************************************************
-// ***************************************************************************************
+
+
 
 #include "common.h"
 #include <libraries.h>
 
-// ***************************************************************************************
+
 //
 //									Initialise a Graphics Port
 //
-// ***************************************************************************************
+
 
 void GFXPortInitialise(GFXPort *vp,int x0,int y0,int x1,int y1) {
 	struct DVIModeInformation *dmi = DVIGetModeInformation();
@@ -28,11 +28,11 @@ void GFXPortInitialise(GFXPort *vp,int x0,int y0,int x1,int y1) {
 	vp->xOffset = vp->yOffset = 0;
 }
 
-// ***************************************************************************************
+
 //
 //							Scroll port offset to new position
 //
-// ***************************************************************************************
+
 
 void GFXScrollPort(GFXPort *vp,int xo,int yo) {
 	vp->xOffset = xo;vp->yOffset = yo;

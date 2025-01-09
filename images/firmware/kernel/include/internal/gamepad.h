@@ -1,26 +1,25 @@
-// ***************************************************************************************
-// ***************************************************************************************
-//
-//      Name :     	gamepad.h
-//      Authors :   Paul Robson (paul@robsons.org.uk)
-//      Date :      23rd December 2024
-//      Reviewed :  No
-//      Purpose :   Gamepad header (internal)
-//
-// ***************************************************************************************
-// ***************************************************************************************
+/**
+ * @file gamepad.h
+ *
+ * @brief      Header file, Gamepad code, internal
+ *
+ * @author     Paul Robson
+ *
+ * @date       07/01/2025
+ *
+ */
 
 #pragma once
 
-#define CTL_DEVICE_TYPE_ID(vid,pid) 			(((vid) << 16)|(pid))  				// 32 bit device type.
-#define CTL_HARDWARE_ID(dev_addr,instance)		(((dev_addr << 8)|(instance))) 		// 16 bit composite identifier
+#define CTL_DEVICE_TYPE_ID(vid,pid)             (((vid) << 16)|(pid))               // 32 bit device type.
+#define CTL_HARDWARE_ID(dev_addr,instance)      (((dev_addr << 8)|(instance)))      // 16 bit composite identifier
 
-#define CTLM_REGISTER		(0)
-#define CTLM_UPDATE 		(1)
+#define CTLM_REGISTER       (0)
+#define CTLM_UPDATE         (1)
 
 struct _CTL_MessageData {
-	const uint8_t *report;   														// USB report data
-	uint8_t len;  																	// Length of report data.
+    const uint8_t *report;                                                          // USB report data
+    uint8_t len;                                                                    // Length of report data.
 };
 
 void CTLInitialise(void);

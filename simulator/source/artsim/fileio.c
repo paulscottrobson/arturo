@@ -1,5 +1,5 @@
-// ***************************************************************************************
-// ***************************************************************************************
+
+
 //
 //		Name : 		fileio.c
 //		Author :	Paul Robson (paul@robsons.org.uk)
@@ -9,35 +9,35 @@
 //					This level does not check things like valid handles. It's purpose
 //					is to precisely perform the required task.
 //
-// ***************************************************************************************
-// ***************************************************************************************
+
+
 
 #include "artsim.h"
 #include "sys/stat.h"
 #include "dirent.h"
 
-// ***************************************************************************************
+
 //
 //								Current open files.
 //
-// ***************************************************************************************
+
 
 static FILE *files[FIO_MAX_HANDLES];
 
-// ***************************************************************************************
+
 //
 //							Reset all file objects etc.
 //
-// ***************************************************************************************
+
 
 void FSYSInitialise(void) {
 }
 
-// ***************************************************************************************
+
 //
 //							Mep errno to our errors
 //
-// ***************************************************************************************
+
 
 static int _FSYSMapError(void) {
 	int e;
@@ -52,11 +52,11 @@ static int _FSYSMapError(void) {
 	return e;
 }
 
-// ***************************************************************************************
+
 //
 //							Convert file to an internal file name.
 //
-// ***************************************************************************************
+
 
 static char *_FSYSMapName(char *name) {
 	static char buffer[256];
@@ -65,11 +65,11 @@ static char *_FSYSMapName(char *name) {
 	return(buffer);
 }
 
-// ***************************************************************************************
+
 //
 //				Get file information. Fills structure if provided and no error.
 //
-// ***************************************************************************************
+
 
 int FSYSFileInformation(char *name,FIOInfo *info) {
 
@@ -90,11 +90,11 @@ int FSYSFileInformation(char *name,FIOInfo *info) {
 	return FIO_OK;
 }
 
-// ***************************************************************************************
+
 //
 //					Create a new file, deleting any currently existing file
 //
-// ***************************************************************************************
+
 
 int FSYSCreateFile(char *name) {
 	FILE *f = fopen(_FSYSMapName(name),"w");  									// Creates an empty file.
@@ -103,11 +103,11 @@ int FSYSCreateFile(char *name) {
 	return FIO_OK;
 }  	
 
-// ***************************************************************************************
+
 //
 //						Delete file, ignoring if it does not exist
 //
-// ***************************************************************************************
+
 
 int FSYSDeleteFile(char *name) {
 	if (unlink(_FSYSMapName(name)) == 0) return FIO_OK; 						// Delete worked okay.
@@ -115,11 +115,11 @@ int FSYSDeleteFile(char *name) {
 	return _FSYSMapError();	
 }
 
-// ***************************************************************************************
+
 //
 //					Create a new directory if it does not already exist
 //
-// ***************************************************************************************
+
 
 int FSYSCreateDirectory(char *name) {  											
 	if (mkdir(_FSYSMapName(name),0777) == 0) return FIO_OK; 					// Create directory okay
@@ -127,11 +127,11 @@ int FSYSCreateDirectory(char *name) {
 	return _FSYSMapError();
 }
 
-// ***************************************************************************************
+
 //
 //				Delete directory, ignoring if it does not exist/not empty
 //
-// ***************************************************************************************
+
 
 int FSYSDeleteDirectory(char *name) {
 	if (rmdir(_FSYSMapName(name)) == 0) return FIO_OK;  							// Removal okay
@@ -140,22 +140,22 @@ int FSYSDeleteDirectory(char *name) {
 	return _FSYSMapError();
 }  											
 
-// ***************************************************************************************
+
 //
 //								Change to a new directory
 //
-// ***************************************************************************************
+
 
 int FSYSChangeDirectory(char *directory) {
 	if (chdir(_FSYSMapName(directory)) == 0) return FIO_OK;
 	return _FSYSMapError();
 }
 
-// ***************************************************************************************
+
 //
 //							Open File in R/W mode, rewind to start
 //
-// ***************************************************************************************
+
 
 int FSYSOpen(int handle,char *name) {
 	files[handle] = fopen(_FSYSMapName(name),"r+");  								// Open read/write
@@ -164,22 +164,22 @@ int FSYSOpen(int handle,char *name) {
 	return FIO_OK;
 };
 
-// ***************************************************************************************
+
 //
 //										Close the file
 //
-// ***************************************************************************************
+
 
 int FSYSClose(int handle) {
 	if (fclose(files[handle]) < 0) return _FSYSMapError();  						// Close file.
 	return FIO_OK;
 }
 
-// ***************************************************************************************
+
 //
 //				Read data from the file. Returns error or # of bytes read.
 //
-// ***************************************************************************************
+
 
 int FSYSRead(int handle,void *data,int size) {
 	int bytesRead = fread(data,1,size,files[handle]);  								// Attempt to read data from file.
@@ -187,11 +187,11 @@ int FSYSRead(int handle,void *data,int size) {
 	return bytesRead;
 }
 
-// ***************************************************************************************
+
 //
 //								Write data to the file. 
 //
-// ***************************************************************************************
+
 
 int FSYSWrite(int handle,void *data,int size) {
 	int bytesWritten = fwrite(data,1,size,files[handle]);  							// Attempt to write.
@@ -200,21 +200,21 @@ int FSYSWrite(int handle,void *data,int size) {
 	return FIO_OK;  																// It's okay.
 }
 
-// ***************************************************************************************
+
 //
 //		Check end of file. Return -ve on error, 0 if more data, +ve if eof
 //
-// ***************************************************************************************
+
 
 int FSYSEndOfFile(int handle) {
 	return feof(files[handle]) ? FIO_EOF : FIO_OK;  								// Seems not to be able to error :)
 }
 
-// ***************************************************************************************
+
 //
 //				Returns current position, and sets new position if >= 0
 //
-// ***************************************************************************************
+
 
 int FSYSGetSetPosition(int handle,int newPosition) {
 	int current = ftell(files[handle]);  											// Where are we now ?
@@ -225,11 +225,11 @@ int FSYSGetSetPosition(int handle,int newPosition) {
 	return current;
 }  	
 
-// ***************************************************************************************
+
 //
 //								Open Directory for reading
 //
-// ***************************************************************************************
+
 
 static DIR* currentDirectory;
 
@@ -239,12 +239,12 @@ int FSYSOpenDirectory(char *directory) {
 	return (currentDirectory == NULL) ? _FSYSMapError() : FIO_OK;  					// Return OK, or error.
 }
 
-// ***************************************************************************************
+
 //
 //			Read next directory entry. This does not exclude .. or . at this level.
 // 			Returns FIO_EOF if there is no directory information to read
 //
-// ***************************************************************************************
+
 
 int FSYSReadDirectory(char *fileName) {
 	struct dirent *next = readdir(currentDirectory); 								// Read next entry.
@@ -257,11 +257,11 @@ int FSYSReadDirectory(char *fileName) {
 	return FIO_OK;
 }  	
 
-// ***************************************************************************************
+
 //
 //								Close directory being read
 //
-// ***************************************************************************************
+
 
 int FSYSCloseDirectory(void) {
 	return closedir(currentDirectory) < 0 ? _FSYSMapError() : FIO_OK;

@@ -1,5 +1,5 @@
-// ***************************************************************************************
-// ***************************************************************************************
+
+
 //
 //      Name :      usbdriver.cpp
 //      Authors :   Tsvetan Usunov (Olimex)
@@ -9,21 +9,21 @@
 //      Reviewed :  No
 //      Purpose :   USB interface and HID->Event mapper.
 //
-// ***************************************************************************************
-// ***************************************************************************************
+
+
 
 #include "common.h"
 #include "tusb.h"
 
 static void usbResetSystem(void);
 
-// ***************************************************************************************
+
 //
 //                          Process USB HID Keyboard Report
 //
 //                  This converts it to a series of up/down key events
 //
-// ***************************************************************************************
+
 
 static short lastReport[KBD_MAX_KEYCODE] = { 0 };                               // state at last HID report.
 
@@ -55,11 +55,11 @@ static void usbProcessReport(uint8_t const *report) {
     }
 }
 
-// ***************************************************************************************
+
 //
 //                          Process USB HID Mouse Report
 //
-// ***************************************************************************************
+
 
 static void usbProcessMouseReport(uint8_t const *report, uint16_t len) {
     if(len < 3) return;                                                         // Some mice return three things, some four.
@@ -70,11 +70,11 @@ static void usbProcessMouseReport(uint8_t const *report, uint16_t len) {
     MSEUpdateScrollWheel(report[3]);
 }
 
-// ***************************************************************************************
+
 //
 //                              USB Callback functions
 //
-// ***************************************************************************************
+
 
 void tuh_hid_mount_cb(uint8_t dev_addr, uint8_t instance, uint8_t const* desc_report, uint16_t desc_len) {
     uint16_t vid, pid;
@@ -118,33 +118,33 @@ void tuh_hid_report_received_cb(uint8_t dev_addr, uint8_t instance, uint8_t cons
     tuh_hid_receive_report(dev_addr, instance);
 }
 
-// ***************************************************************************************
+
 //
 //                               USB initialisation
 //
-// ***************************************************************************************
+
 
 void USBInitialise(void) {
     for (int i = 0;i < KBD_MAX_KEYCODE;i++) lastReport[i] = 0;                  // No keys currently known
     tusb_init();                                                                // Set up tinyUSB
 }
 
-// ***************************************************************************************
+
 //
 //                 Update the USB system (returns 0 to exit, which doesn't happen)
 //
-// ***************************************************************************************
+
 
 int USBUpdate(void) {
     tuh_task();
     return -1;
 }
 
-// ***************************************************************************************
+
 //
 //                                  Reset the RP2040
 //
-// ***************************************************************************************
+
 
 static void usbResetSystem(void) {
     CONWriteString("Resetting.\n");

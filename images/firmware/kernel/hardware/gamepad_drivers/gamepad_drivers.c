@@ -1,5 +1,5 @@
-// ***************************************************************************************
-// ***************************************************************************************
+
+
 //
 //      Name :      gamepad_drivers.c
 //      Authors :   Paul Robson (paul@robsons.org.uk), based on work by Sascha Schneider
@@ -7,17 +7,17 @@
 //      Reviewed :  No
 //      Purpose :   Gamepad individual handlers.
 //
-// ***************************************************************************************
-// ***************************************************************************************
+
+
 
 #include "common.h"
 
 
-// ***************************************************************************************
+
 //
 //					Dispatch command and data to the correct handler.
 //
-// ***************************************************************************************
+
 
 int  CTLDispatchMessage(int command,CTLState *cs,struct _CTL_MessageData *msg) {
 	int retVal = 0;
@@ -42,11 +42,11 @@ int  CTLDispatchMessage(int command,CTLState *cs,struct _CTL_MessageData *msg) {
 	return retVal;
 }
 
-// ***************************************************************************************
+
 //
 //						Utility function to display the status.
 //
-// ***************************************************************************************
+
 
 void CTLAnnounceDevice(CTLState *cs,const char *name) {
 	CONWriteString("USB Device: [%04x:%04x] %s\r",cs->_hardwareTypeID >> 16,cs->_hardwareTypeID & 0xFFFF,name);

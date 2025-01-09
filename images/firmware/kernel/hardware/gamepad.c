@@ -1,5 +1,5 @@
-// ***************************************************************************************
-// ***************************************************************************************
+
+
 //
 //      Name :      gamepad.c
 //      Authors :   Paul Robson (paul@robsons.org.uk), based on work by Sascha Schneider
@@ -7,8 +7,8 @@
 //      Reviewed :  No
 //      Purpose :   Gamepad controller class
 //
-// ***************************************************************************************
-// ***************************************************************************************
+
+
 
 #include "common.h"
 
@@ -17,32 +17,32 @@
 static int controllerCount;  														// Number of controllers
 static CTLState controllers[MAX_CONTROLLERS];  										// Controller states.
 
-// ***************************************************************************************
+
 //
 //								Initialise the controller system
 //
-// ***************************************************************************************
+
 
 void CTLInitialise(void) {
 	controllerCount = 0;
 }
 
-// ***************************************************************************************
+
 //
 //							Get the number of controllers plugged in.
 //
-// ***************************************************************************************
+
 
 int  CTLControllerCount(void) {
 	return controllerCount;
 }
 
-// ***************************************************************************************
+
 //
 //   	Read a specified controller, NULL if not found, -1 reads the first controller or 
 //		emulated gamepad
 //
-// ***************************************************************************************
+
 
 CTLState *CTLReadController(int n) {
 	if (n < 0) {  																	// Autoselect
@@ -56,11 +56,11 @@ CTLState *CTLReadController(int n) {
 	return (n < controllerCount) ? &controllers[n] : NULL;
 }
 
-// ***************************************************************************************
+
 //
 //					Add a specific controller device to the device lists
 //
-// ***************************************************************************************
+
 
 void CTLAddController(uint8_t dev_addr,uint8_t instance,uint16_t vid,uint16_t pid) {
 	if (controllerCount < MAX_CONTROLLERS) {  										// If not reached the end.
@@ -75,11 +75,11 @@ void CTLAddController(uint8_t dev_addr,uint8_t instance,uint16_t vid,uint16_t pi
 	} 
 }
 
-// ***************************************************************************************
+
 //
 //					Update a controller, using the report and length.
 //
-// ***************************************************************************************
+
 
 void CTLUpdateController(uint8_t dev_addr,uint8_t instance,uint8_t const *report,uint8_t len) {
 	if (false) {  																	// "true" here allows you to know exactly what data is being sent.
@@ -92,11 +92,11 @@ void CTLUpdateController(uint8_t dev_addr,uint8_t instance,uint8_t const *report
 	CTLSendMessage(CTLM_UPDATE,CTL_HARDWARE_ID(dev_addr,instance),&msgBlock); 		// Send it with the update message
 }
 
-// ***************************************************************************************
+
 //
 //									Dispatch message
 //
-// ***************************************************************************************
+
 
 int CTLSendMessage(int command,uint16_t hwid,struct _CTL_MessageData *msg) {
 	for (int i = 0;i < controllerCount;i++) {   									// Identify which controller is in receipt of the message.
