@@ -1,3 +1,13 @@
+/**
+ * @file 
+ *
+ * @brief      
+ *
+ * @author     Paul Robson
+ *
+ * @date       07/01/2025
+ *
+ */
 
 
 //
@@ -21,7 +31,7 @@ static int mode = DVI_MODE_640_240_8;
 
 
 //
-//														Mode Palettes
+//                            Mode Palettes
 //
 
 
@@ -54,7 +64,7 @@ static int palette_64[64] = {
 
 
 //
-//											Set 2 colour foreground/background
+//                      Set 2 colour foreground/background
 //
 
 
@@ -66,110 +76,110 @@ void DVISetMonoColour(int fg, int bg)
 
 
 //
-//														Set current mode.
+//                            Set current mode.
 //
 
 
 bool DVISetMode(int mode) {
-	dvi_modeInfo.mode = mode;  														// Record mode
-	dvi_modeInfo.bitPlaneCount = 3;
-	dvi_modeInfo.bitPlane[0] = redPlane;
-	dvi_modeInfo.bitPlane[1] = greenPlane;
-	dvi_modeInfo.bitPlane[2] = bluePlane;
-	dvi_modeInfo.bitPlaneDepth = 1;
+  dvi_modeInfo.mode = mode;                             // Record mode
+  dvi_modeInfo.bitPlaneCount = 3;
+  dvi_modeInfo.bitPlane[0] = redPlane;
+  dvi_modeInfo.bitPlane[1] = greenPlane;
+  dvi_modeInfo.bitPlane[2] = bluePlane;
+  dvi_modeInfo.bitPlaneDepth = 1;
 
-	switch(mode) {
-		case DVI_MODE_640_240_8:  													// 640x480x8 information.
-			dvi_modeInfo.width = 640;dvi_modeInfo.height = 240;
-			dvi_modeInfo.bitPlaneSize = sizeof(redPlane);
-			break;
-		case DVI_MODE_320_240_8:  													// 320x240x8 information.
-			dvi_modeInfo.width = 320;dvi_modeInfo.height = 240;
-			dvi_modeInfo.bitPlaneSize = sizeof(redPlane);
-			break;
-		case DVI_MODE_640_480_2:  													// 640x480x2 information.
-			dvi_modeInfo.width = 640;dvi_modeInfo.height = 480;
-			dvi_modeInfo.bitPlaneSize = sizeof(redPlane);
-			dvi_modeInfo.bitPlaneCount = 1;
-			break;
-		case DVI_MODE_320_240_64:  													// 320x240x64 information.
-			dvi_modeInfo.width = 320;dvi_modeInfo.height = 240;
-			dvi_modeInfo.bitPlaneSize = sizeof(redPlane);
-			dvi_modeInfo.bitPlaneDepth = 2;
-			break;
-		case DVI_MODE_320_256_8:  													// 320x256x8 information.
-			dvi_modeInfo.width = 320;dvi_modeInfo.height = 256;
-			dvi_modeInfo.bitPlaneSize = sizeof(redPlane);
-			break;
+  switch(mode) {
+    case DVI_MODE_640_240_8:                            // 640x480x8 information.
+      dvi_modeInfo.width = 640;dvi_modeInfo.height = 240;
+      dvi_modeInfo.bitPlaneSize = sizeof(redPlane);
+      break;
+    case DVI_MODE_320_240_8:                            // 320x240x8 information.
+      dvi_modeInfo.width = 320;dvi_modeInfo.height = 240;
+      dvi_modeInfo.bitPlaneSize = sizeof(redPlane);
+      break;
+    case DVI_MODE_640_480_2:                            // 640x480x2 information.
+      dvi_modeInfo.width = 640;dvi_modeInfo.height = 480;
+      dvi_modeInfo.bitPlaneSize = sizeof(redPlane);
+      dvi_modeInfo.bitPlaneCount = 1;
+      break;
+    case DVI_MODE_320_240_64:                           // 320x240x64 information.
+      dvi_modeInfo.width = 320;dvi_modeInfo.height = 240;
+      dvi_modeInfo.bitPlaneSize = sizeof(redPlane);
+      dvi_modeInfo.bitPlaneDepth = 2;
+      break;
+    case DVI_MODE_320_256_8:                            // 320x256x8 information.
+      dvi_modeInfo.width = 320;dvi_modeInfo.height = 256;
+      dvi_modeInfo.bitPlaneSize = sizeof(redPlane);
+      break;
 
-		#if DVI_SUPPORT_640_480_8 == 1  										// Controllable (memory constraints)
-		case DVI_MODE_640_480_8:  													// 640x480x8 information.
-			dvi_modeInfo.width = 640;dvi_modeInfo.height = 480;
-			dvi_modeInfo.bitPlaneSize = sizeof(redPlane);
-			break;
-		#endif
+    #if DVI_SUPPORT_640_480_8 == 1                      // Controllable (memory constraints)
+    case DVI_MODE_640_480_8:                            // 640x480x8 information.
+      dvi_modeInfo.width = 640;dvi_modeInfo.height = 480;
+      dvi_modeInfo.bitPlaneSize = sizeof(redPlane);
+      break;
+    #endif
 
-		default:
-			dvi_modeInfo.mode = -1;  												// Failed.
-	}
-	dvi_modeInfo.bytesPerLine = dvi_modeInfo.width / 8 * dvi_modeInfo.bitPlaneDepth;  							// Calculate bytes per line.	return &modeInfo;
-	return true;
+    default:
+      dvi_modeInfo.mode = -1;                         // Failed.
+  }
+  dvi_modeInfo.bytesPerLine = dvi_modeInfo.width / 8 * dvi_modeInfo.bitPlaneDepth;                // Calculate bytes per line.  return &modeInfo;
+  return true;
 }
 
 
 //
-//												Return mode data.
+//                        Return mode data.
 //
 
 
 struct DVIModeInformation *DVIGetModeInformation(void) {
-	return &dvi_modeInfo;
+  return &dvi_modeInfo;
 }
 
-int  DVIGetScreenExtent(int *pWidth,int *pHeight) {	
-	if (pWidth != NULL) *pWidth = dvi_modeInfo.width;
-	if (pHeight != NULL) *pHeight = dvi_modeInfo.height;
-	return dvi_modeInfo.mode;
+int  DVIGetScreenExtent(int *pWidth,int *pHeight) { 
+  if (pWidth != NULL) *pWidth = dvi_modeInfo.width;
+  if (pHeight != NULL) *pHeight = dvi_modeInfo.height;
+  return dvi_modeInfo.mode;
 }
 
 
 //
-//												Get elapsed time in 100Hz ticks.
+//                        Get elapsed time in 100Hz ticks.
 //
 
 
-void RNDRender(SDL_Surface *surface) {	
-	struct DVIModeInformation *dm = DVIGetModeInformation();
-	uint8_t *pr,*pg,*pb,r,g,b;
-	SDL_Rect rc;
-	rc.x = rc.y = 0;rc.w = AS_SCALE*640+16;rc.h = AS_SCALE*480+16;
-	SYSRectangle(&rc,0);
-	for (int y = 0;y < dm->height;y++) {
-		rc.w = AS_SCALE * 640/dm->width;
-		rc.h = AS_SCALE * 480/dm->height;
-		rc.y = y*rc.h+8;
-		pr = dm->bitPlane[0]+y*dm->bytesPerLine;
-		pg = dm->bitPlane[1]+y*dm->bytesPerLine;
-		pb = dm->bitPlane[2]+y*dm->bytesPerLine;
-		for (int x = 0;x < dm->width;x+= 8/dm->bitPlaneDepth) {
-			rc.x = x*rc.w+8;
-			r = *pr++;g = *pg++;b = *pb++;
-			if (dm->bitPlaneDepth == 1) {
-			  for (int bt = 0;bt < 8;bt++) {
-				uint8_t c = ((r & 0x80) >> 7)+((g & 0x80) >> 6)+((b & 0x80) >> 5);
-				if (dm->bitPlaneCount == 1) c = (r & 0x80) ? palette_mono[0] : palette_mono[1];
-				SYSRectangle(&rc,palette[c]);
-				r <<= 1;g <<= 1;b <<= 1;
-				rc.x += rc.w;
-			  }
-			} else {
-			  for (int bt = 0;bt < 8;bt++) {
-				uint8_t c = ((r & 0xC0) >> 6)+((g & 0xC0) >> 4)+((b & 0xC0) >> 2);
-				SYSRectangle(&rc,palette_64[c]);
-				r <<= 2;g <<= 2;b <<= 2;
-				rc.x += rc.w;			    
-			  }			  
-			}
-		}
-	}	
+void RNDRender(SDL_Surface *surface) {  
+  struct DVIModeInformation *dm = DVIGetModeInformation();
+  uint8_t *pr,*pg,*pb,r,g,b;
+  SDL_Rect rc;
+  rc.x = rc.y = 0;rc.w = AS_SCALE*640+16;rc.h = AS_SCALE*480+16;
+  SYSRectangle(&rc,0);
+  for (int y = 0;y < dm->height;y++) {
+    rc.w = AS_SCALE * 640/dm->width;
+    rc.h = AS_SCALE * 480/dm->height;
+    rc.y = y*rc.h+8;
+    pr = dm->bitPlane[0]+y*dm->bytesPerLine;
+    pg = dm->bitPlane[1]+y*dm->bytesPerLine;
+    pb = dm->bitPlane[2]+y*dm->bytesPerLine;
+    for (int x = 0;x < dm->width;x+= 8/dm->bitPlaneDepth) {
+      rc.x = x*rc.w+8;
+      r = *pr++;g = *pg++;b = *pb++;
+      if (dm->bitPlaneDepth == 1) {
+        for (int bt = 0;bt < 8;bt++) {
+        uint8_t c = ((r & 0x80) >> 7)+((g & 0x80) >> 6)+((b & 0x80) >> 5);
+        if (dm->bitPlaneCount == 1) c = (r & 0x80) ? palette_mono[0] : palette_mono[1];
+        SYSRectangle(&rc,palette[c]);
+        r <<= 1;g <<= 1;b <<= 1;
+        rc.x += rc.w;
+        }
+      } else {
+        for (int bt = 0;bt < 8;bt++) {
+        uint8_t c = ((r & 0xC0) >> 6)+((g & 0xC0) >> 4)+((b & 0xC0) >> 2);
+        SYSRectangle(&rc,palette_64[c]);
+        r <<= 2;g <<= 2;b <<= 2;
+        rc.x += rc.w;         
+        }       
+      }
+    }
+  } 
 }

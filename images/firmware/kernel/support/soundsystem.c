@@ -1,3 +1,13 @@
+/**
+ * @file 
+ *
+ * @brief      
+ *
+ * @author     Paul Robson
+ *
+ * @date       07/01/2025
+ *
+ */
 
 
 //
@@ -49,7 +59,7 @@ void SNDMuteAllChannels(void) {
 
 
 //
-//            	Get the next sample for the driver provided hardware rate.
+//              Get the next sample for the driver provided hardware rate.
 //
 
 
@@ -77,18 +87,18 @@ int8_t SNDGetChannelSample(int channel) {
                 }
             }
         }
-	}      
+    }      
     if (channelsActive > 1) {                                                       // If >= 2 channels scale output by 75% to reduce clipping.
         level = level * 3 / 4;  
     }
     if (level < -127) level = -127;                                                 // Clip into range
     if (level > 127) level = 127;
-  	return level;
+    return level;
 }
 
 
 //
-//									Play note on channel
+//                                  Play note on channel
 //
 
 

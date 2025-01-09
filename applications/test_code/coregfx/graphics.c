@@ -1,3 +1,13 @@
+/**
+ * @file 
+ *
+ * @brief      
+ *
+ * @author     Paul Robson
+ *
+ * @date       07/01/2025
+ *
+ */
 
 
 //
@@ -65,11 +75,11 @@ void ApplicationRun(void) {
         if (TMRReadTimeMS() > nextSkip) {                                           // Once every 2 seconds
             nextSkip = TMRReadTimeMS()+2000;
             GFXFillRect(&vp,0,0,width,height,0);                                    // Clear screen and reset the scroll port (TestScrollAndRect() plays with it)
-		    GFXScrollPort(&vp,0,0);
+            GFXScrollPort(&vp,0,0);
             action++;                                                               // Do the next 'thing'
         }
         for (int i = 0;i < 100;i++) {
-        	TestDrawStuff();
+            TestDrawStuff();
         }
 
         if (KBDEscapePressed(true)) {                                               // Escaped ?
@@ -155,7 +165,7 @@ void TestScrollAndRect(void) {
 
 void Test64Colours(void)
 {
-  DVISetMode(DVI_MODE_320_240_64);  						                          
+  DVISetMode(DVI_MODE_320_240_64);                                                    
   CONWrite(12);
   for (int i=0; i<64; i++) {
     CONSetColour(i,0);

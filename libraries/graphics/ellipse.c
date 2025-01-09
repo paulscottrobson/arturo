@@ -1,9 +1,19 @@
+/**
+ * @file 
+ *
+ * @brief      
+ *
+ * @author     Paul Robson
+ *
+ * @date       07/01/2025
+ *
+ */
 
 
 //
 //      Name :      ellipse.c
 //      Authors :   Paul Robson (paul@robsons.org.uk)
-// 					Akanksha Rai (Midpoint algorithm)
+//                  Akanksha Rai (Midpoint algorithm)
 //      Date :      29th December 2024
 //      Reviewed :  No
 //      Purpose :   Ellipse Drawing functions
@@ -24,46 +34,46 @@ static void _GFXDrawEllipseMain(GFXPort *vp,int x0,int y0,int x1,int y1,int colo
 
 
 //
-//						Wrapper functions minimising code duplication
+//                      Wrapper functions minimising code duplication
 //
 
 
 void GFXFrameEllipse(GFXPort *vp,int x0,int y0,int x1,int y1,int colour) {
-	_GFXDrawEllipseMain(vp,x0,y0,x1,y1,colour,false);
+    _GFXDrawEllipseMain(vp,x0,y0,x1,y1,colour,false);
 }
 
 void GFXFillEllipse(GFXPort *vp,int x0,int y0,int x1,int y1,int colour) {
-	_GFXDrawEllipseMain(vp,x0,y0,x1,y1,colour,true);
+    _GFXDrawEllipseMain(vp,x0,y0,x1,y1,colour,true);
 }
 
 
 //
-//						Main drawing program, supporting fill & frame
+//                      Main drawing program, supporting fill & frame
 //
 
 
 static void _GFXDrawEllipseMain(GFXPort *vp,int x0,int y0,int x1,int y1,int colour,bool fill) {
-	GFXASetPort(vp);
-	rx = abs(x0-x1)/2;ry = abs(y0-y1)/2;
-	xc = (x0+x1)/2;yc = (y0+y1)/2;
-	_GFXDrawEllipse(colour,fill);
+    GFXASetPort(vp);
+    rx = abs(x0-x1)/2;ry = abs(y0-y1)/2;
+    xc = (x0+x1)/2;yc = (y0+y1)/2;
+    _GFXDrawEllipse(colour,fill);
 }
 
 
 //
-//									Draw the frame part
+//                                  Draw the frame part
 //
 
 
 static void _GFXFramePart(int x,int y,int colour) {
-	GFXAPlot(xc+x,yc+y,colour);
-	if (x != 0) {  																// If at 0 horizontal only do once
-		GFXAPlot(xc-x,yc+y,colour);
-	}
-	if (y != 0) {  																// If at 0 vertical only do once.
-		GFXAPlot(xc+x,yc-y,colour);
-		GFXAPlot(xc-x,yc-y,colour);
-	}
+    GFXAPlot(xc+x,yc+y,colour);
+    if (x != 0) {                                                               // If at 0 horizontal only do once
+        GFXAPlot(xc-x,yc+y,colour);
+    }
+    if (y != 0) {                                                               // If at 0 vertical only do once.
+        GFXAPlot(xc+x,yc-y,colour);
+        GFXAPlot(xc-x,yc-y,colour);
+    }
 }
 
 
@@ -81,7 +91,7 @@ static void _GFXLinePart(int x,int y,int colour) {
 
 
 //
-//								Midpoint Ellipse Algorithm
+//                              Midpoint Ellipse Algorithm
 //
 
 

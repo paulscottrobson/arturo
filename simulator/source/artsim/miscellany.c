@@ -1,3 +1,13 @@
+/**
+ * @file 
+ *
+ * @brief      
+ *
+ * @author     Paul Robson
+ *
+ * @date       07/01/2025
+ *
+ */
 
 
 //
@@ -14,10 +24,10 @@
 
 
 //
-//												Get elapsed time in 1kHz ticks.
+//                                              Get elapsed time in 1kHz ticks.
 //
 
 
 int TMRReadTimeMS(void) {
-	return SDL_GetTicks();
+    return SDL_GetTicks();
 }

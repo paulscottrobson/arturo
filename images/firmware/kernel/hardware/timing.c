@@ -1,3 +1,13 @@
+/**
+ * @file 
+ *
+ * @brief      
+ *
+ * @author     Paul Robson
+ *
+ * @date       07/01/2025
+ *
+ */
 
 
 //
@@ -20,7 +30,7 @@ bool tick50HzHasFired = false;
 //
 //                                  Set the tick flag
 //
-// 		   This is optimised out because gcc doesn't recognise side effects on extern
+//         This is optimised out because gcc doesn't recognise side effects on extern
 //
 
 
@@ -44,7 +54,7 @@ static bool Tick50Callback(struct repeating_timer *t) {
 
 
 //
-//						    Start the 50Hz timer tick interrupt
+//                          Start the 50Hz timer tick interrupt
 //
 
 
@@ -59,6 +69,6 @@ void TMRStartTickInterrupt(void) {
 
 
 int TMRReadTimeMS(void) {
-    uint32_t time32 = (uint32_t)(time_us_64() >> 9);                           	// divide by 512
+    uint32_t time32 = (uint32_t)(time_us_64() >> 9);                            // divide by 512
     return (time32 * 131) >> 8;                                                // Error of about 0.07%
 }
