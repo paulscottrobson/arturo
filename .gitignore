@@ -22,3 +22,4 @@ simulator/storage/*
 images/firmware/CMakeLists.txt
 libraries/graphics/fonts/fonts/fontconvert/fontconvert
 documents/htmldocs
+texput.log
