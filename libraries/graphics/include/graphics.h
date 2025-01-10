@@ -44,10 +44,13 @@ void GFXGetStringExtent(char *s,int font,int scale,int *w, int *y1,int *y2);
 //      An area designed to store a max 16x16 pixel screen part (for cursors etc)
 //
 struct _SmallBuffer {
+    int storePosition;                                                              // Start offset on display (-1 = no data)
     int xBytesPerLine;                                                              // Bytes stored per line.
     int ySize;                                                                      // Number of lines of data
-    uint8_t storage[16 * 4 * 2];                                                    // Buffer for the background (allows use of)
+    uint8_t *storage[3];                                                            // Buffer for the background planes
+    uint8_t storageMemory[3 * (3 * 16)];                                            // Used memory.
 };
 
+
 void GFXCopyScreenToSmallBuffer(int xPos,int yPos,struct _SmallBuffer *buffer);
-void GFRestoreSmallBufferToScreen(int xPos,int yPos,struct _SmallBuffer *buffer);
+void GFXCopySmallBufferToScreen(struct _SmallBuffer *buffer);

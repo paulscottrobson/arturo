@@ -17,16 +17,21 @@
  */
 void ApplicationRun(void) {
 
+    struct _SmallBuffer scr;
+    GFXSetMode(DVI_MODE_640_240_8);
+
     for (int i = 0;i < 140;i++) {
         GFXFrameRect(NULL,rand()%640,rand()%240,rand()%640,rand()%240,rand()&7);
     }
 
-    MMGRDrawPointer(320,120,10);
+    GFXCopyScreenToSmallBuffer(32,32,&scr);
+    GFXFillRect(NULL,32,32,47,47,7);
 
     while (1) {
 
 
         if (KBDEscapePressed(true)) {                                               // Escaped ?
+            GFXCopySmallBufferToScreen(&scr);
         }
 
         if (HASTICK50_FIRED()) {                                                    // Time to do a 50Hz tick (Don't use this for timing !)

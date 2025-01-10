@@ -9,18 +9,6 @@
  *
  */
 
-
-//
-//      Name :      triangle.c
-//      Authors :   Paul Robson (paul@robsons.org.uk)
-//                  Bastian Molkenthin
-//      Date :      29th December 2024
-//      Reviewed :  No
-//      Purpose :   Triangle Drawing functions
-//
-
-
-
 #include "common.h"
 #include <libraries.h>
 #include "include/atomic.h"
@@ -36,11 +24,9 @@ static int colour = 2;
 #define FROMFIXED(n)        ((n) >> 16)
 
 
-//
-//                                      Sort the vertices
-//
-
-
+/**
+ * @brief      Sort the triangle vertices in ascending Y order
+ */
 static void sortVerticesAscendingByY(void)
 {
     Vertice     vTmp;
@@ -64,13 +50,13 @@ static void sortVerticesAscendingByY(void)
     }
 }
 
-
-//
-//                           Fill a triangle with a flat bottom
-//
-
-
-
+/**
+ * @brief      Flat bottom part of the triangle
+ *
+ * @param[in]  v1    The v1 vertex
+ * @param[in]  v2    The v2 vertex
+ * @param[in]  v3    The v3 vertex
+ */
 static void fillBottomFlatTriangle(Vertice v1,Vertice v2,Vertice v3) {
 
     int invslope1 = (v2.y == v1.y) ? 0 : TOFIXED(v2.x - v1.x)  / (v2.y - v1.y);
@@ -87,11 +73,13 @@ static void fillBottomFlatTriangle(Vertice v1,Vertice v2,Vertice v3) {
 }
 
 
-//
-//                           Fill a triangle with a flat top
-//
-
-
+/**
+ * @brief      Flat top part of the triangle
+ *
+ * @param[in]  v1    The v1 vertex
+ * @param[in]  v2    The v2 vertex
+ * @param[in]  v3    The v3 vertex
+ */
 static void fillTopFlatTriangle(Vertice v1,Vertice v2,Vertice v3)
 {
     int invslope1 = (v3.y == v1.y) ? 0 : TOFIXED(v3.x - v1.x) / (v3.y - v1.y);
@@ -107,12 +95,9 @@ static void fillTopFlatTriangle(Vertice v1,Vertice v2,Vertice v3)
     }
 }
 
-
-//
-//                           Draw a filled triangle
-//
-
-
+/**
+ * @brief      Draw a solid filled triangle
+ */
 static void drawFilledTriangle() {
     /* at first sort the three vertices by y-coordinate ascending so v1 is the topmost vertice */
     sortVerticesAscendingByY();
@@ -135,12 +120,18 @@ static void drawFilledTriangle() {
     }
 }
 
-
-//
-//                           Link in draw filled triangle function
-//
-
-
+/**
+ * @brief      Draw a filled triangle
+ *
+ * @param      vp    GFXPort viewport or NULL
+ * @param[in]  x0    The x0 coordinate
+ * @param[in]  y0    The y0 coordinate
+ * @param[in]  x1    The x1 coordinate
+ * @param[in]  y1    The y1 coordinate
+ * @param[in]  x2    The x2 coordinate
+ * @param[in]  y2    The y2 coordinate
+ * @param[in]  col   The colout
+ */
 void GFXFillTriangle(GFXPort *vp,int x0,int y0,int x1,int y1,int x2,int y2,int col) {
     GFXASetPort(vp);
     vt1.x = x0;vt1.y = y0;
@@ -150,12 +141,18 @@ void GFXFillTriangle(GFXPort *vp,int x0,int y0,int x1,int y1,int x2,int y2,int c
     drawFilledTriangle();
 }
 
-
-//
-//                           Draw framed triangle (e.g. outline)
-//
-
-
+/**
+ * @brief      Draw an outline triangle
+ *
+ * @param      vp    GFXPort viewport or NULL
+ * @param[in]  x0    The x0 coordinate
+ * @param[in]  y0    The y0 coordinate
+ * @param[in]  x1    The x1 coordinate
+ * @param[in]  y1    The y1 coordinate
+ * @param[in]  x2    The x2 coordinate
+ * @param[in]  y2    The y2 coordinate
+ * @param[in]  col   The colout
+ */
 void GFXFrameTriangle(GFXPort *vp,int x0,int y0,int x1,int y1,int x2,int y2,int col) {
     GFXASetPort(vp);
     GFXALine(x0,y0,x1,y1,col);

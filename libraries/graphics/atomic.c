@@ -10,16 +10,6 @@
  */
 
 
-//
-//      Name :      atomic.c
-//      Authors :   Paul Robson (paul@robsons.org.uk)
-//      Date :      28th December 2024
-//      Reviewed :  No
-//      Purpose :   Lowest level graphics routines
-//
-
-
-
 #include "common.h"
 #include <libraries.h>
 #include "include/atomic.h"
@@ -31,14 +21,12 @@ static inline void _GFXDrawBitmap(int colour);
 
 static void _GFXAValidate(void);
 
-
 //
 //      These functions are atomic. They assume once you've selected the viewport
 //      the mode, port will not change for the duration of any function that uses them
 //      e.g. to draw rectangles you set the viewport and draw multiple horizontal lines
 //      that sort of thing :)
 //
-
 
 static GFXPort *_currentPort = NULL;                                                // Current viewport
 static struct DVIModeInformation *_dmi = NULL;                                      // Current mode information.
@@ -56,12 +44,11 @@ static int width,height;                                                        
 
 static GFXPort _fullScreen;                                                         // Used for full screen viewport
 
-
-//
-//                      Set the current mode, clear the screen
-//
-
-
+/**
+ * @brief      Set the current mode, clear the screen
+ *
+ * @param[in]  mode  Screen mode
+ */
 void GFXSetMode(int mode) {
     DVISetMode(mode);                                                               // Set the mode.
     _dmi = DVIGetModeInformation();                                                 // Get mode information
@@ -70,12 +57,11 @@ void GFXSetMode(int mode) {
     }
 }
 
-
-//
-//                              Set the current viewport
-//
-
-
+/**
+ * @brief      Set the current working viewport
+ *
+ * @param      vp    Viewport or NULL
+ */
 void GFXASetPort(GFXPort *vp) {
     _currentPort = vp;                                                              // Save viewport
     _dmi = DVIGetModeInformation();                                                 // Record current information
@@ -87,12 +73,13 @@ void GFXASetPort(GFXPort *vp) {
     dataValid = false;                                                              // Nothing is set up.
 }
 
-
-//
-//                          Plot a pixel in the current port
-//
-
-
+/**
+ * @brief      Plot pixel in current viewport
+ *
+ * @param[in]  x       x coordinate
+ * @param[in]  y       y coordinate
+ * @param[in]  colour  The colour
+ */
 void GFXAPlot(int x,int y,int colour) {
     xPixel = CONV_X(x);yPixel = CONV_Y(y);                                          // Update the pixel positions.
     _GFXAValidate();                                                                // Validate the position.
@@ -100,11 +87,9 @@ void GFXAPlot(int x,int y,int colour) {
 }
 
 
-//
-//                          Try to validate pixel position
-//
-
-
+/**
+ * @brief      Validate it (e.g. check on screen and in viewport)
+ */
 static void _GFXAValidate(void) {
     dataValid = false;
     if (OFFWINDOW(xPixel,yPixel)) return;                                           // No, we can't do anything.
@@ -112,11 +97,11 @@ static void _GFXAValidate(void) {
     int yc = yPixel+_currentPort->y;
     int offset;
     if (_dmi->bitPlaneDepth == 2) {
-      offset = (xc >> 2) + (yc * _dmi->bytesPerLine);                               // Work out the offset on the bitmap planes.
-      bitMask = (0xC0 >> (2*(xc & 3)));                                             // Work out the bitmask for the current pixel.
+            offset = (xc >> 2) + (yc * _dmi->bytesPerLine);                         // Work out the offset on the bitmap planes.
+            bitMask = (0xC0 >> (2*(xc & 3)));                                       // Work out the bitmask for the current pixel.
     } else {
-      offset = (xc >> 3) + (yc * _dmi->bytesPerLine);                               // Work out the offset on the bitmap planes.
-      bitMask = (0x80 >> (xc & 7));                                                 // Work out the bitmask for the current pixel.
+            offset = (xc >> 3) + (yc * _dmi->bytesPerLine);                         // Work out the offset on the bitmap planes.
+            bitMask = (0x80 >> (xc & 7));                                           // Work out the bitmask for the current pixel.
     }
     pl0 = _dmi->bitPlane[0]+offset;                                                 // Set up bitmap plane pointers.
     pl1 = _dmi->bitPlane[1]+offset;
@@ -126,13 +111,16 @@ static void _GFXAValidate(void) {
 }
 
 
-//
-//                                  Horizontal line
-//
-
-
+/**
+ * @brief      Draw horizontal line
+ *
+ * @param[in]  x1      The x1 coordinate
+ * @param[in]  x2      The x2 coordinate
+ * @param[in]  y       Y coordinate
+ * @param[in]  colour  The colour
+ */
 void GFXAHorizLine(int x1,int x2,int y,int colour) {
-        int ppb = _dmi->bitPlaneDepth==2 ? 4 : 8;
+    int ppb = _dmi->bitPlaneDepth==2 ? 4 : 8;
     x1 = CONV_X(x1);x2 = CONV_X(x2);y = CONV_Y(y);                                  // Convert to physical pixels in window.
     if (OFFWINDOWV(y)) return;                                                      // Vertically out of range => no line.
     if (x1 >= x2) { int n = x1;x1 = x2;x2 = n; }                                    // Sort the x coordinates into order.
@@ -169,12 +157,14 @@ void GFXAHorizLine(int x1,int x2,int y,int colour) {
     }
 }
 
-
-//
-//                                  Vertical line code.
-//
-
-
+/**
+ * @brief      Vertical line
+ *
+ * @param[in]  x       X coordinate
+ * @param[in]  y1      y1 coordinate
+ * @param[in]  y2      y2 coordinate
+ * @param[in]  colour  colour
+ */
 void GFXAVertLine(int x,int y1,int y2,int colour) {
     x = CONV_X(x);y1 = CONV_Y(y1);y2 = CONV_Y(y2);                                  // Convert coordinates.
     if (OFFWINDOWH(x)) return;                                                      // Off screen.
@@ -190,12 +180,9 @@ void GFXAVertLine(int x,int y1,int y2,int colour) {
 }
 
 
-
-//
-//          Move current position. These avoid change location/recalculate
-//
-
-
+/**
+ * @brief      Move current up
+ */
 void GFXAUp(void) {
     yPixel--;                                                                       // Pixel up
     pl0 -= _dmi->bytesPerLine;                                                      // Shift pointers to next line up.
@@ -204,6 +191,9 @@ void GFXAUp(void) {
     if (dataValid) dataValid = (yPixel >= 0);                                       // Still in window
 }
 
+/**
+ * @brief      Move current down
+ */
 void GFXADown(void) {
     yPixel++;                                                                       // Pixel down
     pl0 += _dmi->bytesPerLine;                                                      // Shift pointers to next line down
@@ -212,6 +202,9 @@ void GFXADown(void) {
     if (dataValid) dataValid = (yPixel < height);                                   // Still in window
 }
 
+/**
+ * @brief      Move current left
+ */
 void GFXALeft(void) {
     xPixel--;                                                                       // Pixel left
     if (_dmi->bitPlaneDepth == 2) {
@@ -231,6 +224,9 @@ void GFXALeft(void) {
     if (dataValid) dataValid = (xPixel >= 0);                                       // Still in window
 }
 
+/**
+ * @brief      Move current right
+ */
 void GFXARight(void) {
     xPixel++;                                                                       // Pixel right
     if (_dmi->bitPlaneDepth == 2) {
@@ -249,12 +245,15 @@ void GFXARight(void) {
     if (dataValid) dataValid = (xPixel < width);                                    // Still in window
 }
 
-
-//
-//                  Line drawing algorithm (currently straight Bresenham)
-//
-
-
+/**
+ * @brief      Line drawing (simple Bresenham)
+ *
+ * @param[in]  x0      The x0 coordinate
+ * @param[in]  y0      The y0 coordinate
+ * @param[in]  x1      The x1 coordinate
+ * @param[in]  y1      The y1 coordinate
+ * @param[in]  colour  The colour
+ */
 void GFXALine(int x0, int y0, int x1, int y1,int colour) {
     if (y0 == y1) {                                                                 // Use the horizontal one.
         GFXAHorizLine(x0,x1,y1,colour);
@@ -294,11 +293,11 @@ void GFXALine(int x0, int y0, int x1, int y1,int colour) {
 }
 
 
-//
-//                              Draw the current pixel
-//
-
-
+/**
+ * @brief      Draw bitmap dispatched
+ *
+ * @param[in]  colour  colour to use
+ */
 static inline void _GFXDrawBitmap(int colour) {
     if (!dataValid) return;                                                         // Not valid drawing.
     if (_dmi->bitPlaneCount == 1) {                                                 // Draw the bitmap.
@@ -311,11 +310,11 @@ static inline void _GFXDrawBitmap(int colour) {
 }
 
 
-//
-//                          Draw the current pixel (3 planes)
-//
-
-
+/**
+ * @brief      Draw bitmap for 3 plane
+ *
+ * @param[in]  colour  The colour
+ */
 static inline void _GFXDrawBitmap3(int colour) {
 
     switch(GFXACTION(colour)) {
@@ -335,12 +334,11 @@ static inline void _GFXDrawBitmap3(int colour) {
 }
 
 
-
-//
-//                          Draw the current pixel (1 plane)
-//
-
-
+/**
+ * @brief      Draw bitmap for a 1 plane monochrome
+ *
+ * @param[in]  colour  The colour
+ */
 static inline void _GFXDrawBitmap1(int colour) {
 
     switch(GFXACTION(colour)) {
@@ -356,11 +354,11 @@ static inline void _GFXDrawBitmap1(int colour) {
 }
 
 
-//
-//                  Draw the current pixel (2 plane, e.g. 64 colours)
-//
-
-
+/**
+ * @brief      Draw bitmap for a 1 plane 6 bit colour display
+ *
+ * @param[in]  colour  The colour
+ */
 static inline void _GFXDrawBitmap6(int colour) {
 
 
@@ -382,4 +380,52 @@ static inline void _GFXDrawBitmap6(int colour) {
             break;
     }
 
+}
+
+/**
+ * @brief      Save part of the screen to the buffer object
+ *
+ * @param[in]  xPos    x coordinate (raw pixels)
+ * @param[in]  yPos    y coordinate (raw pixels)
+ * @param      buffer  buffer storage object
+ */
+void GFXCopyScreenToSmallBuffer(int xPos,int yPos,struct _SmallBuffer *buffer) {
+    if (xPos < 0 || yPos < 0 || xPos >= _dmi->width || yPos >= _dmi->height) {      // If off screen
+        buffer->storePosition = -1;                                                 // e.g. no saved screen
+        return;
+    }
+    buffer->storePosition = (xPos >> 3) + _dmi->bytesPerLine * yPos;                // Position on screen.
+    buffer->ySize = min(16,_dmi->height-yPos);                                      // How many lines to take.
+
+    int pixelsPerLine = min(24,_dmi->width-yPos);                                   // How many pixels do we need to store horizontally to ensure 16 pixels
+    buffer->xBytesPerLine = (pixelsPerLine + 7) >> 3;                               // How many bytes do we store (includes incomplete)
+    if (_dmi->bitPlaneDepth == 2) buffer->xBytesPerLine *= 2;                       // Double for 64 colour mode (e.g. more pixels)()
+    for (int p = 0;p < _dmi->bitPlaneCount;p++) {                                   // Set up pointers to storage for each plane
+        buffer->storage[p] = buffer->storageMemory + (16 * 3 * p);                  // If 64 colour mode we have plenty of storage.
+    }
+    for (int y = 0;y < buffer->ySize;y++) {                                         // Copy data out of bitplanes into storage.
+        for (int x = 0;x < buffer->xBytesPerLine;x++) {
+            for (int c = 0;c < _dmi->bitPlaneCount;c++) {
+                buffer->storage[c][x + y * buffer->xBytesPerLine] = *(_dmi->bitPlane[c] + buffer->storePosition + x + y * _dmi->bytesPerLine);
+            }
+        }
+    }
+    //printf("%d %d %d\n",buffer->storePosition,buffer->xBytesPerLine,buffer->ySize);
+}
+
+/**
+ * @brief      Copy small buffer back to screen
+ *
+ * @param      buffer  Small buffer structure.
+ */
+void GFXCopySmallBufferToScreen(struct _SmallBuffer *buffer) {
+    if (buffer->storePosition < 0) return;                                          // Nothing saved
+    for (int y = 0;y < buffer->ySize;y++) {                                         // Copy data out of storage to bitmap planes
+        for (int x = 0;x < buffer->xBytesPerLine;x++) {
+            for (int c = 0;c < _dmi->bitPlaneCount;c++) {
+            *(_dmi->bitPlane[c] + buffer->storePosition + x + y * _dmi->bytesPerLine) = buffer->storage[c][x + y * buffer->xBytesPerLine];
+            }
+        }
+    }
+    
 }

@@ -9,32 +9,26 @@
  *
  */
 
-
-//
-//      Name :      fonts.c
-//      Authors :   Paul Robson (paul@robsons.org.uk)
-//                  Andrew S. Owen (Font Design)
-//      Date :      30th December 2024
-//      Reviewed :  No
-//      Purpose :   Monochrome Font Rendering
-//
-
-
-
 #include "common.h"
 #include <libraries.h>
 #include "include/atomic.h"
-
-
-//
-//                          Include the font data in Flash memory.
-//
-
 
 #include "fontstructures.h"
 #include "fonts/fontdata.h"
 #include "fonts/fontindex.h"
 
+/**
+ * @brief      Draws a character from bitmap on the display.
+ *
+ * @param      vp          Viewport or NULL
+ * @param[in]  xPos        X Position
+ * @param[in]  yPos        Y Position
+ * @param[in]  w           Bitmap width
+ * @param[in]  h           Bitmap height
+ * @param      bitmapData  The bitmap data
+ * @param[in]  colour      The colour
+ * @param[in]  scale       The scale
+ */
 static void _DrawCharacterFromBitmap(GFXPort *vp,int xPos,int yPos,int w,int h,uint8_t *bitmapData,int colour,int scale) {
     uint8_t bitMask = 0x80;                                                         // Bit to check.
     GFXASetPort(vp);                                                                // Set the viewport
@@ -58,11 +52,19 @@ static void _DrawCharacterFromBitmap(GFXPort *vp,int xPos,int yPos,int w,int h,u
 }
 
 
-//
-//          Draw a single character, return the x adjustment to the next character.
-//
-
-
+/**
+ * @brief      Draws a character on the viewport
+ *
+ * @param      vp      Viewport or NULL
+ * @param[in]  xPos    X position
+ * @param[in]  yPos    Y position
+ * @param[in]  ch      Character
+ * @param[in]  fontid  Font id
+ * @param[in]  colour  colour
+ * @param[in]  scale   Scale
+ *
+ * @return     The pixel width of the font (advance to next, includes spacing)
+ */
 static int _DrawCharacter(GFXPort *vp,int xPos,int yPos,int ch,int fontid,int colour,int scale) {
 
     if (fontid < 0 || fontid >= FONT_COUNT) return 0;                               // Unknown font
@@ -86,12 +88,17 @@ static int _DrawCharacter(GFXPort *vp,int xPos,int yPos,int ch,int fontid,int co
 }
 
 
-
-//
-//                                      Draw font
-//
-
-
+/**
+ * @brief      Draw a string on the viewport
+ *
+ * @param      vp      Viewport or NULL
+ * @param[in]  xPos    X position
+ * @param[in]  yPos    Y position
+ * @param      s       ASCIIZ string
+ * @param[in]  font    Font ID
+ * @param[in]  colour  Dolour
+ * @param[in]  scale   Scale
+ */
 void GFXDrawString(GFXPort *vp,int xPos,int yPos,char *s,int font,int colour,int scale) {
     int xWidth;
     if (GFXACTION(colour) == GFXA_SOLID) {                                          // Solid background
@@ -109,14 +116,21 @@ void GFXDrawString(GFXPort *vp,int xPos,int yPos,char *s,int font,int colour,int
     }
 }
 
-
-//
-//                               Get upper/lower extent
-//
-
-
+/**
+ * @brief      Get the extent of the string (e.g. how many pixels it takes)
+ *
+ * @param      s       ASCIIZ string
+ * @param[in]  fontid  font id
+ * @param[in]  scale   scale
+ * @param      w       Address of int to store width
+ * @param      y1      Address of int to store height above baseline
+ * @param      y2      Address of int to store height below baseline.
+ */
 void GFXGetStringExtent(char *s,int fontid,int scale,int *w, int *y1,int *y2) {
     uint8_t ch;
+    int wx,y1x,y2x;
+    w = (w == NULL) ? &wx : w;                                                      // In case the targets are NULLs.
+    y1 = (y1 == NULL) ? &y1x : y1;y2 = (y2 == NULL) ? &y2x:y2;
     *w = 0;*y1 = 0;*y2 = 0;                                                         // W is additive ,
     while (ch = (uint8_t)(*s++), ch != '\0') {                                      // Scan the string
         if (ch >= FONT_FIRST_UDG && ch <= FONT_LAST_UDG) {                          // UDGs are a special case

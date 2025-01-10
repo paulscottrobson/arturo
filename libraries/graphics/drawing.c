@@ -9,27 +9,20 @@
  *
  */
 
-
-//
-//      Name :      drawing.c
-//      Authors :   Paul Robson (paul@robsons.org.uk)
-//      Date :      29th December 2024
-//      Reviewed :  No
-//      Purpose :   Drawing functions
-//
-
-
-
 #include "common.h"
 #include <libraries.h>
 #include "include/atomic.h"
 
-
-//
-//                                      Draw a frame
-//
-
-
+/**
+ * @brief      Draw a framed rectangle
+ *
+ * @param      vp      Viewport or NULL
+ * @param[in]  x0      The x0 coordinate
+ * @param[in]  y0      The y0 coordinate
+ * @param[in]  x1      The x1 coordinate
+ * @param[in]  y1      The y1 coordinate
+ * @param[in]  colour  The colour
+ */
 void GFXFrameRect(GFXPort *vp,int x0,int y0,int x1,int y1,int colour) {
     GFXASetPort(vp);
     if (y0 > y1) { int n = y0;y0 = y1;y1 = n; }                                     // Sort horizontally.
@@ -42,11 +35,16 @@ void GFXFrameRect(GFXPort *vp,int x0,int y0,int x1,int y1,int colour) {
 }
 
 
-//
-//                                      Draw a rectangle
-//
-
-
+/**
+ * @brief      Draw a solid rectangle
+ *
+ * @param      vp      Viewport or NULL
+ * @param[in]  x0      The x0 coordinate
+ * @param[in]  y0      The y0 coordinate
+ * @param[in]  x1      The x1 coordinate
+ * @param[in]  y1      The y1 coordinate
+ * @param[in]  colour  The colour
+ */
 void GFXFillRect(GFXPort *vp,int x0,int y0,int x1,int y1,int colour) {
     GFXASetPort(vp);
     for (int y = y0;y <= y1;y++) {
@@ -54,27 +52,60 @@ void GFXFillRect(GFXPort *vp,int x0,int y0,int x1,int y1,int colour) {
     }
 }
 
-
-//
-//                              Wrappers for atomic functions
-//
-
-
+/**
+ * @brief      Plot a point
+ *
+ * @param      vp      Viewport or NULL
+ * @param[in]  x       x Point
+ * @param[in]  y       y Point
+ * @param[in]  colour  The colour
+ */
 void GFXPlot(GFXPort *vp,int x,int y,int colour) {
     GFXASetPort(vp);
     GFXAPlot(x,y,colour);
 }
 
+/**
+ * @brief      Draw a line
+ *
+ * @param      vp      Viewport or NULL
+ * @param[in]  x0      The x0 coordinate
+ * @param[in]  y0      The y0 coordinate
+ * @param[in]  x1      The x1 coordinate
+ * @param[in]  y1      The y1 coordinate
+ * @param[in]  colour  The colour
+ */
 void GFXLine(GFXPort *vp,int x0, int y0, int x1, int y1,int colour) {
     GFXASetPort(vp);
     GFXALine(x0,y0,x1,y1,colour);
 }
+
+/**
+ * @brief      Draw a horizontal line
+ *
+ * @param      vp      Viewport or NULL
+ * @param[in]  x0      The x0 coordinate
+ * @param[in]  y0      The y0 coordinate
+ * @param[in]  x1      The x1 coordinate
+ * @param[in]  y1      The y1 coordinate
+ * @param[in]  colour  The colour
+ */
 
 void GFXHLine(GFXPort *vp,int x0, int x1, int y,int colour) {
     GFXASetPort(vp);
     GFXAHorizLine(x0,x1,y,colour);
 }
 
+/**
+ * @brief      Draw a vertictal line
+ *
+ * @param      vp      Viewport or NULL
+ * @param[in]  x0      The x0 coordinate
+ * @param[in]  y0      The y0 coordinate
+ * @param[in]  x1      The x1 coordinate
+ * @param[in]  y1      The y1 coordinate
+ * @param[in]  colour  The colour
+ */
 void GFXVLine(GFXPort *vp,int x, int y0, int y1,int colour) {
     GFXASetPort(vp);
     GFXAHorizLine(x,y0,y1,colour);

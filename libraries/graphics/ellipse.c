@@ -9,18 +9,6 @@
  *
  */
 
-
-//
-//      Name :      ellipse.c
-//      Authors :   Paul Robson (paul@robsons.org.uk)
-//                  Akanksha Rai (Midpoint algorithm)
-//      Date :      29th December 2024
-//      Reviewed :  No
-//      Purpose :   Ellipse Drawing functions
-//
-
-
-
 #include "common.h"
 #include <libraries.h>
 #include "include/atomic.h"
@@ -33,25 +21,46 @@ static void _GFXFrameEllipseMain(GFXPort *vp,int x0,int y0,int x1,int y1,int col
 static void _GFXDrawEllipseMain(GFXPort *vp,int x0,int y0,int x1,int y1,int colour,bool fill);
 
 
-//
-//                      Wrapper functions minimising code duplication
-//
-
-
+/**
+ * @brief      Draw an outline ellipse
+ *
+ * @param      vp      Viewport or NULL
+ * @param[in]  x0      The x0 coordinate
+ * @param[in]  y0      The y0 coordinate
+ * @param[in]  x1      The x1 coordinate
+ * @param[in]  y1      The y1 coordinate
+ * @param[in]  colour  Colour
+ */
 void GFXFrameEllipse(GFXPort *vp,int x0,int y0,int x1,int y1,int colour) {
     _GFXDrawEllipseMain(vp,x0,y0,x1,y1,colour,false);
 }
 
+/**
+ * @brief      Draw a filled in ellipse.
+ *
+ * @param      vp      Viewport or NULL
+ * @param[in]  x0      The x0 coordinate
+ * @param[in]  y0      The y0 coordinate
+ * @param[in]  x1      The x1 coordinate
+ * @param[in]  y1      The y1 coordinate
+ * @param[in]  colour  Colour
+ */
 void GFXFillEllipse(GFXPort *vp,int x0,int y0,int x1,int y1,int colour) {
     _GFXDrawEllipseMain(vp,x0,y0,x1,y1,colour,true);
 }
 
 
-//
-//                      Main drawing program, supporting fill & frame
-//
-
-
+/**
+ * @brief      Run main draw ellipse
+ *
+ * @param      vp      Viewport or NULL
+ * @param[in]  x0      The x0 coordinate
+ * @param[in]  y0      The y0 coordinate
+ * @param[in]  x1      The x1 coordinate
+ * @param[in]  y1      The y1 coordinate
+ * @param[in]  colour  Colour
+ * @param[in]  fill    In fill ?
+ */
 static void _GFXDrawEllipseMain(GFXPort *vp,int x0,int y0,int x1,int y1,int colour,bool fill) {
     GFXASetPort(vp);
     rx = abs(x0-x1)/2;ry = abs(y0-y1)/2;
@@ -59,12 +68,13 @@ static void _GFXDrawEllipseMain(GFXPort *vp,int x0,int y0,int x1,int y1,int colo
     _GFXDrawEllipse(colour,fill);
 }
 
-
-//
-//                                  Draw the frame part
-//
-
-
+/**
+ * @brief      Draw the frame part of the ellipse
+ *
+ * @param[in]  x       x Coordinate
+ * @param[in]  y       y Coordinate
+ * @param[in]  colour  colour
+ */
 static void _GFXFramePart(int x,int y,int colour) {
     GFXAPlot(xc+x,yc+y,colour);
     if (x != 0) {                                                               // If at 0 horizontal only do once
@@ -76,12 +86,13 @@ static void _GFXFramePart(int x,int y,int colour) {
     }
 }
 
-
-//
-//                                  Draw the line
-//
-
-
+/**
+ * @brief      Draw the line for the filled eillipse
+ *
+ * @param[in]  x       x Coordinate
+ * @param[in]  y       y Coordinate
+ * @param[in]  colour  colour
+ */
 static void _GFXLinePart(int x,int y,int colour) {
     GFXAHorizLine(xc-x,xc+x,yc+y,colour);
     if (yc != 0) {                                                              // Don't redraw the middle.
@@ -89,12 +100,12 @@ static void _GFXLinePart(int x,int y,int colour) {
     }
 }
 
-
-//
-//                              Midpoint Ellipse Algorithm
-//
-
-
+/**
+ * @brief      Midpoint Ellipse Algorithm
+ *
+ * @param[in]  colour  The colour to use
+ * @param[in]  fill    True if solid fill
+ */
 static void _GFXDrawEllipse(int colour, bool fill) {
     float dx, dy, d1, d2, x, y;
     x = 0;y = ry;

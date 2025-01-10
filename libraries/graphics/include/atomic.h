@@ -41,3 +41,4 @@ void GFXARight(void);
 #define     GFXA_NORMAL     (0x00000)
 #define     GFXA_XOR        (0x10000)
 #define     GFXA_SOLID      (0x100000)
+
