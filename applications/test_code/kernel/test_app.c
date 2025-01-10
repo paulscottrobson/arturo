@@ -1,5 +1,5 @@
 /**
- * @file test_app.c
+ * @file       test_app.c
  *
  * @brief      Test various kernel functions
  *

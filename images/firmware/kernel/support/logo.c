@@ -1,5 +1,5 @@
 /**
- * @file   logo.c
+ * @file       logo.c
  *
  * @brief      Draw Logo
  *

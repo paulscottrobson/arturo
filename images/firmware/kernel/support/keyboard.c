@@ -1,5 +1,5 @@
 /**
- * @file   keyboard.c
+ * @file       keyboard.c
  *
  * @brief      Converts keyboard events to a queue and key state array.
  *

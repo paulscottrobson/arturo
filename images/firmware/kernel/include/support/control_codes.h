@@ -1,5 +1,5 @@
 /**
- * @file control_codes.h
+ * @file       control_codes.h
  *
  * @brief      Header file for Keyboard control codes
  *

@@ -1,5 +1,5 @@
 /**
- * @file internal.h
+ * @file       internal.h
  *
  * @brief      Header file, internal files.
  *

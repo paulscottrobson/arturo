@@ -1,5 +1,5 @@
 /**
- * @file   timing.c
+ * @file       timing.c
  *
  * @brief      Timing stuff
  *

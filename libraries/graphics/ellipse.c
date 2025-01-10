@@ -1,5 +1,5 @@
 /**
- * @file   ellipse.c
+ * @file       ellipse.c
  *
  * @brief      Ellipse Drawing functions
  *

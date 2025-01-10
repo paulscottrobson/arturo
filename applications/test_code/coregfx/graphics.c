@@ -1,5 +1,5 @@
 /**
- * @file graphics.c
+ * @file       graphics.c
  *
  * @brief      Graphics test program
  *

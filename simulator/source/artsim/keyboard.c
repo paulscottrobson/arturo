@@ -1,5 +1,5 @@
 /**
- * @file keyboard.c
+ * @file       keyboard.c
  *
  * @brief      Keyboard event processor.
  *

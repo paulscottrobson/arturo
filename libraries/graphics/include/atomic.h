@@ -1,5 +1,5 @@
 /**
- * @file atomic.h
+ * @file       atomic.h
  *
  * @brief      Header file, atomic graphic functions
  *

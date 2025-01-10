@@ -1,5 +1,5 @@
 /**
- * @file gamepad.h
+ * @file       gamepad.h
  *
  * @brief      Header file, Gamepad code, internal
  *

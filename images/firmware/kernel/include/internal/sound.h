@@ -1,5 +1,5 @@
 /**
- * @file sound.h
+ * @file       sound.h
  *
  * @brief      Header file, sound interface
  *

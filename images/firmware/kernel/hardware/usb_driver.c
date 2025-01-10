@@ -1,5 +1,5 @@
 /**
- * @file   usb_driver.c
+ * @file       usb_driver.c
  *
  * @brief      USB interface and HID->Event mapper.
  *

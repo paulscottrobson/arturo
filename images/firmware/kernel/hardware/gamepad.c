@@ -1,5 +1,5 @@
 /**
- * @file   gamepad.c
+ * @file       gamepad.c
  *
  * @brief      Gamepad controller class
  *

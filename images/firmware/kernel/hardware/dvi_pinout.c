@@ -1,5 +1,5 @@
 /**
- * @file   dvi_pinout.c
+ * @file       dvi_pinout.c
  *
  * @brief      DVI HDMI setup function.
  *

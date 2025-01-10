@@ -1,5 +1,5 @@
 /**
- * @file   mouse.c
+ * @file       mouse.c
  *
  * @brief      Mouse testcode
  *

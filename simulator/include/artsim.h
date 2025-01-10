@@ -1,5 +1,5 @@
 /**
- * @file artsim.h
+ * @file       artsim.h
  *
  * @brief      Header file, simulator
  *

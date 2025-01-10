@@ -1,5 +1,5 @@
 /**
- * @file kbd_codes.h
+ * @file       kbd_codes.h
  *
  * @brief      Header file, keyboard codes (same as USB HID ones)
  *

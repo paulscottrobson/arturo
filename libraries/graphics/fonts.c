@@ -1,5 +1,5 @@
 /**
- * @file   fonts.c
+ * @file       fonts.c
  *
  * @brief      Monochrome Font Rendering
  *

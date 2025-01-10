@@ -1,5 +1,5 @@
 /**
- * @file   port.c
+ * @file       port.c
  *
  * @brief      Graphic Port functions
  *

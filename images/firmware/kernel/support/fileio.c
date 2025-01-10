@@ -1,5 +1,5 @@
 /**
- * @file fileio.c
+ * @file       fileio.c
  *
  * @brief      File I/O wrapper for the FSYS interface
  *

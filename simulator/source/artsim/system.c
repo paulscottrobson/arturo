@@ -1,5 +1,5 @@
 /**
- * @file    system.c
+ * @file       system.c
  *
  * @brief      Open SDL, Close SDL, Process polling.
  *

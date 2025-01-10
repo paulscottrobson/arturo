@@ -1,5 +1,5 @@
 /**
- * @file   cpu6502.c
+ * @file       cpu6502.c
  *
  * @brief      6502 Emulation Main Code
  *

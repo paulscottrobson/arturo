@@ -1,5 +1,5 @@
 /**
- * @file udg.c
+ * @file       udg.c
  *
  * @brief      Test UDG on Graphic fonts, also checks extents and backgrounds
  *

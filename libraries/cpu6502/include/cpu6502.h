@@ -1,5 +1,5 @@
 /**
- * @file cpu6502.h
+ * @file       cpu6502.h
  *
  * @brief      Header file, library 6502 emulator
  *             

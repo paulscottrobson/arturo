@@ -1,5 +1,5 @@
 /**
- * @file   snes_usb.c
+ * @file       snes_usb.c
  *
  * @brief      Driver for SNES type USB gamepads (like the Olimex standard one)
  *

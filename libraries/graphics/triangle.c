@@ -1,5 +1,5 @@
 /**
- * @file   triangle.c
+ * @file       triangle.c
  *
  * @brief      Triangle Drawing functions
  *

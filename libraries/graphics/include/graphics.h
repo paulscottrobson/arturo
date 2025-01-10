@@ -1,5 +1,5 @@
 /**
- * @file graphics.h
+ * @file       graphics.h
  *
  * @brief      Header file, graphics functions
  *

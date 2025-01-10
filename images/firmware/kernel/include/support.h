@@ -1,5 +1,5 @@
 /**
- * @file support.h
+ * @file       support.h
  *
  * @brief      Header file composite for support section
  *

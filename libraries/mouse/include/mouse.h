@@ -1,5 +1,5 @@
 /**
- * @file mouse.h
+ * @file       mouse.h
  *
  * @brief      Header file for mouse functionality
  *

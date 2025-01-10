@@ -1,4 +1,5 @@
 # TODO stuff
 
-- Mouse code
+- Mouse code (design implement ugui)
 - More reviewing of code
+- Design implement aplus

@@ -1,5 +1,5 @@
 /**
- * @file dvi_common.h
+ * @file       dvi_common.h
  *
  * @brief      Header file, DVI interface
  *

@@ -1,5 +1,5 @@
 /**
- * @file   drawing.c
+ * @file       drawing.c
  *
  * @brief      Drawing functions
  *

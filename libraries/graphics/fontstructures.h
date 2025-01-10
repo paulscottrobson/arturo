@@ -1,5 +1,5 @@
 /**
- * @file fontstructures.h
+ * @file       fontstructures.h
  *
  * @brief      Header file, Font structures (borrowed from AdafruitGFX ideas)
  *

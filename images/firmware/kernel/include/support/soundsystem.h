@@ -1,5 +1,5 @@
 /**
- * @file soundsystem.c
+ * @file       soundsystem.c
  *
  * @brief      Header file, 4 channel 8 bit soundsystem
  *

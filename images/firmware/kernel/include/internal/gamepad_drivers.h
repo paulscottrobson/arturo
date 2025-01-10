@@ -1,5 +1,5 @@
 /**
- * @file gamepad_drivers.h
+ * @file       gamepad_drivers.h
  *
  * @brief      Header file, hardware specific drivers
  *

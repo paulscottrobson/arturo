@@ -1,5 +1,5 @@
 /**
- * @file   usb_storage.c
+ * @file       usb_storage.c
  *
  * @brief      USB MSC Storage / FATFS link from Apple/Oric emulators.
  *

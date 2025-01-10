@@ -1,5 +1,5 @@
 /**
- * @file libraries.h
+ * @file       libraries.h
  *
  * @brief      Header file, library composite.
  *

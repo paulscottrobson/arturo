@@ -1,5 +1,5 @@
 /**
- * @file miscellany.h
+ * @file       miscellany.h
  *
  * @brief      Header file, other miscellaneous
  *

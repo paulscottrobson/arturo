@@ -1,5 +1,5 @@
 /**
- * @file tmds_encode_custom.h
+ * @file       tmds_encode_custom.h
  *
  * @brief      Header file, new TMDS functions
  *

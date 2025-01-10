@@ -1,5 +1,5 @@
 /**
- * @file   atomic.c
+ * @file       atomic.c
  *
  * @brief      Lowest level graphics routines
  *

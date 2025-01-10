@@ -1,5 +1,5 @@
 /**
- * @file  font_8x8.h
+ * @file       font_8x8.h
  *
  * @brief      Header file, system font data
  *

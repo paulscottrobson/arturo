@@ -1,5 +1,5 @@
 /**
- * @file   locale.c
+ * @file       locale.c
  *
  * @brief      Locale Handling
  *

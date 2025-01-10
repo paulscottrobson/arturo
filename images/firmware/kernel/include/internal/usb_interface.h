@@ -1,5 +1,5 @@
 /**
- * @file usb_interface.h
+ * @file       usb_interface.h
  *
  * @brief      Internal USB function headers
  *

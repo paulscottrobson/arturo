@@ -1,5 +1,5 @@
 /**
- * @file keyboard.h
+ * @file       keyboard.h
  *
  * @brief      Header file, keyboard internals
  *

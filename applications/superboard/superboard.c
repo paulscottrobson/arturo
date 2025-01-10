@@ -1,5 +1,5 @@
 /**
- * @file superboard.c
+ * @file       superboard.c
  *
  * @brief      Main code for a Superboard 2 emulator, demoing the 6502 library
  *

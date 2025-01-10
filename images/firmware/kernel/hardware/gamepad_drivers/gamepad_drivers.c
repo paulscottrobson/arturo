@@ -1,5 +1,5 @@
 /**
- * @file   gamepad_drivers.c
+ * @file       gamepad_drivers.c
  *
  * @brief      Gamepad individual handlers.
  *

@@ -1,5 +1,5 @@
 /**
- * @file   dvi_640x480.c
+ * @file       dvi_640x480.c
  *
  * @brief      DVI Driver 640x480 frame size.
  *

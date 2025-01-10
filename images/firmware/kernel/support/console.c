@@ -1,5 +1,5 @@
 /**
- * @file   console.c
+ * @file       console.c
  *
  * @brief      Console output code, for debugging primarily.
  *

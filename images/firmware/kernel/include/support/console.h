@@ -1,5 +1,5 @@
 /**
- * @file console.h
+ * @file       console.h
  *
  * @brief      Header file console debugging
  *

@@ -1,5 +1,5 @@
 /**
- * @file main.c
+ * @file       main.c
  *
  * @brief      Simulator main program
  *

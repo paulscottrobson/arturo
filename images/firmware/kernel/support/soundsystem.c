@@ -1,5 +1,5 @@
 /**
- * @file   soundsystem.c
+ * @file       soundsystem.c
  *
  * @brief      Waveform generator, default sound system.
  *
