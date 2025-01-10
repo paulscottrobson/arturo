@@ -9,17 +9,6 @@
  *
  */
 
-
-//
-//      Name :      cpu6502.c
-//      Authors :   Paul Robson (paul@robsons.org.uk)
-//      Date :      5th January 2025
-//      Reviewed :  No
-//      Purpose :   6502 Emulation Main Code
-//
-
-
-
 #include "common.h"
 #include "libraries.h"
 
@@ -27,7 +16,6 @@
 //
 //                                      CPU Status
 //
-
 
 static uint8_t a,x,y,sp;                                                            // 6502 A,X,Y and Stack registers
 static uint8_t carryFlag,interruptDisableFlag,breakFlag,                            // Values representing status reg
@@ -39,12 +27,9 @@ static int frameRate;                                                           
 static int cyclesPerFrame;                                                          // CPU Cycles per frame.
 static int nextFrameSync = 0;                                                       // Timer frame sync next
 
-
 //
 //                                  Read / Write system
 //
-
-
 uint8_t _dummyRead(uint16_t a) { return 0; }                                        // These are dummies
 void    _dummyWrite(uint16_t a,uint8_t d) {}
 
@@ -61,29 +46,33 @@ static CPU6502WRITEFUNC writeFunc = _dummyWrite;
 #include "generator/__6502support.h"
 
 
-//
-//                                  Set up the 6502 CPU
-//
-
-
+/**
+ * @brief      Set up the 65C02
+ *
+ * @param      setup  Setup informaion
+ */
 void CPU6502Setup(CPU6502SETUP *setup) {
     readFunc = setup->read;writeFunc = setup->write;                                // Save the function pointer
     frameRate = setup->frameRate;                                                   // Save Frame rate (in Hz)
     cyclesPerFrame = setup->clockSpeed/setup->frameRate;                            // Cycles in each frame.
 }
 
+/**
+ * @brief      Get the 65C02 CPU Status
+ *
+ * @param      stat Pointer to the structure holding the status.
+ */
 void CPU6502GetStatus(CPU6502STATUS *stat) {
     stat->a = a;stat->x = x;stat->y = y;
     stat->pc = pc;stat->stackPointer = sp;
     stat->status = constructFlagRegister();
 }
 
-
-//
-//              Execute a single instruction. Returns true on frame completed
-//
-
-
+/**
+ * @brief      Execute one 6502 instruction
+ *
+ * @return     Non-zero if the frame sync/redraw fired.
+ */
 int CPU6502ExecuteOne(void) {
 
     switch(FETCH8()) {                                                              // Execute one 6502 opcode
@@ -96,23 +85,22 @@ int CPU6502ExecuteOne(void) {
     return 1;
 }
 
-
-//
-//                                      Fire NMI
-//
-
-
+/**
+ * @brief      Trigger the NMI
+ *
+ * @return     true
+ */
 bool CPU6502TriggerNMI(void) {
     nmiCode();
     return true;
 }
 
 
-//
-//                                      Fire IRQ
-//
-
-
+/**
+ * @brief      Trigger the IRQ
+ *
+ * @return     True if IRQ triggered.
+ */
 bool CPU6502TriggerIRQ(void) {
     if (interruptDisableFlag == 0) {                                                // Fire if I flag is clear
         executeInterrupt(0xFFFE,1);
@@ -120,12 +108,11 @@ bool CPU6502TriggerIRQ(void) {
     return (interruptDisableFlag == 0);
 }
 
-
-//
-//                                    Reset the 6502
-//
-
-
+/**
+ * @brief      Reset the 6502 emulation
+ *
+ * @return     True if reset has happened.
+ */
 bool CPU6502Reset(void) {
     resetProcessor();
     return true;

@@ -10,16 +10,6 @@
  */
 
 
-//
-//      Name :      mouse.c
-//      Authors :   Paul Robson (paul@robsons.org.uk)
-//      Date :      8th January 2025
-//      Reviewed :  No
-//      Purpose :   Mouse routines
-//
-
-
-
 #include "common.h"
 #include <libraries.h>
 

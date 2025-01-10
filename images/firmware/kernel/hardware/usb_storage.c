@@ -36,10 +36,10 @@ void USBSynchronise(void) {
 /**
  * @brief      Handle a new USB key device
  *
- * @param[in]  dev_addr  The dev address
- * @param      cb_data   The cb data
+ * @param[in]  dev_addr  dev address
+ * @param      cb_data   cb data
  *
- * @return     { description_of_the_return_value }
+ * @return     True if file system mounted now.
  */
 bool inquiry_complete_cb(uint8_t dev_addr, tuh_msc_complete_data_t const *cb_data) {
     if (cb_data->csw->status != 0) {

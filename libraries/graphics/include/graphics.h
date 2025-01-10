@@ -40,3 +40,14 @@ void GFXFrameTriangle(GFXPort *vp,int x0,int y0,int x1,int y1,int x2,int y2,int 
 void GFXDrawString(GFXPort *vp,int xPos,int yPos,char *s,int font,int colour,int scale);
 void GFXGetStringExtent(char *s,int font,int scale,int *w, int *y1,int *y2);
 
+//
+//      An area designed to store a max 16x16 pixel screen part (for cursors etc)
+//
+struct _SmallBuffer {
+    int xBytesPerLine;                                                              // Bytes stored per line.
+    int ySize;                                                                      // Number of lines of data
+    uint8_t storage[16 * 4 * 2];                                                    // Buffer for the background (allows use of)
+};
+
+void GFXCopyScreenToSmallBuffer(int xPos,int yPos,struct _SmallBuffer *buffer);
+void GFRestoreSmallBufferToScreen(int xPos,int yPos,struct _SmallBuffer *buffer);

@@ -84,9 +84,9 @@ int SYSPollUpdate(void) {
             SYSUpdateMouse();
         }
         if (event.type == SDL_MOUSEWHEEL) {                                         // Handle scroll wheel events.
-            // int dy = event.wheel.y;
-            // if (event.wheel.type == SDL_MOUSEWHEEL_FLIPPED) dy = -dy;
-            // MSEUpdateScrollWheel(dy);
+            int dy = event.wheel.y;
+            if (event.wheel.type == SDL_MOUSEWHEEL_FLIPPED) dy = -dy;
+            MSEUpdateScrollWheel(dy);
         }
         if (event.type == SDL_QUIT) {                                               // Exit on Alt+F4 etc.
             isRunning = 0;

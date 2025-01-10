@@ -17,8 +17,7 @@
  */
 void ApplicationRun(void) {
 
-
-    for (int i = 0;i < 40;i++) {
+    for (int i = 0;i < 140;i++) {
         GFXFrameRect(NULL,rand()%640,rand()%240,rand()%640,rand()%240,rand()&7);
     }
 
