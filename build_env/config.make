@@ -4,7 +4,6 @@
 #		Name : 		config.make
 #		Purpose :	Configuration filess
 #		Date :		18th December 2024
-#		Reviewed :	Yes
 #		Author : 	Paul Robson (paul@robsons.org.uk)
 #
 # *******************************************************************************************

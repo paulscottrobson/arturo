@@ -4,7 +4,6 @@
 #		Name : 		Makefile
 #		Author :	Paul Robson (paul@robsons.org.uk)
 #		Date : 		18th December 2024
-#		Reviewed :	No
 #		Purpose :	Main firmware makefile, most of the work is done by CMake.
 #
 # ***************************************************************************************

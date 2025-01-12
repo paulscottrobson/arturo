@@ -4,7 +4,6 @@
 #      Name :      t1000.py
 #      Authors :   Paul Robson (paul@robsons.org.uk)
 #      Date :      3rd January 2025
-#      Reviewed :  No
 #      Purpose :   Calculate timer division approximation.
 #
 # ***************************************************************************************

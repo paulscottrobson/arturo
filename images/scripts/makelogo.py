@@ -4,7 +4,6 @@
 #      Name :      makelogo.py
 #      Authors :   Paul Robson (paul@robsons.org.uk)
 #      Date :      26th December 2024
-#      Reviewed :  No
 #      Purpose :   Create the Olimex Logo
 #
 # ***************************************************************************************

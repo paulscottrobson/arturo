@@ -4,7 +4,6 @@
 #      Name :      keymaps.py
 #      Authors :   Paul Robson (paul@robsons.org.uk)
 #      Date :      19th December 2024
-#      Reviewed :  No
 #      Purpose :   Locale Processor
 #
 # ***************************************************************************************

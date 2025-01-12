@@ -3,7 +3,6 @@
 #
 #		Name : 		Makefile
 #		Purpose :	Build Emulator
-#		Reviewed :	No
 #		Date :		29th December 2024
 #		Author : 	Paul Robson (paul@robsons.org.uk)
 #

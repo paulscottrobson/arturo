@@ -4,7 +4,6 @@
 #		Name : 		common.make
 #		Purpose :	Common make
 #		Date :		12th December 2024
-#		Reviewed :	Yes
 #		Author : 	Paul Robson (paul@robsons.org.uk)
 #
 # *******************************************************************************************

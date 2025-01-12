@@ -4,7 +4,6 @@
 #		Name : 		convbmf.py
 #		Purpose :	Convert BMF to Adafruit format.
 #		Date :		4th January 2025
-# 		Reviwed: 	No
 #		Author : 	Paul Robson (paul@robsons.org.uk)
 #
 # *******************************************************************************************

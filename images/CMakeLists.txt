@@ -4,7 +4,6 @@
 #		Name : 		CMakeLists.txt
 #		Author :	Paul Robson (paul@robsons.org.uk)
 #		Date : 		18th December 2024
-#		Reviewed :	No
 #		Purpose :	Outer level CMake configuration
 #
 # ***************************************************************************************

@@ -5,7 +5,6 @@
 #		Authors :	Paul Robson (paul@robsons.org.uk)
 #					Sascha Schneider
 #		Date : 		18th December 2024
-#		Reviewed :	No
 #		Purpose :	Outer level CMake configuration
 #
 # ***************************************************************************************
