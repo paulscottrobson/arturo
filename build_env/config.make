@@ -22,7 +22,7 @@ export PICO_DVI_PATH := /aux/builds/PicoDVI/
 #
 #		Directory the App is in.
 #
-ARTURO_APP_DIRECTORY = $(APPDIR)/test_code/mouse
+ARTURO_APP_DIRECTORY = $(APPDIR)/test_code/kernel
 #		Directory containing libraries
 #
 ARTURO_LIB_DIRECTORY = $(ROOTDIR)libraries
