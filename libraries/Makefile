@@ -24,3 +24,4 @@ all: .any
 	
 	make -C graphics/fonts convert
 	make -C cpu6502/generator
+	make -C cpuz80/generator

@@ -23,3 +23,5 @@ images/firmware/CMakeLists.txt
 libraries/graphics/fonts/fonts/fontconvert/fontconvert
 documents/htmldocs
 texput.log
+libraries/cpuz80/generator/code/*.h
+libraries/cpuz80/_*.h
