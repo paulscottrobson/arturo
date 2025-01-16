@@ -72,13 +72,13 @@ void AquaWrite(uint16_t a,uint8_t d) {
         }
     }
 }
-
+ 
 /**
  * @brief      Handle reads from Z80 I/O ports
  *
  * @param[in]  a     Port to read
  *
- * @return     Value read
+                                   * @return     Value read
  */
 uint8_t AquaPortRead(uint16_t a) {
     if ((a & 0xFF) == 0xFF) {
@@ -112,14 +112,14 @@ bool IsKeyPressed(int c) {
 }
 
 static int keys[][8] = {
-    { KEY_EQUAL,KEY_BACKSPACE,KEY_HASHTILDE,KEY_ENTER,KEY_SEMICOLON,KEY_DOT,0,0 },
+    { KEY_EQUAL,KEY_BACKSPACE,KEY_APOSTROPHE,KEY_ENTER,KEY_SEMICOLON,KEY_DOT,0,0 },
     { KEY_MINUS,KEY_SLASH,KEY_0,KEY_P,KEY_L,KEY_COMMA,0,0 },
     { KEY_9,KEY_O,KEY_K,KEY_M,KEY_N,KEY_J,0,0 },
     { KEY_8,KEY_I,KEY_7,KEY_U,KEY_H,KEY_B,0,0 },
     { KEY_6,KEY_Y,KEY_G,KEY_V,KEY_C,KEY_F,0,0 },
     { KEY_5,KEY_T,KEY_4,KEY_R,KEY_D,KEY_X,0,0 },
     { KEY_3,KEY_E,KEY_S,KEY_Z,KEY_SPACE,KEY_A,0,0 },
-    { KEY_2,KEY_W,KEY_1,-KEY_Q,KEY_MOD_LSHIFT,-KEY_MOD_LCTRL,0,0 }
+    { KEY_2,KEY_W,KEY_1,KEY_Q,-KEY_MOD_LSHIFT,-KEY_MOD_LCTRL,0,0 }
 };
 
 /**
