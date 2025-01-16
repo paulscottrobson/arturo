@@ -41,7 +41,8 @@ static CPU6502WRITEFUNC writeFunc = _dummyWrite;
 #define READ16(a)       (READ8(a) + ((READ8(a+1)) << 8))
 #define FETCH8()        READ8(pc++)
 #define FETCH16()       { temp16 = FETCH8();temp16 |= (FETCH8() << 8); }
-#define CYCLES(x)       cycles += (x)
+
+#define CYCLES(n) cycles += (n)
 
 #include "generator/__6502support.h"
 

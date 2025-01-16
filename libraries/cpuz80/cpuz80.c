@@ -58,7 +58,7 @@ static CPUZ80WRITEFUNC writePortFunc = _dummyWrite;
 #define INPORT(a)   ((*readPortFunc)(a))
 #define OUTPORT(a,d) ((*writePortFunc)(a,d))
 
-#define CYCLES(n) cycles -= (n)
+#define CYCLES(n) cycles += (n)
 
 static uint16_t _Fetch16(void) {
     uint16_t w = READ16(PC);

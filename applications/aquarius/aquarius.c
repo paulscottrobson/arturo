@@ -1,11 +1,11 @@
 /**
- * @file       superboard.c
+ * @file       aquarius.c
  *
- * @brief      Main code for a Superboard 2 emulator, demoing the 6502 library
+ * @brief      Main code for a Mattel Aquarius emulator, demoing the Z80 library
  *
  * @author     Paul Robson
  *
- * @date       07/01/2025
+ * @date       16/01/2025
  *
  */
 
@@ -17,25 +17,28 @@ void SuperWrite(uint16_t a,uint8_t d);
 uint8_t SuperPortRead(uint16_t a);
 void SuperPortWrite(uint16_t a,uint8_t d);
 uint8_t ReadKeyboard(void);
-
-static CPUZ80STATUS st;
+void ScreenPaint(uint16_t addr);
 
 /**
  * @brief      Dump the current 6502 status to stdout
  */
 
 void Dump(void) {
+    static CPUZ80STATUS st;
     CPUZ80GetStatus(&st);
-    printf("%04x: A:%02x B:%02x C:%02x D:%02x E:%02x H:%02x L:%02x:\n",st.pc,st.a,st.b,st.c,st.d,st.e,st.h,st.l);;
+    printf("%04x:%02x A:%02x B:%02x C:%02x D:%02x E:%02x H:%02x L:%02x:\n",st.pc,SuperRead(st.pc),st.a,st.b,st.c,st.d,st.e,st.h,st.l);;
 }
+
+//
+//              Binaries 
+//
+#include "roms/character_rom.h"                                                     // Load the ROMs into flash memory
+#include "roms/monitor_rom.h"
 
 //
 //              Handle memory read/write (character ROM is not memory mapped)
 //
-
-#include "roms/character_rom.h"                                                     // Load the ROMs into flash memory
-#include "roms/monitor_rom.h"
-
+ 
 #define RAMSIZE     (16384)                                                         // Extended RAM size
 
 uint8_t ram[RAMSIZE+4096];                                                          // 8k of Program RAM
@@ -48,7 +51,7 @@ uint8_t ram[RAMSIZE+4096];                                                      
  * @return     byte read from that location
  */
 uint8_t SuperRead(uint16_t a) { 
-    if (a < 0x3000) return monitor_ROM[a];                                          // 0000-2FFF is ROM
+    if (a < 0x2000) return monitor_ROM[a];                                          // 0000-1FFF is ROM
     if (a > 0x3000 && a < RAMSIZE+0x4000) return ram[a-0x3000];                     // RAM area ?
     return 0xFF; 
 }
@@ -60,18 +63,32 @@ uint8_t SuperRead(uint16_t a) {
  * @param[in]  d     byte to write to that location
  */
 void SuperWrite(uint16_t a,uint8_t d) {
-    if (a > 0x3000 && a < RAMSIZE+0x4000) {                                         // RAM area ?
+    if (a >= 0x3000 && a < RAMSIZE+0x4000) {                                        // RAM area ?
+        bool changed = (ram[a-0x3000] != d);
         ram[a - 0x3000] = d;
-        if (a >= 0x3400 && a < 0x3800) {
-            printf("%04x %02x\n",a,d);
+        if (a < 0x3800 && changed) {                                                // Written to screen RAM (char/colour RAM)
+            ScreenPaint(a);
         }
     }
 }
 
+/**
+ * @brief      Handle reads from Z80 I/O ports
+ *
+ * @param[in]  a     Port to read
+ *
+ * @return     Value read
+ */
 uint8_t SuperPortRead(uint16_t a) {
     return 0;
 }
 
+/**
+ * @brief      Write value to Z80 I/O port
+ *
+ * @param[in]  a     Port to write to
+ * @param[in]  d     Data to write
+ */
 void SuperPortWrite(uint16_t a,uint8_t d) {
 
 }
@@ -109,9 +126,25 @@ uint8_t ReadKeyboard(void) {
  * @param[in]  addr  The address of the screen location written to
  * @param[in]  c     Character written to it
  */
-void ScreenPaint(uint16_t addr,uint8_t c) {
-}
+void ScreenPaint(uint16_t addr) {
+    if (addr >= 0x3800) return;
+    addr = addr & 0x3FF;        
+    int c = ram[addr];                                                              // Character
+    int x = addr % 40,y = addr / 40;                                                // Cell position.
+    if (y >= 24) return;                                                            // Off the display
+    int offset = x + y * 320;                                                       // Offset into the bitmap
 
+    const uint8_t *fontData = character_ROM + c * 8;                                // Character data to copy
+    struct DVIModeInformation *dmi = DVIGetModeInformation();                       // Access bitmap planes
+
+    for (int i = 0;i < 8;i++) {                                                     // Write to bitmap
+        uint8_t bd = *fontData++;                                                   // Get the character line.
+        *(dmi->bitPlane[0]+offset) = bd;                                            // Write to RGB bitmaps
+        *(dmi->bitPlane[1]+offset) = bd;
+        *(dmi->bitPlane[2]+offset) = bd;
+        offset += 320/8;                                                            // One line down
+    }
+}
 
 /**
  * @brief      Run the main application
@@ -128,9 +161,7 @@ void ApplicationRun(void) {
     CPUZ80Reset();                                                                  // Reset the CPU
     while (1) {
         while (CPUZ80ExecuteOne() == 0) {                                           // Do one frame
-            //Dump(); 
         }
-        CPUZ80TriggerInt();                                                         // Frame Sync interrupt.
         if (HASTICK50_FIRED()) {                                                    // Time to do a 50Hz tick (Don't use this for timing !)
             TICK50_RESET();                                                         // Reset the tick flag
             if (USBUpdate() == 0) return;                                           // Update USB

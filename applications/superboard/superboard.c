@@ -15,6 +15,7 @@
 uint8_t SuperRead(uint16_t a);
 void SuperWrite(uint16_t a,uint8_t d);
 uint8_t ReadKeyboard(void);
+void ScreenPaint(uint16_t addr,uint8_t c);
 
 static CPU6502STATUS st;
 
