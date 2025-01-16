@@ -75,8 +75,7 @@ int FIORead(int handle,void *data,int size) {
 
 
 /**
- * @brief      Write data tp am p[emo;e/]
- *
+ * @brief      Write data to an open file.
  * @param[in]  handle  The handle
  * @param      data    The data
  * @param[in]  size    The size

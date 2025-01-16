@@ -38,8 +38,8 @@ static int nextFrameSync = 0;                                                   
 //
 //                                  Read / Write system
 //
-uint8_t _dummyRead(uint16_t a) { return 0; }                                        // These are dummies
-void    _dummyWrite(uint16_t a,uint8_t d) {}
+static uint8_t _dummyRead(uint16_t a) { return 0; }                                // These are dummies
+static void    _dummyWrite(uint16_t a,uint8_t d) {}
 
 static CPUZ80READFUNC readFunc = _dummyRead;                                       // Set the read and write functions to the dummies
 static CPUZ80WRITEFUNC writeFunc = _dummyWrite;
@@ -55,8 +55,8 @@ static CPUZ80WRITEFUNC writePortFunc = _dummyWrite;
 #define FETCH8()    READ8(PC++)                                                     // Fetch byte without fiddling.
 #define FETCH16()   _Fetch16()                                                      // Fetch word
 
-#define INPORT(p)   ((*readPortFunc)(a))
-#define OUTPORT(p,d) ((*writePortFunc)(a,d))
+#define INPORT(a)   ((*readPortFunc)(a))
+#define OUTPORT(a,d) ((*writePortFunc)(a,d))
 
 #define CYCLES(n) cycles -= (n)
 
@@ -65,6 +65,8 @@ static uint16_t _Fetch16(void) {
     PC += 2;
     return w;
 }
+
+#define FAILOPCODE(grp,op) {}
 
 //
 //                                          CPU Support routines.
@@ -90,6 +92,12 @@ void CPUZ80Setup(CPUZ80SETUP *setup) {
  * @param      stat Pointer to the structure holding the status.
  */
 void CPUZ80GetStatus(CPUZ80STATUS *stat) {
+    stat->a = A;stat->b = B;stat->c = C;stat->d = D;
+    stat->e = E;stat->h = H;stat->l = L;stat->ie = intEnabled;
+    stat->f = ConstructStatusByte();
+    stat->afAlt = AFalt;stat->bcAlt = BCalt; 
+    stat->deAlt = DEalt;stat->hlAlt = HLalt;
+    stat->ix = IX;stat->iy = IY;stat->pc = PC;stat->sp = SP;
 }
 
 /**
@@ -97,9 +105,9 @@ void CPUZ80GetStatus(CPUZ80STATUS *stat) {
  *
  * @return     Non-zero if the frame sync/redraw fired.
  */
-int CPU6502ExecuteOne(void) {
+int CPUZ80ExecuteOne(void) {
 
-    BYTE8 opcode = FETCH8();                                                        // Fetch opcode.
+    uint8_t opcode = FETCH8();                                                      // Fetch opcode.
     switch(opcode) {                                                                // Execute it.
         #include "_code_group_0.h"
     }
@@ -111,28 +119,21 @@ int CPU6502ExecuteOne(void) {
     return 1;
 }
 
-// /**
-//  * @brief      Trigger the NMI
-//  *
-//  * @return     true
-//  */
-// bool CPU6502TriggerNMI(void) {
-//     nmiCode();
-//     return true;
-// }
+/**
+ * @brief      Trigger the Interrupt
+ *
+ * @return     true
+ */
+bool CPUZ80TriggerInt(void) {
+    bool fired = intEnabled;
+     if (intEnabled) {                                                              // Interrupt enabled.
+        PUSH(PC);                                                                   // Do RST 38h
+        PC = 0x38;
+        intEnabled = 0;
+     }    
+    return fired;
+}
 
-
-// /**
-//  * @brief      Trigger the IRQ
-//  *
-//  * @return     True if IRQ triggered.
-//  */
-// bool CPU6502TriggerIRQ(void) {
-//     if (interruptDisableFlag == 0) {                                                // Fire if I flag is clear
-//         executeInterrupt(0xFFFE,1);
-//     }
-//     return (interruptDisableFlag == 0);
-// }
 
 /**
  * @brief      Reset the Z80 emulation

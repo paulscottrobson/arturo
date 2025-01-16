@@ -33,7 +33,9 @@ typedef struct _CPUZ80Setup {
 //      Status structure
 //
 typedef struct _CPUZ80Status {
-    int a,b,c,d,e,h,l,f,ix,iy,pc,sp,cycles;
+    int a,b,c,d,e,h,l,f,ie;
+    int afAlt,bcAlt,deAlt,hlAlt;
+    int ix,iy,pc,sp,cycles;
 } CPUZ80STATUS;
 
 //
@@ -43,6 +45,6 @@ void CPUZ80Setup(CPUZ80SETUP *setup);
 void CPUZ80GetStatus(CPUZ80STATUS *stat);
 bool CPUZ80Reset(void);
 int CPUZ80ExecuteOne(void);
-bool CPUZ80TriggerNMI(void);
-bool CPUZ80TriggerIRQ(void);
+bool CPUZ80TriggerInt(void);
+
 
