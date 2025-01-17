@@ -72,13 +72,13 @@ void AquaWrite(uint16_t a,uint8_t d) {
         }
     }
 }
-
+ 
 /**
  * @brief      Handle reads from Z80 I/O ports
  *
  * @param[in]  a     Port to read
  *
- * @return     Value read
+                                   * @return     Value read
  */
 uint8_t AquaPortRead(uint16_t a) {
     if ((a & 0xFF) == 0xFF) {
