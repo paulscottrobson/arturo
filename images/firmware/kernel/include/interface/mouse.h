@@ -21,8 +21,8 @@ void MSEGetState(int *pX, int *pY, int *pButtonState, int *pScrollWheelState);
 //
 void MSEInitialise(void);
 void MSEEnableMouse(void);
-void MSEUpdateScrollWheel(int8_t ds);
-void MSEUpdateButtonState(uint8_t bs);
-void MSEOffsetPosition(int8_t dx, int8_t dy);
+void MSEUpdateScrollWheel(int ds);
+void MSEUpdateButtonState(int bs);
+void MSEOffsetPosition(int dx, int dy);
 
 

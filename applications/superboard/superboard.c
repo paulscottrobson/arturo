@@ -162,7 +162,7 @@ void ScreenPaint(uint16_t addr,uint8_t c) {
  * @brief      Run the main application
  */
 void ApplicationRun(void) {
-    CONEnableConsole(true);                                                         // Disable console output.
+    CONEnableConsole(false);                                                        // Disable console output.
     GFXSetMode(DVI_MODE_320_240_8);                                                 // Display to 320x240x8 mode.
     CPU6502SETUP s;                                                                 // Set up the processor r/w
     s.read = SuperRead;s.write = SuperWrite;

@@ -12,9 +12,9 @@
 
 #include "common.h"
 
-static uint16_t xCursor, yCursor;                                                // Current position
-static uint8_t buttonState;
-static uint8_t scrollWheelState;
+static int xCursor, yCursor;                                                        // Current position
+static int buttonState;
+static int scrollWheelState;
 static bool hasMouse = false;
 
 /**
@@ -62,7 +62,7 @@ void MSESetPosition(int x,int y) {
  * @param[in]  dy    y position
  */
 
-void MSEOffsetPosition(int8_t dx, int8_t dy) {
+void MSEOffsetPosition(int dx, int dy) {
     struct DVIModeInformation *dmi = DVIGetModeInformation();
     if(dx < 0 && xCursor < abs(dx)) {
         xCursor = 0;
@@ -84,7 +84,7 @@ void MSEOffsetPosition(int8_t dx, int8_t dy) {
  *
  * @param[in]  ds    Scroll wheel data
  */
-void MSEUpdateScrollWheel(int8_t ds) {
+void MSEUpdateScrollWheel(int ds) {
     scrollWheelState += ds;
 }
 
@@ -94,7 +94,7 @@ void MSEUpdateScrollWheel(int8_t ds) {
  *
  * @param[in]  bs    One bit per button.
  */
-void MSEUpdateButtonState(uint8_t bs) {
+void MSEUpdateButtonState(int bs) {
     buttonState = bs;
 }
 

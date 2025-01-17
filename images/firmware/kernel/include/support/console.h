@@ -34,6 +34,6 @@ void CONWrite(int c);
 void CONWriteString(const char *fmt, ...);
 void CONDrawPixel(int x, int y, int rgb);
 void CONSetColour(int foreground,int background);
-void CONEnableConsole(bool isOn);
+void CONEnableConsole(int isOn);
 void CONDefineUDG(int udg,uint8_t * bitData);
 uint8_t *CONGetUDGGraphicData(int udg);

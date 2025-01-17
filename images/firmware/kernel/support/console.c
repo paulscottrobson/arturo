@@ -86,8 +86,8 @@ void CONInitialise(void) {
  *
  * @param[in]  isOn  Consol is on ?
  */
-void CONEnableConsole(bool isOn) {
-    conIsEnabled = isOn;
+void CONEnableConsole(int isOn) {
+    conIsEnabled = (isOn != 0);
 }
 
 /**
@@ -145,8 +145,6 @@ void CONWrite(int c) {
             break;
     }
 }
-
-
 
 /**
  * @brief      UDG Definition

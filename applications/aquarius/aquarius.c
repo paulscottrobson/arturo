@@ -220,15 +220,18 @@ static uint8_t pickSelect(int colour,int bitMask) {
  * @brief      Run the main application
  */
 void ApplicationRun(void) {
-    CONEnableConsole(true);                                                         // Disable console output.
+    CONEnableConsole(false);                                                        // Disable console output.
     GFXSetMode(DVI_MODE_320_240_8);                                                 // Display to 320x240x8 mode.
     CPUZ80SETUP s;                                                                  // Set up the processor r/w
+
     s.read = AquaRead;s.write = AquaWrite;
     s.readPort = AquaPortRead;s.writePort = AquaPortWrite;
     s.clockSpeed = 3580000;                                                         // 3.58Mhz Clock
     s.frameRate = 50;                                                               // 50 Frames/Second 
     CPUZ80Setup(&s);                                                                // Set up the processor
+
     CPUZ80Reset();                                                                  // Reset the CPU
+
     while (1) {
         while (CPUZ80ExecuteOne() == 0) {                                           // Do one frame
         }
