@@ -18,7 +18,6 @@ bin/*
 __*
 __*/
 CMakeCache.txt
-simulator/storage/*
 images/firmware/CMakeLists.txt
 libraries/graphics/fonts/fonts/fontconvert/fontconvert
 documents/htmldocs

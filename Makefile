@@ -37,7 +37,7 @@ fonts:
 #
 lib:
 	make -C libraries
-		
+	make -C host-forth
 #
 #		Build Doxygen documentation
 #
