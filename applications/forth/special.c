@@ -15,7 +15,6 @@
 #define CLIP() do {addr&=MEMMASK;len&=MEMMASK;if(addr+len>MEMSIZE)len=MEMSIZE-addr;} while(0)
 #define FILEID(n) do{if (((n) & 0x80000000)==0)fp=(n);else fp=0;}while(0);
 
-char *filemodes[]={"r","rb","w","wb","r+","r+b"};
 char filename[256];
 
 int make_name(char *addr,UNS32 len)
@@ -117,7 +116,12 @@ void do_os(void)
       SWAP(); goto end;
     } SWAP();
     {
-      if(CELL(save_sp-4)>5){ior=-203;goto end;}
+      if(CELL(save_sp-4)>5) {
+	ior=-203;
+	goto end;
+      }
+      if ((CELL(save_sp-4) & 2)!= 0)
+	FIOCreateFile(filename);
       //CONWriteString("Filename: %s\n",filename);
       fp=FIOOpen(filename);
       //ONWriteString("Open res: %d\n",fp);

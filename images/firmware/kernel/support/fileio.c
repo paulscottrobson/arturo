@@ -46,8 +46,9 @@ int FIOOpen(char *fileName) {
     res = FSYSOpen(i,fileName);
     if (res<0) {
       files[i].isInUse = false;
+      i = -1;
     }
-    return res;
+    return i;
 }
 
 
