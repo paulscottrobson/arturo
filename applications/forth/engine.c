@@ -171,7 +171,7 @@ void virtual_machine(void)
                          do_special(t);
 			 icount += 100;
                          sp=save_sp;ip=save_ip;rp=save_rp;
-			 if (interrupt == 100)
+			 if (interrupt >= 100)
 			   return;
                          if(interrupt) {
                           ireg=(((ireg>>5)<<1)+1)|ret; 

@@ -33,6 +33,8 @@ void CONInitialise(void);
 void CONWrite(int c);
 void CONWriteString(const char *fmt, ...);
 void CONDrawPixel(int x, int y, int rgb);
+void CONSetCursor(int x, int y);
+void CONGetCursor(int *x, int *y);
 void CONSetColour(int foreground,int background);
 void CONEnableConsole(int isOn);
 void CONDefineUDG(int udg,uint8_t * bitData);

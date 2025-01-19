@@ -100,6 +100,33 @@ void CONSetColour(int foreground,int background) {
     fgcol = foreground;bgcol = background;
 }
 
+/**
+ * @brief      Set console text cursor position.
+ *
+ * @param[in]  x  column of the cursor.
+ * @param[in]  y  row of the cursor.
+ */
+void CONSetCursor(int x, int y)
+{
+  struct DVIModeInformation *dmi = DVIGetModeInformation();
+  if (x>=0 && x*8 < dmi->width)
+    x0 = x*8;
+  if (y>=0 && y*8 < dmi->height)
+    y0 = y*8;
+}
+
+/**
+ * @brief       Get console text cursor position.
+ *
+ * @param[out]  x  column of the cursor.
+ * @param[out]  y  row of the cursor.
+ */
+void CONGetCursor(int *x, int *y)
+{
+  *x = x0/8;
+  *y = y0/8;
+}
+
 
 /**
  * @brief      Write one character or control code.
@@ -117,6 +144,14 @@ void CONWrite(int c) {
                     CONDrawPixel(x, y, CON_COL_BLACK);
             x0 = y0 = 0;                                                            // Home cursor
             break;
+        case 8:
+	  if (x0 >= 8) {	    
+	    x0 -= 8;
+	  } else if (y0 >= 8) {
+	    y0 -= 8;
+	    x0 = dmi->width - 8;
+	  }
+	  break;
         case 10:
         case 13:                                                                    // New line
             x0 = 0;y0 = y0 + 8;

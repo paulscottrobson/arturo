@@ -9,6 +9,7 @@
 #include <string.h>
 #include "sod32.h"
 #include "common.h"
+#include <libraries.h>
 
 #define SWAP() swap_mem(addr&CELLMASK,len+3);
 #define CLIP() do {addr&=MEMMASK;len&=MEMMASK;if(addr+len>MEMSIZE)len=MEMSIZE-addr;} while(0)
@@ -27,26 +28,36 @@ int make_name(char *addr,UNS32 len)
  return 1; 
 }
 
+int lastkey;
 int getch(void)
 {
   int k;
-  do {
-    check_timer();
-    if (interrupt == 100) return 0;
-    k = KBDGetKey();
-  } while (k==0);
+  if (lastkey != 0) {
+    k=lastkey;
+    lastkey = 0;
+  } else {
+    do {
+      check_timer();
+      if (interrupt == 100) return 0;
+      k = KBDGetKey();
+    } while (k==0);
+  }
   return k;
 }
 
 int kbhit(void)
 {
-  return 0;
+  if (lastkey != 0)
+    return -1;
+  else {
+    lastkey = KBDGetKey();
+    return lastkey != 0;
+  };
 }
 
 void putch(int c)
 {
-  if (c!=13)
-    CONWrite(c);
+    VDUWrite(c);
 }
 
 void check_timer(void)
@@ -95,7 +106,7 @@ void do_os(void)
  UNS32 fp;
  UNS32 code=CELL(save_sp);save_sp+=4;
  switch(code) {
-   //case 0: /*exit*/ systerm();exit(0);break;
+  case 0: /*exit*/ interrupt = 101; break;
   case 1: /*read char */ save_sp-=4;CELL(save_sp)=getch();break; 
   case 2: /*print char*/ putch(CELL(save_sp));save_sp+=4;break;
   case 3: /*check key */ save_sp-=4;CELL(save_sp)=-kbhit();break;

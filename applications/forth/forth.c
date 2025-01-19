@@ -26,7 +26,8 @@ void load_image(void)
 
 void ApplicationRun(void)
 {
- load_image();
- //initterm();
- virtual_machine();
+  do {
+    load_image();
+    virtual_machine();
+  } while (interrupt != 100);
 }
