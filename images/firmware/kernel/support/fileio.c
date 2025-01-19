@@ -38,11 +38,16 @@ void FIOInitialise(void) {
  */
 int FIOOpen(char *fileName) {
     int i = 0;
+    int res;
     while (i < FIO_MAX_HANDLES && files[i].isInUse) i++;                            // Find an unused handle.
     if (i == FIO_MAX_HANDLES) return FIO_ERR_MAXFILES;                              // None found.
     files[i].isInUse = true;
     files[i].isReadOnly = false;
-    return FSYSOpen(i,fileName);
+    res = FSYSOpen(i,fileName);
+    if (res<0) {
+      files[i].isInUse = false;
+    }
+    return res;
 }
 
 

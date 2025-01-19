@@ -13,7 +13,7 @@
 
 #define SWAP() swap_mem(addr&CELLMASK,len+3);
 #define CLIP() do {addr&=MEMMASK;len&=MEMMASK;if(addr+len>MEMSIZE)len=MEMSIZE-addr;} while(0)
-#define FILEID(n) fp=(n)
+#define FILEID(n) do{if (((n) & 0x80000000)==0)fp=(n);else fp=0;}while(0);
 
 char *filemodes[]={"r","rb","w","wb","r+","r+b"};
 char filename[256];
@@ -120,8 +120,8 @@ void do_os(void)
       if(CELL(save_sp-4)>5){ior=-203;goto end;}
       //CONWriteString("Filename: %s\n",filename);
       fp=FIOOpen(filename);
-      //CONWriteString("Open res: %d\n",fp);
-      if(fp<0)ior=200;
+      //ONWriteString("Open res: %d\n",fp);
+      if(fp & 0x80000000)ior=200;
       CELL(save_sp+4)=fp;                         
     } goto end;   
  case 8: /*close-file*/  FILEID(CELL(save_sp));FIOClose(fp); 
