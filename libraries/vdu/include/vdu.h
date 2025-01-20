@@ -14,7 +14,7 @@
 void VDUWrite(unsigned char c);
 void VDUWriteString(const char *fmt, ...);
 void VDUGetCursor(int *x, int *y);
-
+void VDUSwitchCursor(void);
 
 
 

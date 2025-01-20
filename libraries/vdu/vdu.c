@@ -27,6 +27,9 @@ int expect_params = 0;
 int vdu_fg = 3;
 int vdu_bg = 0;
 
+GFXPort vp = {0,0,640,240,0,0};
+
+
 static void switch_ctrl(unsigned char c)
 {
   switch(c) {
@@ -52,6 +55,15 @@ static void switch_ctrl(unsigned char c)
       vdu_fg = 7;
       vdu_bg = 0;
       CONSetColour(vdu_fg, vdu_bg);      
+    }
+    {
+      struct DVIModeInformation *dmi = DVIGetModeInformation();
+      vp.x = 0;
+      vp.y = 0;
+      vp.width = dmi->width;
+      vp.height = dmi->height;
+      vp.xOffset = 0;
+      vp.yOffset = 0;
     }
     break;
   case 23:
@@ -124,4 +136,14 @@ void VDUWriteString(const char *fmt, ...)
 void VDUGetCursor(int *x, int *y)
 {
   CONGetCursor(x,y);
+}
+
+/**
+ * @brief       Invert character cell at cursor position to make cursore visible.
+ */
+void VDUSwitchCursor(void)
+{
+  int x,y;
+  CONGetCursor(&x,&y);
+  GFXFillRect(&vp,x*8,y*8,x*8+7,y*8+7,0x10000+63);
 }

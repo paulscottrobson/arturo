@@ -35,11 +35,13 @@ int getch(void)
     k=lastkey;
     lastkey = 0;
   } else {
+    VDUSwitchCursor();
     do {
       check_timer();
       if (interrupt == 100) return 0;
       k = KBDGetKey();
     } while (k==0);
+    VDUSwitchCursor();
   }
   return k;
 }
