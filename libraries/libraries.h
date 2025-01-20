@@ -14,5 +14,4 @@
 #include "graphics/include/graphics.h"
 #include "cpu6502/include/cpu6502.h"
 #include "cpuz80/include/cpuz80.h"
-#include "mouse/include/mouse.h"
 #include "vdu/include/vdu.h"

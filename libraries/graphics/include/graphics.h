@@ -54,3 +54,5 @@ struct _SmallBuffer {
 
 void GFXCopyScreenToSmallBuffer(int xPos,int yPos,struct _SmallBuffer *buffer);
 void GFXCopySmallBufferToScreen(struct _SmallBuffer *buffer);
+
+void GFXUpdateMouse(void);

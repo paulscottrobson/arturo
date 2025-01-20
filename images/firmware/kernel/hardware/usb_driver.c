@@ -58,9 +58,12 @@ static void usbProcessReport(uint8_t const *report) {
  * @param      report  The USB report
  * @param[in]  len     The Report length
  */
+
+#define TOINT(x)    (((x) & 0x80) ? (x)-256 : (x))                              // 8 bit 2's complement to integer.
+
 static void usbProcessMouseReport(uint8_t const *report, uint16_t len) {
     if(len < 3) return;                                                         // Some mice return three things, some four.
-    MSEOffsetPosition(report[1], report[2]);
+    MSEOffsetPosition(TOINT(report[1]), TOINT(report[2]));
     MSEUpdateButtonState(report[0]);
 
     if(len < 4) return;

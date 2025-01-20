@@ -55,6 +55,7 @@ void GFXSetMode(int mode) {
     for (int i = 0;i < _dmi->bitPlaneCount;i++) {                                   // Clear all the bit planes.
         memset(_dmi->bitPlane[i],0,_dmi->bytesPerLine*_dmi->height);
     }
+    GFXMReset();                                                                    // Reset the mouse system.
 }
 
 /**

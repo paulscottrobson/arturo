@@ -88,7 +88,6 @@ void MSEUpdateScrollWheel(int ds) {
     scrollWheelState += ds;
 }
 
-
 /**
  * @brief      Update the buttons current state
  *
@@ -108,12 +107,8 @@ void MSEUpdateButtonState(int bs) {
  * @param      pScrollWheelState  poninter to int
  */
 void MSEGetState(int *pX, int *pY, int *pButtonState, int *pScrollWheelState) {
-    if (hasMouse) {
-        *pX = xCursor;
-        *pY = yCursor;
-        *pButtonState = buttonState;    
-        *pScrollWheelState = scrollWheelState;
-    } else {
-        *pX = *pY = *pButtonState = *pScrollWheelState = 0;
-    }
+    if (pX != NULL) *pX = hasMouse ? xCursor : 0;
+    if (pY != NULL) *pY = hasMouse ? yCursor : 0;
+    if (pButtonState != NULL) *pButtonState = hasMouse ? buttonState : 0;    
+    if (pScrollWheelState != NULL) *pScrollWheelState = hasMouse ? scrollWheelState : 0;
 }

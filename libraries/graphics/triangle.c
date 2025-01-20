@@ -133,6 +133,7 @@ static void drawFilledTriangle() {
  * @param[in]  col   The colout
  */
 void GFXFillTriangle(GFXPort *vp,int x0,int y0,int x1,int y1,int x2,int y2,int col) {
+    GFXCHECKMOUSE(vp);
     GFXASetPort(vp);
     vt1.x = x0;vt1.y = y0;
     vt2.x = x1;vt2.y = y1;
@@ -154,6 +155,7 @@ void GFXFillTriangle(GFXPort *vp,int x0,int y0,int x1,int y1,int x2,int y2,int c
  * @param[in]  col   The colout
  */
 void GFXFrameTriangle(GFXPort *vp,int x0,int y0,int x1,int y1,int x2,int y2,int col) {
+    GFXCHECKMOUSE(vp);
     GFXASetPort(vp);
     GFXALine(x0,y0,x1,y1,col);
     GFXALine(x0,y0,x2,y2,col);
