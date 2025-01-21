@@ -169,12 +169,14 @@ void GFXAHorizLine(int x1,int x2,int y,int colour) {
 void GFXAVertLine(int x,int y1,int y2,int colour) {
     x = CONV_X(x);y1 = CONV_Y(y1);y2 = CONV_Y(y2);                                  // Convert coordinates.
     if (OFFWINDOWH(x)) return;                                                      // Off screen.
-    if (y1 > y2) { int n = y1;y1 = y2;y2 = n; }                                     // Sort y coordinates
+    if (y1 > y2) { int n = y1;y1 = y2;y2 = n; }                                 
+    // Sort y coordinates
     if (y2 < 0 || y1 >= height) return;                                             // Wholly off top or bottom.
-    y1 = max(y1,0);y2 = max(y2,height-1);                                           // Clip into region.
+    y1 = max(y1,0);y2 = min(y2,height-1);                                           // Clip into region.
     xPixel = x;yPixel = y1;dataValid = false;                                       // Set start and validate
     _GFXAValidate();
-    int pixelCount = y2-y1+1;                                                       // Pixels to draw
+    int pixelCount = y2-y1+1;                                                   
+    // Pixels to draw
     while (pixelCount-- > 0) {                                                      // Shift until reached byte boundary
         _GFXDrawBitmap(colour);GFXADown();
     }

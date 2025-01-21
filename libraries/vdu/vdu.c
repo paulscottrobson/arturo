@@ -13,6 +13,15 @@
 #include "common.h"
 #include <libraries.h>
 
+typedef struct _Point {
+  short x, y;
+} Point_t;
+
+Point_t p1, p2, p3;
+
+int max_x=1279, max_y=959, scale_x=1, scale_y=2;
+
+
 /* Number of parameter byes expected for each control code 0..31
    See https://beebwiki.mdfs.net/VDU */
 static const uint8_t vdu_param_bytes[] = {
@@ -26,8 +35,50 @@ int param_index = 0;
 int expect_params = 0;
 int vdu_fg = 3;
 int vdu_bg = 0;
+int gfx_fg = 7;
+int gfx_bg = 0;
 
 GFXPort vp = {0,0,640,240,0,0};
+
+#define SCALE_X(x) ((x) >> scale_x)
+#define SCALE_Y(y) ((max_y - (y)) >> scale_y)
+
+static void do_plot(unsigned char mode, short x, short y)
+{
+  unsigned int colour;
+  //CONWriteString("PLOT %d,%d,%d\n",mode,x,y);
+  if (mode & 0x4) {
+    p1.x = x;
+    p1.y = y;
+  } else {
+    p1.x = p2.x + x;
+    p1.y = p2.y + y;
+  }
+  if ((mode & 0x3)) {
+    switch (mode & 0x3) {
+    case 1: colour = gfx_fg; break;
+    case 2: colour = 0x10000+63; break;
+    case 3: colour = gfx_bg; break;
+    }
+    switch (mode >> 3) {
+    case 0: /* Line */
+      GFXLine(&vp, SCALE_X(p2.x), SCALE_Y(p2.y),
+	      SCALE_X(p1.x), SCALE_Y(p1.y),colour);
+      break;
+    case 8: /* Plot single dot */
+      GFXPlot(&vp, SCALE_X(p1.x), SCALE_Y(p1.y), colour);
+      break;
+    case 10: /* Triangle */
+      GFXFillTriangle(&vp, SCALE_X(p3.x), SCALE_Y(p3.y),
+		      SCALE_X(p2.x), SCALE_Y(p2.y),
+		      SCALE_X(p1.x), SCALE_Y(p1.y),colour);
+      break;
+    }
+      
+  }
+  p3 = p2;
+  p2 = p1;
+}
 
 
 static void switch_ctrl(unsigned char c)
@@ -39,11 +90,17 @@ static void switch_ctrl(unsigned char c)
     CONWrite(c);
     break;
   case 17:
-    if (params[0] > 128)
+    if (params[0] >= 128)
       vdu_bg = params[0] & 0x3f;
     else
       vdu_fg = params[0] & 0x3f;
     CONSetColour(vdu_fg, vdu_bg);
+    break;
+  case 18:
+    if (params[1] >= 128)
+      gfx_bg = params[1] & 0x3f;
+    else
+      gfx_fg = params[1] & 0x3f;      
     break;
   case 22:
     if (params[0] <= 4) {
@@ -54,6 +111,8 @@ static void switch_ctrl(unsigned char c)
       CONWrite(12);
       vdu_fg = 7;
       vdu_bg = 0;
+      gfx_fg = 7;
+      gfx_bg = 0;
       CONSetColour(vdu_fg, vdu_bg);      
     }
     {
@@ -64,12 +123,24 @@ static void switch_ctrl(unsigned char c)
       vp.height = dmi->height;
       vp.xOffset = 0;
       vp.yOffset = 0;
+      max_x = 1279;
+      if (dmi->height == 256) max_y = 1023; else max_y = 959;
+      if (dmi->width == 320) scale_x = 2; else scale_x = 1;
+      if (dmi->height < 400) scale_y = 2; else scale_y = 1;
+      p1.x=0; p1.y=0;
+      p2.x=0; p2.y=0; 
+      p3.x=0; p3.y=0;       
     }
     break;
   case 23:
     if (params[0] >= 128) {
       CONDefineUDG((params[0]&31)+224, &params[1]);
     }
+    break;
+  case 25:
+    do_plot(params[0],
+	    (short)(params[1] + 256*params[2]),
+	    (short)(params[3] + 256*params[4]));
     break;
   case 30:
     CONSetCursor(0,0);
