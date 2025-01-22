@@ -37,6 +37,8 @@ int vdu_fg = 3;
 int vdu_bg = 0;
 int gfx_fg = 7;
 int gfx_bg = 0;
+int mono_fg = 7;
+int mono_bg = 0;
 
 GFXPort vp = {0,0,640,240,0,0};
 
@@ -84,25 +86,32 @@ static void do_plot(unsigned char mode, short x, short y)
 static void switch_ctrl(unsigned char c)
 {
   switch(c) {
-  case 8:
-  case 10:
-  case 12:
+  case 8:  /* backspace */
+  case 10: /* Newline */
+  case 12: /* clear screen */
     CONWrite(c);
     break;
-  case 17:
+  case 17: /* Set text colour */
     if (params[0] >= 128)
       vdu_bg = params[0] & 0x3f;
     else
       vdu_fg = params[0] & 0x3f;
     CONSetColour(vdu_fg, vdu_bg);
     break;
-  case 18:
+  case 18: /* Set graphics colour */
     if (params[1] >= 128)
       gfx_bg = params[1] & 0x3f;
     else
       gfx_fg = params[1] & 0x3f;      
     break;
-  case 22:
+  case 19: /* Set palette */
+    if (params[0] == 0)
+      mono_bg = params[1];
+    else
+      mono_fg = params[1];
+    DVISetMonoColour(mono_fg,mono_bg);      
+    break; 
+  case 22: /* Switch mode */
     if (params[0] <= 4) {
       if (params[0] == 2) {
 	DVISetMonoColour(7,0);
@@ -113,6 +122,8 @@ static void switch_ctrl(unsigned char c)
       vdu_bg = 0;
       gfx_fg = 7;
       gfx_bg = 0;
+      mono_fg = 7;
+      mono_bg = 0;
       CONSetColour(vdu_fg, vdu_bg);      
     }
     {
@@ -132,20 +143,20 @@ static void switch_ctrl(unsigned char c)
       p3.x=0; p3.y=0;       
     }
     break;
-  case 23:
+  case 23: /* Define UDG */
     if (params[0] >= 128) {
       CONDefineUDG((params[0]&31)+224, &params[1]);
     }
     break;
-  case 25:
+  case 25: /* PLOT */
     do_plot(params[0],
 	    (short)(params[1] + 256*params[2]),
 	    (short)(params[3] + 256*params[4]));
     break;
-  case 30:
+  case 30: /* HOME cursor */
     CONSetCursor(0,0);
     break;
-  case 31:
+  case 31: /* TAB(x,y) */
     CONSetCursor(params[0],params[1]);
     break;
   }

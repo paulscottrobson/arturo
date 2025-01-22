@@ -283,7 +283,7 @@ DEFINITIONS
   ELSE
    !
   THEN
-;
+; IMMEDIATE 
 
 : D- ( d1 d2 --- d3)
 \G subtract double numbers d2 from d1.    
