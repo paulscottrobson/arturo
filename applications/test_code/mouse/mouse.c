@@ -61,9 +61,9 @@ void ApplicationRun(void) {
 
         GFXUpdateMouse();
 
-        if (TMRReadTimeMS() > nextUpdate) {
-            current = (current + 1) % WIN_COUNT;
-            if (Window[current].inUse) {
+        if (TMRReadTimeMS() > nextUpdate) {                                         // Every 30ms
+            current = (current + 1) % WIN_COUNT;                                    // Next window
+            if (Window[current].inUse) {                                            // Update it's data and redraw it.
                     Window[current].count += (current + 1);
                     WindowUpdate(&Window[current]);
             }
