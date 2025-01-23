@@ -31,7 +31,7 @@
  */
 static void _DrawCharacterFromBitmap(GFXPort *vp,int xPos,int yPos,int w,int h,uint8_t *bitmapData,int colour,int scale) {
     uint8_t bitMask = 0x80;                                                         // Bit to check.
-    GFXCHECKMOUSE(vp);
+    GFXCheckMouse(vp);
     GFXASetPort(vp);                                                                // Set the viewport
 
     for (int y = 0;y < h;y++) {                                                     // For each line of actual data.
@@ -97,7 +97,7 @@ static int _DrawCharacter(GFXPort *vp,int xPos,int yPos,int ch,int fontid,int co
  * @param[in]  yPos    Y position
  * @param      s       ASCIIZ string
  * @param[in]  font    Font ID
- * @param[in]  colour  Dolour
+ * @param[in]  colour  Colour
  * @param[in]  scale   Scale
  */
 void GFXDrawString(GFXPort *vp,int xPos,int yPos,char *s,int font,int colour,int scale) {

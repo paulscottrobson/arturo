@@ -42,6 +42,6 @@ void GFXARight(void);
 #define     GFXA_XOR        (0x10000)
 #define     GFXA_SOLID      (0x100000)
 
-#define GFXCHECKMOUSE(vp) 	{}
+void GFXCheckMouse(GFXPort *vp);
 
 void GFXMReset(void);

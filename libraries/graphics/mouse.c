@@ -64,3 +64,16 @@ static void _GFXRestoreScreen(void) {
     if (isPointerDrawn) GFXCopySmallBufferToScreen(&pointerStore);                  // Restore the display
     isPointerDrawn = false;                                                         // No longer drawn
 }
+
+
+/**
+ * @brief      If mouse is in viewport and drawn, remove it as going to do some
+ *             painting
+ *
+ * @param      vp    Viewport, or NULL.
+ */
+void GFXCheckMouse(GFXPort *vp) {
+    if (!isPointerDrawn) return;                                                    // Is the pointer drawn, if not, no action.
+    _GFXRestoreScreen();                                                            // Restore the mouse pointer.
+    xMouse = yMouse = -99;                                                          // Force it's redraw
+}

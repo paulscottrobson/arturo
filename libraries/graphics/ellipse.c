@@ -62,7 +62,7 @@ void GFXFillEllipse(GFXPort *vp,int x0,int y0,int x1,int y1,int colour) {
  * @param[in]  fill    In fill ?
  */
 static void _GFXDrawEllipseMain(GFXPort *vp,int x0,int y0,int x1,int y1,int colour,bool fill) {
-    GFXCHECKMOUSE(vp);
+    GFXCheckMouse(vp);
     GFXASetPort(vp);
     rx = abs(x0-x1)/2;ry = abs(y0-y1)/2;
     xc = (x0+x1)/2;yc = (y0+y1)/2;

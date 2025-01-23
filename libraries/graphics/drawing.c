@@ -13,6 +13,22 @@
 #include <libraries.h>
 #include "include/atomic.h"
 
+
+/**
+ * @brief      Fill the background with the desktop colour
+ */
+void GFXClearBackground(void) {
+    GFXCheckMouse(NULL);
+    struct DVIModeInformation *_dmi = DVIGetModeInformation();
+    for (int i = 0;i < _dmi->bitPlaneCount;i++) {
+        uint8_t *p = _dmi->bitPlane[i];
+        for (int y = 0;y < _dmi->height;y++) {
+            memset(p,(y & 1) ? 0x55:0xAA,_dmi->bytesPerLine);
+            p += _dmi->bytesPerLine;
+        }
+    }
+}
+
 /**
  * @brief      Draw a framed rectangle
  *
@@ -24,7 +40,7 @@
  * @param[in]  colour  The colour
  */
 void GFXFrameRect(GFXPort *vp,int x0,int y0,int x1,int y1,int colour) {
-    GFXCHECKMOUSE(vp);
+    GFXCheckMouse(vp);
     GFXASetPort(vp);
     if (y0 > y1) { int n = y0;y0 = y1;y1 = n; }                                     // Sort horizontally.
     GFXAHorizLine(x0,x1,y0,colour);                                                 // Top line.
@@ -47,7 +63,7 @@ void GFXFrameRect(GFXPort *vp,int x0,int y0,int x1,int y1,int colour) {
  * @param[in]  colour  The colour
  */
 void GFXFillRect(GFXPort *vp,int x0,int y0,int x1,int y1,int colour) {
-    GFXCHECKMOUSE(vp);
+    GFXCheckMouse(vp);
     GFXASetPort(vp);
     for (int y = y0;y <= y1;y++) {
         GFXAHorizLine(x0,x1,y,colour);
@@ -63,7 +79,7 @@ void GFXFillRect(GFXPort *vp,int x0,int y0,int x1,int y1,int colour) {
  * @param[in]  colour  The colour
  */
 void GFXPlot(GFXPort *vp,int x,int y,int colour) {
-    GFXCHECKMOUSE(vp);
+    GFXCheckMouse(vp);
     GFXASetPort(vp);
     GFXAPlot(x,y,colour);
 }
@@ -79,7 +95,7 @@ void GFXPlot(GFXPort *vp,int x,int y,int colour) {
  * @param[in]  colour  The colour
  */
 void GFXLine(GFXPort *vp,int x0, int y0, int x1, int y1,int colour) {
-    GFXCHECKMOUSE(vp);
+    GFXCheckMouse(vp);
     GFXASetPort(vp);
     GFXALine(x0,y0,x1,y1,colour);
 }
@@ -96,7 +112,7 @@ void GFXLine(GFXPort *vp,int x0, int y0, int x1, int y1,int colour) {
  */
 
 void GFXHLine(GFXPort *vp,int x0, int x1, int y,int colour) {
-    GFXCHECKMOUSE(vp);
+    GFXCheckMouse(vp);
     GFXASetPort(vp);
     GFXAHorizLine(x0,x1,y,colour);
 }
@@ -112,7 +128,7 @@ void GFXHLine(GFXPort *vp,int x0, int x1, int y,int colour) {
  * @param[in]  colour  The colour
  */
 void GFXVLine(GFXPort *vp,int x, int y0, int y1,int colour) {
-    GFXCHECKMOUSE(vp);
+    GFXCheckMouse(vp);
     GFXASetPort(vp);
     GFXAHorizLine(x,y0,y1,colour);
 }
