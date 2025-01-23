@@ -51,9 +51,11 @@ void GFXUpdateMouse(void) {
  */
 static void _GFXUpdateMousePointer(void) {
     if (isPointerDrawn) _GFXRestoreScreen();                                        // If pointer drawn, restore screen.
+    int scale = DVIGetModeInformation()->height / 240;                              // Vertical scale
     GFXCopyScreenToSmallBuffer(xMouse,yMouse,&pointerStore);                        // Save the background
-    GFXFillTriangle(NULL,xMouse,yMouse,xMouse+2,yMouse+8,xMouse+12,yMouse+4,0);     // Draw the cursor
-    GFXFrameTriangle(NULL,xMouse,yMouse,xMouse+2,yMouse+8,xMouse+12,yMouse+4,7);
+
+    GFXFillTriangle(NULL,xMouse,yMouse,xMouse+2,yMouse+7*scale,xMouse+12,yMouse+4*scale,0);     
+    GFXFrameTriangle(NULL,xMouse,yMouse,xMouse+2,yMouse+7*scale,xMouse+12,yMouse+4*scale,7);
     isPointerDrawn = true;                                                          // Set pointer drawn flag.
 }
 
@@ -74,6 +76,8 @@ static void _GFXRestoreScreen(void) {
  */
 void GFXCheckMouse(GFXPort *vp) {
     if (!isPointerDrawn) return;                                                    // Is the pointer drawn, if not, no action.
+    if (xMouse < vp->x-32 && yMouse < vp->y-32) return;
+    if (xMouse > vp->x+vp->width+32 || yMouse > vp->y+vp->height+32) return;
     _GFXRestoreScreen();                                                            // Restore the mouse pointer.
     xMouse = yMouse = -99;                                                          // Force it's redraw
 }

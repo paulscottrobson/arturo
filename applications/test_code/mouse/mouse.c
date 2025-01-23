@@ -43,7 +43,8 @@ void ApplicationRun(void) {
     int current = 0;
 
     CONEnableConsole(false);
-    GFXSetMode(DVI_MODE_640_240_8);
+    //GFXSetMode(DVI_MODE_640_240_8);
+    GFXSetMode(DVI_MODE_640_480_2);
     GFXClearBackground();
 
     for (int i = 0;i < WIN_COUNT;i++) {
