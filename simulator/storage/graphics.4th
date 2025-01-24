@@ -1,10 +1,10 @@
 \ Graphics package for Agon Forth
 
 VARIABLE HXS VARIABLE HYS \ Half X size and half Y size of screen.
-640 HXS ! 512 HYS !
+640 HXS ! 480 HYS !
 
 : MODE ( m --- )
-    22 EMIT EMIT ;
+    PAGE 22 EMIT EMIT ;
 
 : FG ( c ---)
     17 EMIT EMIT ;
