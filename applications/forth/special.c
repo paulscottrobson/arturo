@@ -197,6 +197,7 @@ void do_special(UNS32 code) /* execute a special instruction */
   case 3: /* rp! */ save_rp=CELL(save_sp)&CELLMASK;save_sp+=4;break;
   case 32: /* trap0 */ do_os();break; 
   case 50: /* setalarm */ save_sp+=4;break;
+  case 51: /* getmstimer */ save_sp-=4;CELL(save_sp)=TMRReadTimeMS();break;
  }
 }
 

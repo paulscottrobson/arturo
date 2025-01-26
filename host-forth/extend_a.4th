@@ -22,12 +22,11 @@ VARIABLE TIMER
 ;
 
 : MS ( n --- )
-\G Delay for n milliseconds.
-    ['] TIMER-INT 16 !
-    20 / 0 ?DO 
-	TIMER @
-	BEGIN TIMER @ OVER - UNTIL DROP 
-    LOOP
+    \G Delay for n milliseconds.
+    51 SPECIAL +
+    BEGIN
+	51 SPECIAL OVER U< 0=
+    UNTIL DROP
 ;
 
 SAVE-SYSTEM forth_a.img
