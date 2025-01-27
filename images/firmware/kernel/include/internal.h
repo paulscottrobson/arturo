@@ -13,7 +13,7 @@
 #pragma once
 
 #include "internal/sound.h"
-#include "internal/dvi_common.h"
+#include "internal/dvi_config.h"
 #include "internal/gamepad.h"
 #include "internal/gamepad_drivers.h"
 #include "internal/miscellany.h"

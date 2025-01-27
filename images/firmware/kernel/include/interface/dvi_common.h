@@ -36,7 +36,6 @@ struct DVIModeInformation {
     int bitPlaneSize;                                                               // Byte size of each bitplane.
 };
 
-
 void DVISetMonoColour(int fg, int bg);
 bool DVISetMode(int mode);
 struct DVIModeInformation *DVIGetModeInformation(void);

@@ -30,9 +30,7 @@ static void _showRAMAvailable(void) {
  */
 int main() {
 	DVIStart();																	// Start DVI running.
-	CONInitialise();  															// Initialise the console.
-    LOGODrawTitle();                                                            // Olimex Logo.
-    LOGOTextHeader();                                                           // Write text header
+    CONWrite(12);                                                               // Clear the screen.make 
     _showRAMAvailable();                                                        // Show RAM free.
     SNDInitialise(ARTURO_MONO_SOUND != 0);                                      // Start the sound system, seperate channels according to config.
     SNDMuteAllChannels();                                                       // Mute all channels

@@ -32,59 +32,18 @@ void ApplicationRun(void) {
         if (n != 0) CONWriteString("%d %c\r",n,n);
         if (n == ' ') DemoApp_CheckFileIO();                                        // Dump the USB key on space
 
-    if (n == 'm') {                                                                 // Change working mode
-        mode=(mode+1) % 5;
-        DVISetMode(mode);
-        CONWrite(12);
-        fg = 3;
-        bg = 0;
-        if (mode==2) {                                                              // Set colour on Mode 2,640x480 mono
-            DVISetMonoColour(fg, bg);
-            CONSetColour(1, 0);
-        } else {
-            CONSetColour(fg, bg);
-        }       
-        CONWriteString("Set mode to %d\n",mode);
-    }
-
-    if (n == 'f') {                                                                 // Set foreground
-        fg++;
-        if (mode==3 && fg==64) {
-            fg = 0; 
-        }
-        else if (mode!=3 && (fg & 7)==0) {
-            fg = 0;
-        }
-        if (mode==2) {
-            DVISetMonoColour(fg, bg);
-        } else {
-            CONSetColour(fg, bg);
-        }       
-            CONWriteString("Set foreground to %d\n",fg);
+        if (n == 'm') {                                                             // Change working mode
+            mode=(mode+1) % DVI_MODE_MAX;
+            DVISetMode(mode);
+            CONWrite(12);
+            CONWriteString("Set mode to %d\n",mode);
         }
 
-    if (n == 'b') {                                                                 // Set background
-        bg++;
-        if (mode==3 && bg==64) {
-            bg = 0; 
-        }
-        else if (mode!=3 && (bg & 7)==0) {
-            bg = 0;
-        }
-        if (mode==2) {
-            DVISetMonoColour(fg, bg);
-        } else {
-            CONSetColour(fg, bg);
-        }       
-            CONWriteString("Set background to %d\n",bg);
-        }
-     
-    
+
         if (KBDEscapePressed(true)) {                                               // Escaped ?
             CONWriteString("Escape !\r");
         }
 
-    
         if (HASTICK50_FIRED()) {                                                    // Time to do a 50Hz tick (Don't use this for timing !)
             TICK50_RESET();                                                         // Reset the tick flag
             if (USBUpdate() == 0) return;                                           // Update USB

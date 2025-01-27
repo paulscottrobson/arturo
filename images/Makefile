@@ -27,13 +27,9 @@ always:
 CONFIG_OUT_FILE = firmware/kernel/include/support/__config.h
 LOCALE_OUT_FILE = ../include/support/__locale.h
 
-LOGO_DIRECTORY = $(ROOTDIR)images/scripts/
-LOGO_OUT_FILE = $(ROOTDIR)images/firmware/kernel/include/support/__logo_data.h
-LOGO_IN_FILE = $(LOGO_DIRECTORY)olimex.png
-
 CMAKE_OUT_FILE = $(ROOTDIR)images/firmware/CMakeLists.txt
 
-prelim_data: $(CONFIG_OUT_FILE) $(LOGO_OUT_FILE)
+prelim_data: $(CONFIG_OUT_FILE)
 	cd firmware/kernel/locale ; $(PYTHON) keymaps.py >$(LOCALE_OUT_FILE)
 
 prelim: prelim_data  $(CMAKE_OUT_FILE)
@@ -44,11 +40,6 @@ prelim: prelim_data  $(CMAKE_OUT_FILE)
 #
 $(CONFIG_OUT_FILE) : $(BUILDENVDIR)/config.make
 	$(PYTHON) scripts/makeconfig.py '$(CONFIG_DATA)' >$(CONFIG_OUT_FILE)
-#
-#		Build any logos required. (Currently just the Olimex one)
-#
-$(LOGO_OUT_FILE) : $(LOGO_IN_FILE)
-	cd $(LOGO_DIRECTORY) ; $(PYTHON) makelogo.py >$(LOGO_OUT_FILE)
 #
 #		Create the middle CMakeLists.txt file (in images/firmware) which sets
 #		environment variables.

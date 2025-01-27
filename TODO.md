@@ -2,8 +2,8 @@
 
 - Redesign core.
 
-	- Seperate Console out, so it is handleable like the keyboard.
-	- Convert old console code to new VDU code & get working
+	- Rewrite the text out code to be more efficient.
+	- Expand the VDUWrite() out from the text handler.
 	- Start adding new VDU stuff.
 
 	
