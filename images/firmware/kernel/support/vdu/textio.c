@@ -1,7 +1,7 @@
 /**
 * @file       textio.c
 *
-* @brief      Text driver
+* @brief      Text mode driver
 *
 * @author     Paul Robson
 *
@@ -67,75 +67,75 @@ static void VDUDrawPixel(int x, int y, int rgb) {
 
 static uint x0 = 0;                                                                 // Posiiton in pixels
 static uint y0 = 0;
-static uint fgcol = 7;
-static uint bgcol = 0;
+static uint fgCol = 7;
+static uint bgCol = 0;
 
-
-    /**
-    * @brief      Write one character or control code.
-    *
-    * @param[in]  c     Character code
-    */
-void VDUWrite(int c) {
-    struct DVIModeInformation *dmi = DVIGetModeInformation();                       // Identify mode data.
-    if (dmi == NULL) return;
-    switch(c) {
-        case 12:                                                                    // Clear Screen.
-            for (uint x = 0; x < dmi->width; ++x)
-                for (uint y = 0; y < dmi->height; ++y) {
-                    VDUDrawPixel(x, y, 0);
-            }
-            x0 = y0 = 0;                                                            // Home cursor
-            break;
-        case 8:
-        	  if (x0 >= 8) {	    
-        	    x0 -= 8;
-        	  } else if (y0 >= 8) {
-        	    y0 -= 8;
-        	    x0 = dmi->width - 8;
-        	  }
-            break;
-        case 10:
-        case 13:                                                                    // New line
-            x0 = 0;y0 = y0 + 8;
-            if (y0 == dmi->height) {                                                // Scrolling.
-                y0 = y0 - 8;
-                for (int i = 0;i < dmi->bitPlaneCount;i++) {
-                    uint8_t *s = dmi->bitPlane[i];
-                    memcpy(s,s+8*dmi->bytesPerLine,dmi->bytesPerLine*(dmi->height-8));
-                    memset(s+dmi->bytesPerLine*(dmi->height-8),0,8*dmi->bytesPerLine);
-                }
-            }
-            break;
-
-        default:
-            if (c>=FONT_FIRST_ASCII && c<FONT_FIRST_ASCII+FONT_N_CHARS) {           // ASCII character set
-                for (int y = y0; y < y0 + 8; ++y) {
-                    uint8_t font_bits = font_8x8[(c - FONT_FIRST_ASCII) * FONT_CHAR_HEIGHT+y-y0];
-                    for (int i = 0; i < 8; ++i) {
-                        VDUDrawPixel(x0 + i, y, font_bits & (0x80 >> i) ? fgcol : bgcol);
-                    }
-                }
-                x0 = x0 + 8;
-                if (x0 == dmi->width) VDUWrite(13);
-            }
-            break;
+/**
+ * @brief      Clear the screen to the background
+ */
+void VDUClearScreen(void) {
+    struct DVIModeInformation *dmi = DVIGetModeInformation();            
+    for (uint x = 0; x < dmi->width; ++x) {
+        for (uint y = 0; y < dmi->height; ++y) {
+            VDUDrawPixel(x, y, bgCol);
+        }
     }
 }
 
-
 /**
- * @brief      Bridge from CONWrite to VDUWrite. 
- * 
- * This is only compiled if ARTURO_PROCESS_CONSOLE is set to 1.
+ * @brief      Set the cursor position
  *
- * @param[in]  c     Character to write
+ * @param[in]  x     Horizontal character position
+ * @param[in]  y     Vertical character position
  */
-
-#if ARTURO_PROCESS_CONSOLE==1
-
-void CONWrite(int c) {
-    VDUWrite(c);
+void VDUSetCursor(int x,int y) {
+    x0 = x * 8;y0 = y * 8;
 }
 
-#endif
+/**
+ * @brief      Backspace (8)
+ */
+void VDUBackspace(void) {
+    struct DVIModeInformation *dmi = DVIGetModeInformation();            
+    if (x0 >= 8) {	    
+        x0 -= 8;
+    } else if (y0 >= 8) {
+        y0 -= 8;
+        x0 = dmi->width - 8;
+    }
+}
+
+/**
+ * @brief      New line (13)
+ */
+void VDUNewLine(void) {
+    struct DVIModeInformation *dmi = DVIGetModeInformation();            
+    x0 = 0;y0 = y0 + 8;
+    if (y0 == dmi->height) {                                                // Scrolling.
+        y0 = y0 - 8;
+        for (int i = 0;i < dmi->bitPlaneCount;i++) {
+            uint8_t *s = dmi->bitPlane[i];
+            memcpy(s,s+8*dmi->bytesPerLine,dmi->bytesPerLine*(dmi->height-8));
+            memset(s+dmi->bytesPerLine*(dmi->height-8),0,8*dmi->bytesPerLine);
+        }
+    }
+}
+
+/**
+ * @brief      Character output to text display
+ *
+ * @param[in]  c     Character to output (non control)
+ */
+void VDUWriteText(char c) {
+    struct DVIModeInformation *dmi = DVIGetModeInformation();            
+    if (c>=FONT_FIRST_ASCII && c<FONT_FIRST_ASCII+FONT_N_CHARS) {           // ASCII character set
+        for (int y = y0; y < y0 + 8; ++y) {
+            uint8_t font_bits = font_8x8[(c - FONT_FIRST_ASCII) * FONT_CHAR_HEIGHT+y-y0];
+            for (int i = 0; i < 8; ++i) {
+                VDUDrawPixel(x0 + i, y, font_bits & (0x80 >> i) ? fgCol : bgCol);
+            }
+        }
+        x0 = x0 + 8;
+        if (x0 == dmi->width) VDUWrite(13);
+    }
+}

@@ -12,3 +12,9 @@
 #pragma once
 
 void VDUWrite(int c);
+
+void VDUNewLine(void);	
+void VDUWriteText(char c);
+void VDUBackspace(void);
+void VDUClearScreen(void);
+void VDUSetCursor(int x,int y);

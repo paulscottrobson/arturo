@@ -18,13 +18,11 @@ bool tick50HzHasFired = true;
 
 static int nextUpdateTime = 0;
 
-
 //
 //      Co-opt the USB updating routine, which doesn't happen in the simulator, to 
 //      update the simulator, removing events from the queue and repainting the
 //      display. This is because there is no tick interrupt.
 //
-
 
 int USBUpdate(void) {
     tick50HzHasFired = true;                                                        // Rigged so we fire every time round the main loop
@@ -46,7 +44,7 @@ int USBUpdate(void) {
 int main(int argc,char *argv[]) {
     DVISetMode(DVI_MODE_640_240_8);                                                 // Initialise display
     CONWrite(12);                                                                   // Clear the screen
-    CONWriteString("Simulator booting\n\n");
+    CONWriteString("Simulator booting\r\r");
     KBDReceiveEvent(0,0xFF,0);                                                      // Initialise keyboard manager
     FIOInitialise();                                                                // Initialise file system
     SYSOpen(false);                                                                 // Start SDL and Mouse/Controller/Sound that use it
