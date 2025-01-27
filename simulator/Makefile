@@ -16,16 +16,14 @@ APPNAME = artsim
 
 TGTBIN = $(BINDIR)$(APPNAME)
 KERNELDIR = $(ROOTDIR)images/firmware/kernel/
-LIBDIR = $(ROOTDIR)libraries
 
 SOURCE1 = $(shell find -L source -name "*.c")
 SOURCE2 = $(shell find -L $(ARTURO_APP_DIRECTORY) -name "*.c")
 SOURCE3 = $(shell find -L $(KERNELDIR)support -name "*.c")
-SOURCE4 = $(shell find -L $(LIBDIR) -name "*.c")
 
-SOURCES = $(SOURCE1) $(SOURCE2) $(SOURCE3) $(SOURCE4)
+SOURCES = $(SOURCE1) $(SOURCE2) $(SOURCE3)
 OBJECTS = $(subst .c,.o,$(SOURCES))
-INCLUDES = -I include -I $(ARTURO_APP_DIRECTORY)/include -I $(LIBDIR) -I $(KERNELDIR)include
+INCLUDES = -I include -I $(ARTURO_APP_DIRECTORY)/include -I $(KERNELDIR)include
 
 SDL_CFLAGS = $(shell sdl2-config --cflags)
 SDL_LDFLAGS = $(shell sdl2-config --libs)

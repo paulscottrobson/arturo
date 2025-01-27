@@ -10,7 +10,6 @@
  */
 
 #include "common.h"
-#include <libraries.h>
 #include "testapp.h"
 
 /**

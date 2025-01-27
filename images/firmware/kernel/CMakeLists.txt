@@ -17,7 +17,6 @@
 # ***************************************************************************************
 
 file(GLOB_RECURSE APP_C_SOURCES "${APPLICATION_DIRECTORY}/*.c")
-file(GLOB_RECURSE LIBRARY_C_SOURCES "${LIBRARY_DIRECTORY}/*.c")
 file(GLOB_RECURSE HARDWARE_C_SOURCES "hardware/*.[cS]")
 file(GLOB_RECURSE SUPPORT_C_SOURCES "support/*.c")
 
@@ -26,6 +25,7 @@ add_executable(kernel
 	${APP_C_SOURCES} ${HARDWARE_C_SOURCES} ${SUPPORT_C_SOURCES} ${LIBRARY_C_SOURCES}
 )
 
+#file(GLOB_RECURSE LIBRARY_C_SOURCES "${LIBRARY_DIRECTORY}/*.c")
 #message("*** ${LIBRARY_DIRECTORY}")
 #message("*** ${APPLICATION_DIRECTORY}")
 #message("*** ${APP_C_SOURCES}")
