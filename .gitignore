@@ -11,7 +11,7 @@
 *.obj
 __pycache__/*
 __pycache__
-build/*
+build
 images/build/*
 memory.dump
 bin/*
@@ -24,3 +24,5 @@ documents/htmldocs
 texput.log
 libraries/cpuz80/generator/code/*.h
 libraries/cpuz80/_*.h
+images/build/_deps/tinyusb-src
+images/build/_deps/picotool-src
