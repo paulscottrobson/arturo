@@ -33,10 +33,12 @@ LOGO_IN_FILE = $(LOGO_DIRECTORY)olimex.png
 
 CMAKE_OUT_FILE = $(ROOTDIR)images/firmware/CMakeLists.txt
 
-prelim: $(CONFIG_OUT_FILE) $(LOGO_OUT_FILE) $(CMAKE_OUT_FILE)
+prelim_data: $(CONFIG_OUT_FILE) $(LOGO_OUT_FILE)
+	cd firmware/kernel/locale ; $(PYTHON) keymaps.py >$(LOCALE_OUT_FILE)
+
+prelim: prelim_data  $(CMAKE_OUT_FILE)
 	mkdir -p $(BINDIR)
 	rm -f $(BINDIR)*.elf $(BINDIR)*.uf2
-	cd firmware/kernel/locale ; $(PYTHON) keymaps.py >$(LOCALE_OUT_FILE)
 
 #		Build the C configuration header file, passing constants into code.
 #
@@ -56,7 +58,6 @@ $(CMAKE_OUT_FILE) : always
 	echo "# This is automatically generated." >>$(CMAKE_OUT_FILE)
 	echo "#" >>$(CMAKE_OUT_FILE)
 	echo 'set(APPLICATION_DIRECTORY "${ARTURO_APP_DIRECTORY}")' >>$(CMAKE_OUT_FILE)
-	echo 'set(LIBRARY_DIRECTORY "$(ARTURO_LIB_DIRECTORY)")' >>$(CMAKE_OUT_FILE)
 	echo 'add_subdirectory(kernel)' >>$(CMAKE_OUT_FILE)
 
 	cmake --fresh -B build 

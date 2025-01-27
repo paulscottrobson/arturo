@@ -34,7 +34,13 @@ SDL_LDFLAGS = $(shell sdl2-config --libs)
 #
 # ***************************************************************************************
 
-build : $(TGTBIN)
+.any:
+
+build : setup $(TGTBIN)
+
+setup : .any
+	mkdir -p $(ROOTDIR)bin
+	make -C $(ROOTDIR)images prelim_data
 
 run : build
 	$(TGTBIN)
