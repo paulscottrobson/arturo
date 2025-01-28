@@ -43,9 +43,9 @@ static uint8_t _VDUMapToBitplaneByte(uint8_t line,int plane) {
 /**
  * @brief      Output a character onto the display, text mode, current fgr/bgr
  *
- * @param[in]  x     { parameter_description }
- * @param[in]  y     { parameter_description }
- * @param[in]  c     { parameter_description }
+ * @param[in]  x     x Coordinate
+ * @param[in]  y     y Coordinate
+ * @param[in]  c     Character to write
  */
 static void _VDURenderCharacter(int x,int y,int c) {
 
@@ -54,7 +54,7 @@ static void _VDURenderCharacter(int x,int y,int c) {
         0xC0,0xC3,0xCC,0xCF,0xF0,0xF3,0xFC,0xFF
     };
 
-    // TODO: Check if in text window (also on screen)
+    // TODO: Check if in text window (also on screen), also check for 0-31
 
     struct DVIModeInformation *dmi = DVIGetModeInformation();            
     for (int plane = 0;plane < dmi->bitPlaneCount;plane++) {                        // Do all three planes.
@@ -74,7 +74,7 @@ static void _VDURenderCharacter(int x,int y,int c) {
 /**
  * @brief      Clear the screen to the background
  */
-void VDUClearScreen(void) {
+void VDUClearScreen(void) {    
     struct DVIModeInformation *dmi = DVIGetModeInformation();            
     for (int x = 0;x < dmi->width>>3;x++) {
         for (int y = 0;y < dmi->height>>3;y++) {

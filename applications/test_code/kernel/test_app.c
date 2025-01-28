@@ -34,7 +34,7 @@ void ApplicationRun(void) {
         if (n == ' ') DemoApp_CheckFileIO();                                        // Dump the USB key on space
 
         if (n == 'm') {                                                             // Change working mode
-            mode=(mode+1) % DVI_MODE_MAX;
+            mode=(mode+1) % DVI_MODE_COUNT;
             DVISetMode(mode);
             VDUWrite(12);
             struct DVIModeInformation *dmi = DVIGetModeInformation();            
