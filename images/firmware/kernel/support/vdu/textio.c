@@ -65,8 +65,8 @@ static void VDUDrawPixel(int x, int y, int rgb) {
 //                              Console setup - very simple here.
 //
 
-static uint x0 = 0;                                                                 // Posiiton in pixels
-static uint y0 = 0;
+static uint xCursor = 0;                                                            // Posiiton in pixels
+static uint yCursor = 0;
 static uint fgCol = 7;
 static uint bgCol = 0;
 
@@ -89,7 +89,7 @@ void VDUClearScreen(void) {
  * @param[in]  y     Vertical character position
  */
 void VDUSetCursor(int x,int y) {
-    x0 = x * 8;y0 = y * 8;
+    xCursor = x;yCursor = y;
 }
 
 /**
@@ -97,11 +97,11 @@ void VDUSetCursor(int x,int y) {
  */
 void VDUBackspace(void) {
     struct DVIModeInformation *dmi = DVIGetModeInformation();            
-    if (x0 >= 8) {	    
-        x0 -= 8;
-    } else if (y0 >= 8) {
-        y0 -= 8;
-        x0 = dmi->width - 8;
+    if (xCursor > 0) {	    
+        xCursor --;
+    } else if (yCursor > 0) {
+        yCursor --;
+        xCursor = dmi->width/8-1;
     }
 }
 
@@ -110,9 +110,9 @@ void VDUBackspace(void) {
  */
 void VDUNewLine(void) {
     struct DVIModeInformation *dmi = DVIGetModeInformation();            
-    x0 = 0;y0 = y0 + 8;
-    if (y0 == dmi->height) {                                                // Scrolling.
-        y0 = y0 - 8;
+    xCursor = 0;yCursor++;
+    if (yCursor == dmi->height/8) {                                                // Scrolling.
+        yCursor--;
         for (int i = 0;i < dmi->bitPlaneCount;i++) {
             uint8_t *s = dmi->bitPlane[i];
             memcpy(s,s+8*dmi->bytesPerLine,dmi->bytesPerLine*(dmi->height-8));
@@ -129,13 +129,13 @@ void VDUNewLine(void) {
 void VDUWriteText(char c) {
     struct DVIModeInformation *dmi = DVIGetModeInformation();            
     if (c>=FONT_FIRST_ASCII && c<FONT_FIRST_ASCII+FONT_N_CHARS) {           // ASCII character set
-        for (int y = y0; y < y0 + 8; ++y) {
-            uint8_t font_bits = font_8x8[(c - FONT_FIRST_ASCII) * FONT_CHAR_HEIGHT+y-y0];
+        for (int y = yCursor*8; y < yCursor*8 + 8; ++y) {
+            uint8_t font_bits = font_8x8[(c - FONT_FIRST_ASCII) * FONT_CHAR_HEIGHT+y-yCursor*8];
             for (int i = 0; i < 8; ++i) {
-                VDUDrawPixel(x0 + i, y, font_bits & (0x80 >> i) ? fgCol : bgCol);
+                VDUDrawPixel(xCursor*8 + i, y, font_bits & (0x80 >> i) ? fgCol : bgCol);
             }
         }
-        x0 = x0 + 8;
-        if (x0 == dmi->width) VDUWrite(13);
+        xCursor++;
+        if (xCursor == dmi->width/8) VDUWrite(13);
     }
 }
