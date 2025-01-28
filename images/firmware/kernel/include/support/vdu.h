@@ -18,3 +18,4 @@ void VDUWriteText(char c);
 void VDUBackspace(void);
 void VDUClearScreen(void);
 void VDUSetCursor(int x,int y);
+uint8_t VDUGetCharacterLineData(int c,int y);

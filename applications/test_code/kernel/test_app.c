@@ -36,7 +36,9 @@ void ApplicationRun(void) {
             mode=(mode+1) % DVI_MODE_MAX;
             DVISetMode(mode);
             CONWrite(12);
-            CONWriteString("Set mode to %d\n",mode);
+            struct DVIModeInformation *dmi = DVIGetModeInformation();            
+            CONWriteString("Set mode to %d : %dx%dx%d\n",mode,dmi->width,dmi->height,1 << (dmi->bitPlaneCount * dmi->bitPlaneDepth));
+
         }
 
 

@@ -67,7 +67,7 @@ static void VDUDrawPixel(int x, int y, int rgb) {
 
 static uint xCursor = 0;                                                            // Posiiton in pixels
 static uint yCursor = 0;
-static uint fgCol = 7;
+static uint fgCol = 7;                                                              // Foreground & Background colour
 static uint bgCol = 0;
 
 /**
@@ -122,20 +122,35 @@ void VDUNewLine(void) {
 }
 
 /**
+ * @brief      Get the line data for line y of character c, in l-r bit format
+ *
+ *             (e.g. 0x80 is the leftmost bit)
+ *
+ * @param[in]  c     Character 0-255
+ * @param[in]  y     Vertical position within character 0-7
+ *
+ * @return     { description_of_the_return_value }
+ */
+uint8_t VDUGetCharacterLineData(int c,int y) {
+    if (c < ' ') return 0;
+    if (c >= 0x80) return 0xFF;
+    return font_8x8[(c - FONT_FIRST_ASCII) * FONT_CHAR_HEIGHT+y];
+}
+
+/**
  * @brief      Character output to text display
  *
  * @param[in]  c     Character to output (non control)
  */
 void VDUWriteText(char c) {
     struct DVIModeInformation *dmi = DVIGetModeInformation();            
-    if (c>=FONT_FIRST_ASCII && c<FONT_FIRST_ASCII+FONT_N_CHARS) {           // ASCII character set
-        for (int y = yCursor*8; y < yCursor*8 + 8; ++y) {
-            uint8_t font_bits = font_8x8[(c - FONT_FIRST_ASCII) * FONT_CHAR_HEIGHT+y-yCursor*8];
-            for (int i = 0; i < 8; ++i) {
-                VDUDrawPixel(xCursor*8 + i, y, font_bits & (0x80 >> i) ? fgCol : bgCol);
-            }
+    for (int y = yCursor*8; y < yCursor*8 + 8; ++y) {
+        uint8_t font_bits = VDUGetCharacterLineData(c,y-yCursor*8);
+        for (int i = 0; i < 8; ++i) {
+            VDUDrawPixel(xCursor*8 + i, y, font_bits & (0x80 >> i) ? fgCol : bgCol);
         }
-        xCursor++;
-        if (xCursor == dmi->width/8) VDUWrite(13);
     }
+    xCursor++;
+    if (xCursor == dmi->width/8) VDUWrite(13);
 }
+
