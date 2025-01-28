@@ -13,71 +13,67 @@
 
 #include "support/font_8x8.h"
 
-#define FONT_CHAR_WIDTH 8
-#define FONT_CHAR_HEIGHT 8
 #define FONT_N_CHARS 95
 #define FONT_FIRST_ASCII 32
 
-/**
-* @brief      Set one pixel on
-*
-* @param[in]  x     x position
-* @param[in]  y     y position
-* @param[in]  rgb   RGB 3 bit colour
-*/
-
-static void VDUDrawPixel(int x, int y, int rgb) {
-    struct DVIModeInformation *dmi = DVIGetModeInformation();                       // Identify mode data.
-
-    if (dmi == NULL) return;
-    uint8_t mask;
-    if (dmi->bitPlaneDepth == 2) {
-
-      mask = 0x80 >> (2*(x % 4));                             
-      for (uint component = 0; component < dmi->bitPlaneCount; ++component) {       // Do each bitplane
-        uint8_t *idx = (x / 4) + y * dmi->bytesPerLine + dmi->bitPlane[component];  // Work out byte.
-
-        if (rgb & (1u << component))                                                // Set or clear the bit in the plane.
-          *idx = *idx | mask;
-        else
-          *idx = *idx & (~mask);
-        if (rgb & (1u << (component+3)))                                                // Set or clear the bit in the plane.
-          *idx = *idx | (mask>>1);
-        else
-          *idx = *idx & (~(mask>>1));
-      }
-    } else {
-      mask = 0x80 >> (x % 8);                                               // Mask from lower 8 bits.
-
-      for (uint component = 0; component < dmi->bitPlaneCount; ++component) {       // Do each bitplane
-        uint8_t *idx = (x / 8) + y * dmi->bytesPerLine + dmi->bitPlane[component];  // Work out byte.
-
-        if (rgb & (1u << component))                                                // Set or clear the bit in the plane.
-          *idx = *idx | mask;
-        else
-          *idx = *idx & (~mask);
-      }
-    }
-}
-
-
-//
-//                              Console setup - very simple here.
-//
 
 static uint xCursor = 0;                                                            // Posiiton in pixels
 static uint yCursor = 0;
 static uint fgCol = 7;                                                              // Foreground & Background colour
 static uint bgCol = 0;
 
+
+/**
+ * @brief      Convert a pixel pattern to the byte to write to the plane
+ *             adjusting for foreground and background colours.
+ *
+ * @param[in]  line   Pixel Data
+ * @param[in]  plane  Bitplane.
+ *
+ * @return     Modified pixel data.
+ */
+static uint8_t _VDUMapToBitplaneByte(uint8_t line,int plane) {
+    uint8_t mask = 1 << plane;
+    if ((fgCol & mask) == (bgCol & mask)) {                                         // Same bit pattern.
+        return (fgCol & mask) ? 0xFF:0x00;
+    }
+    return (fgCol & mask) ? line : line ^ 0xFF;
+}
+
+/**
+ * @brief      Output a character onto the display, text mode, current fgr/bgr
+ *
+ * @param[in]  x     { parameter_description }
+ * @param[in]  y     { parameter_description }
+ * @param[in]  c     { parameter_description }
+ */
+static void _VDURenderCharacter(int x,int y,int c) {
+
+    // TODO: Check if in text window (also on screen)
+    fgCol = x & 7;bgCol = y & 7;                                                    // BODGE TO FIX COLOURS
+
+    struct DVIModeInformation *dmi = DVIGetModeInformation();            
+    for (int plane = 0;plane < dmi->bitPlaneCount;plane++) {                        // Do all three planes.
+        for (int yChar = 0;yChar < 8;yChar++) {                                     // Each line in a bit plane.
+            uint8_t pixels = VDUGetCharacterLineData(c,yChar);                      // Get the character line data.
+            uint8_t *p = dmi->bitPlane[plane] + (y*8+yChar)*dmi->bytesPerLine;      // Position in bitmap.
+            if (dmi->bitPlaneDepth == 1) {                                          // Handle 8 bits per bitmap (2,8 colours)
+                *(p+x) = _VDUMapToBitplaneByte(pixels,plane);
+            } else {                                                                // Handle 4 bits per bitmap (64 colours)
+
+            }
+        }
+    }
+}
+
 /**
  * @brief      Clear the screen to the background
  */
 void VDUClearScreen(void) {
     struct DVIModeInformation *dmi = DVIGetModeInformation();            
-    for (uint x = 0; x < dmi->width; ++x) {
-        for (uint y = 0; y < dmi->height; ++y) {
-            VDUDrawPixel(x, y, bgCol);
+    for (int x = 0;x < dmi->width>>3;x++) {
+        for (int y = 0;y < dmi->height>>3;y++) {
+            _VDURenderCharacter(x,y,x+y*3);
         }
     }
 }
@@ -134,7 +130,7 @@ void VDUNewLine(void) {
 uint8_t VDUGetCharacterLineData(int c,int y) {
     if (c < ' ') return 0;
     if (c >= 0x80) return 0xFF;
-    return font_8x8[(c - FONT_FIRST_ASCII) * FONT_CHAR_HEIGHT+y];
+    return font_8x8[(c - FONT_FIRST_ASCII) * 8+y];
 }
 
 /**
@@ -144,12 +140,7 @@ uint8_t VDUGetCharacterLineData(int c,int y) {
  */
 void VDUWriteText(char c) {
     struct DVIModeInformation *dmi = DVIGetModeInformation();            
-    for (int y = yCursor*8; y < yCursor*8 + 8; ++y) {
-        uint8_t font_bits = VDUGetCharacterLineData(c,y-yCursor*8);
-        for (int i = 0; i < 8; ++i) {
-            VDUDrawPixel(xCursor*8 + i, y, font_bits & (0x80 >> i) ? fgCol : bgCol);
-        }
-    }
+    _VDURenderCharacter(xCursor,yCursor,c);
     xCursor++;
     if (xCursor == dmi->width/8) VDUWrite(13);
 }

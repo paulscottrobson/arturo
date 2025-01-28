@@ -13,7 +13,7 @@
 #include "testapp.h"
 
 
-static int mode;
+static int mode = 3;
 static int fg=3;                                                                    // 2 colour mode, you can change what they are.
 static int bg=0;
 
@@ -22,6 +22,7 @@ static int bg=0;
  */
 void ApplicationRun(void) {
     int n = 0;
+    DVISetMode(mode);
     CONWriteString("Kernel Demo Application\r");                                          
     //
     //      A typical 'main'
