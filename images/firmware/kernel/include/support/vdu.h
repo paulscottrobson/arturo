@@ -14,7 +14,7 @@
 void VDUWrite(int c);
 void VDUWriteString(const char *fmt, ...);
 
-void VDUNewLine(void);	
+void VDUCursor(int c);
 void VDUWriteText(char c);
 void VDUClearScreen(void);
 void VDUSetTextCursor(int x,int y);

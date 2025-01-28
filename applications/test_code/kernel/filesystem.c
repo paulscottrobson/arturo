@@ -22,34 +22,34 @@ void DemoApp_CheckFileIO(void) {
 	//
 	//      Get some stuff about files
 	//
-	CONWriteString("\rFSYSFileInformation\r");
+	CONWriteString("\r\nFSYSFileInformation\r\n");
 	s = "inline.bas";e = FSYSFileInformation(s,&fi);CONWriteString("(%d) %s %d %d ",e,s,fi.length,fi.isDirectory);
 	s = "inline.xxx";e = FSYSFileInformation(s,&fi);CONWriteString("(%d) %s %d %d ",e,s,fi.length,fi.isDirectory);
 	s = "aadir";e = FSYSFileInformation(s,&fi);CONWriteString("(%d) %s %d %d ",e,s,fi.length,fi.isDirectory);
-	s = "abdir";e = FSYSFileInformation(s,&fi);CONWriteString("(%d) %s %d %d\r",e,s,fi.length,fi.isDirectory);
+	s = "abdir";e = FSYSFileInformation(s,&fi);CONWriteString("(%d) %s %d %d\r\n",e,s,fi.length,fi.isDirectory);
 
 	//
 	//      Create files and delete some
 	//
-	CONWriteString("\rFSYSCreateFile/FSYSDeleteFile\r");
+	CONWriteString("\r\nFSYSCreateFile/FSYSDeleteFile\r\n");
 	e = FSYSCreateFile("newfile.1");  CONWriteString("Create %d ",e);
 	e = FSYSCreateFile("newfile.2");  CONWriteString("Create %d ",e);
 	e = FSYSDeleteFile("newfile.1");  CONWriteString("Delete %d ",e);
-	e = FSYSDeleteFile("newfile.3");  CONWriteString("Delete %d\r",e);
+	e = FSYSDeleteFile("newfile.3");  CONWriteString("Delete %d\r\n",e);
 
 	//
 	//      Create directories and delete some
 	//
-	CONWriteString("\rFSYSCreateDirectory/FSYSDeleteDirectory\r");
+	CONWriteString("\r\nFSYSCreateDirectory/FSYSDeleteDirectory\r\n");
 	e = FSYSCreateDirectory("newDirectory.1");  CONWriteString("Create %d ",e);
 	e = FSYSCreateDirectory("newDirectory.2");  CONWriteString("Create %d ",e);
 	e = FSYSDeleteDirectory("newDirectory.1");  CONWriteString("Delete %d ",e);
-	e = FSYSDeleteDirectory("newDirectory.3");  CONWriteString("Delete %d\r",e);
+	e = FSYSDeleteDirectory("newDirectory.3");  CONWriteString("Delete %d\r\n",e);
 
 	//
 	//         File I/O, write hello world to a test file.
 	//
-	CONWriteString("\rFile R/W\r");
+	CONWriteString("\r\nFile R/W\r\n");
 	e = FSYSCreateFile("test.file");CONWriteString(" %d",e);
 	e = FSYSOpen(0,"test.file");CONWriteString(" %d",e);
 	e = FSYSWrite(0,"Hello world",5);CONWriteString(" %d",e);
@@ -69,7 +69,7 @@ void DemoApp_CheckFileIO(void) {
 	//
 	//          Directory listing.
 	//
-	CONWriteString("\rFSYSOpenDirectory\r");
+	CONWriteString("\r\nFSYSOpenDirectory\r\n");
 	e = FSYSOpenDirectory("/");CONWriteString(" %d",e);
 	while (e = FSYSReadDirectory(buffer),e == 0) CONWriteString(" %s",buffer);
 	CONWriteString(" %d",e);

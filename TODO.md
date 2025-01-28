@@ -2,12 +2,7 @@
 
 - Redesign core.
 
-	- Do up down left right and scrolling and CR
-
-	- UDGs to text.
-
 Outstanding :
-	8,9,10,11,13 		movement
 	23  				define UDGs
 
 	16  				clear graphics
@@ -17,4 +12,5 @@ Outstanding :
 	29 					set graphics origin
 
 	graphic text. (VDU 5)
-	
+
+- Get stuff working again :)

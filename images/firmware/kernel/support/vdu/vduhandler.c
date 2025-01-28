@@ -93,13 +93,20 @@ void VDUWrite(int c) {
         case 7:                                                                     // 7 is the beep, which is not supported.
             break;
 
+        case 8:                                                                     // 8..11 are cursor moves
+        case 9:
+        case 10:
+        case 11:
+            VDUCursor(c);
+            break;
+
         case 12:                                                                    // 12 Clear Screen.
             VDUClearScreen();     
             VDUHomeCursor();
             break;
 
         case 13:                                                                    // 13 New line
-            VDUNewLine();
+            VDUCursor(13);
             break;
 
         case 14:                                                                    // 14,15 control paged mode, not supported
@@ -149,7 +156,11 @@ void VDUWrite(int c) {
         case 31:                                                                    // 31 is position cursor
             VDUSetTextCursor(_vduBuffer[0],_vduBuffer[1]);
             break;
-            
+
+        case 127:                                                                   // 127 is destructive backspace
+            VDUWrite(9);VDUWrite(' ');VDUWrite(9);
+            break;
+                        
         default:
             if (c >= ' ') VDUWriteText(c);                                          // Output character if legitimate and enabled.
             break;

@@ -11,12 +11,14 @@
 
 #include "common.h"
 
-static uint xCursor = 0;                                                            // Posiiton in character cells in the window.
-static uint yCursor = 0;
-static uint fgCol = 7;                                                              // Foreground & Background colour
-static uint bgCol = 0;
+static int xCursor = 0;                                                             // Posiiton in character cells in the window.
+static int yCursor = 0;
+static int fgCol = 7;                                                               // Foreground & Background colour
+static int bgCol = 0;
 
 static int  xLeft = 0,yTop = 0,xRight = 79,yBottom = 29;                            // Text window (these are inclusive values)
+
+static void _VDUScroll(int yFrom,int yTo,int yTarget,int yClear);
 
 /**
  * @brief      Convert a pixel pattern to the byte to write to the plane
@@ -111,18 +113,71 @@ void VDUSetTextColour(int colour) {
 }
 
 /**
- * @brief      New line (13)
+ * @brief      VDU Cursor command
+ *
+ * @param[in]  c     Command (8,9,10,11 or 13)
  */
-void VDUNewLine(void) {
-    struct DVIModeInformation *dmi = DVIGetModeInformation();            
-    xCursor = 0;yCursor++;
-    if (yCursor == dmi->height/8) {                                                // Scrolling.
-        yCursor--;
-        for (int i = 0;i < dmi->bitPlaneCount;i++) {
-            uint8_t *s = dmi->bitPlane[i];
-            memcpy(s,s+8*dmi->bytesPerLine,dmi->bytesPerLine*(dmi->height-8));
-            memset(s+dmi->bytesPerLine*(dmi->height-8),0,8*dmi->bytesPerLine);
-        }
+void VDUCursor(int c) {
+    switch(c) {
+        case 8:                                                                     // VDU 8 left
+            xCursor--;
+            if (xCursor < 0) {                                                      // Off the left
+                xCursor = xRight-xLeft;                                             // Go to EOL 
+                VDUCursor(11);                                                      // And up
+            }
+            break;
+        case 9:                                                                     // VDU 9 right
+            xCursor++; 
+            if (xCursor > xRight-xLeft) {                                           // Off the write
+                xCursor = 0;                                                        // Go to SOL
+                VDUCursor(10);                                                      // And down.
+            }
+            break;
+        case 10:                                                                    // VDU 10 down
+            yCursor++;                                                              
+            if (yCursor > yBottom-yTop) {                                           // Vertical scroll up
+                _VDUScroll(yTop+1,yTop,yBottom+1,yBottom); 
+                yCursor--;
+            }
+            break;
+        case 11:                                                                    // VDU 11 up.
+            yCursor--;                                                              
+            if (yCursor < 0) {
+                _VDUScroll(yBottom,yBottom+1,yTop-1,yTop);                            // Vertical scroll down.
+                yCursor = 0;
+            }
+            break;
+        case 13:                                                                    // VDU 13 does not go down a line.
+            xCursor = 0; 
+            break;
+    }
+}
+
+/**
+ * @brief      Copy screen lines, blank the bottom line.
+ *
+ * @param[in]  yFrom    Copy from here
+ * @param[in]  yTo      To here
+ * @param[in]  yTarget  Until this is reached.
+ */
+static void _VDUScroll(int yFrom,int yTo,int yTarget,int yClear) {
+    struct DVIModeInformation *dmi = DVIGetModeInformation();                       // Get information.
+    yFrom *= 8;yTo *= 8;yTarget *= 8;                                               // Scale from characters to lines.
+    int dir = (yFrom > yTarget) ? -1 : 1;                                           // How From and to are adjusted.
+    int bytesPerCharacter = (dmi->bitPlaneDepth == 1) ? 1 : 2;                      // Bytes per character. 
+    int copySize = (xRight-xLeft+1) * bytesPerCharacter;                            // Amount to copy.
+    while (yFrom != yTarget) {
+        for (int i = 0;i < dmi->bitPlaneCount;i++) {                                // For each bitplane
+            uint8_t *f = dmi->bitPlane[i] + dmi->bytesPerLine * yFrom;              // Start Line from
+            uint8_t *t = dmi->bitPlane[i] + dmi->bytesPerLine * yTo;                // Start Line to.
+            f = f + xLeft * bytesPerCharacter;                                      // Start of the copy block
+            t = t + xLeft * bytesPerCharacter;
+            memcpy(t,f,copySize);                                                   // Copy it
+        }        
+        yFrom += dir;yTo += dir;                                                    // Scroll the line down.
+    }
+    for (int x = xLeft;x <= xRight;x++) {                                           // Blank the new line.
+        _VDURenderCharacter(x,yClear,' ');
     }
 }
 
@@ -151,10 +206,8 @@ uint8_t VDUGetCharacterLineData(int c,int y) {
  * @param[in]  c     Character to output (non control)
  */
 void VDUWriteText(char c) {
-    struct DVIModeInformation *dmi = DVIGetModeInformation();            
-    _VDURenderCharacter(xCursor+xLeft,yCursor+yTop,c);
-    xCursor++;
-    if (xCursor == dmi->width/8) VDUWrite(13);
+    _VDURenderCharacter(xCursor+xLeft,yCursor+yTop,c);                              // Write character
+    VDUWrite(9);                                                                    // Move forward.
 }
 
 /**
@@ -190,3 +243,4 @@ void VDUSetTextWindow(int x1,int y1,int x2,int y2) {
     xLeft = x1;yTop = y2;
     xRight = min(w,x2);yBottom = min(h,y1);
 }
+
