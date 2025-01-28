@@ -24,6 +24,7 @@ void ApplicationRun(void) {
     int n = 0;
     VDUWrite(22);VDUWrite(mode);                                                    // Switch mode
     VDUWrite(17);VDUWrite(129);VDUWrite(12);                                        // Clear background to red
+    VDUWrite(31);VDUWrite(10);VDUWrite(1);
     VDUWriteString("Kernel Demo Application\r");                                          
     VDUWrite(17);VDUWrite(132);                                                     // Background blue
     VDUWrite(17);VDUWrite(2);

@@ -41,7 +41,7 @@ static uint8_t _vduRequired = 0;                                                
 static uint8_t _vduIndex = 0;                                                       // Current index into _vduBuffer
 static uint8_t _vduPendingCommand = 0;                                              // Command to do when all collected.
 static bool writeTextToGraphics = false;                                            // When set, text output is via graphics
-static bool textGfxEnabled = true;                                                  // Text I/O enabled ?
+static bool vduEnabled = true;                                                      // Text I/O enabled ?
 
 /**
 * @brief      Write one character or control code (bodge version)
@@ -64,6 +64,10 @@ void VDUWrite(int c) {
 
     if (_vduRequired != 0) return;                                                  // We still want more.
 
+    if (!vduEnabled) {                                                              // If VDU is disabled.
+        if (_vduPendingCommand != 1 && _vduPendingCommand != 6) return;             // Exit for everything except 1 and 6
+    }
+
     switch(_vduPendingCommand) {                                                    // So, what do we do as we now have a complete command.
 
         case 0:                                                                     // 0 does nothing.
@@ -83,14 +87,14 @@ void VDUWrite(int c) {
             break;
 
         case 6:                                                                     // 6 re-enables VDU
-            textGfxEnabled = true;
+            vduEnabled = true;
             break;  
 
         case 7:                                                                     // 7 is the beep, which is not supported.
             break;
 
         case 12:                                                                    // 12 Clear Screen.
-            if (textGfxEnabled) VDUClearScreen();                                   // This affects the display obviously.
+            VDUClearScreen();     
             VDUHomeCursor();
             break;
 
@@ -112,7 +116,7 @@ void VDUWrite(int c) {
             break;
 
         case 21:
-            textGfxEnabled = false;                                                 // 21 stops all text and graphic output.
+            vduEnabled = false;                                                     // 21 stops all text and graphic output.
             break;
 
         case 22:                                                                    // 22 n Change mode.
@@ -132,9 +136,9 @@ void VDUWrite(int c) {
 
         case 28:                                                                    // 28 set text window
             VDUSetTextWindow(min(_vduBuffer[0],_vduBuffer[2]),
-                             min(_vduBuffer[1],_vduBuffer[3]),
+                             max(_vduBuffer[1],_vduBuffer[3]),
                              max(_vduBuffer[0],_vduBuffer[2]),
-                             max(_vduBuffer[1],_vduBuffer[3]));
+                             min(_vduBuffer[1],_vduBuffer[3]));
             VDUHomeCursor();
             break;
 
@@ -142,8 +146,12 @@ void VDUWrite(int c) {
             VDUHomeCursor();
             break;
 
+        case 31:                                                                    // 31 is position cursor
+            VDUSetTextCursor(_vduBuffer[0],_vduBuffer[1]);
+            break;
+            
         default:
-            if (c >= ' ' && textGfxEnabled) VDUWriteText(c);                        // Output character if legitimate and enabled.
+            if (c >= ' ') VDUWriteText(c);                                          // Output character if legitimate and enabled.
             break;
     }
 }

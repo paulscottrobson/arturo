@@ -2,22 +2,19 @@
 
 - Redesign core.
 
-	- Set up text window and clip to it
-
-	- Up down left right CR, fix to require CRLF
+	- Do up down left right and scrolling and CR
 
 	- UDGs to text.
 
 Outstanding :
 	8,9,10,11,13 		movement
+	23  				define UDGs
+
 	16  				clear graphics
 	18 					set graphics colour
-	23  				define UDGs
-	24  				graphics window
+	24  				set graphics window
 	25 					plot
-	28 					text window
-	29 					graphics origin
-	31  				move cursor
+	29 					set graphics origin
 
-	graphic text.
+	graphic text. (VDU 5)
 	

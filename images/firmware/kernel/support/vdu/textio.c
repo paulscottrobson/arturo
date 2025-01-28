@@ -179,14 +179,14 @@ void VDUResetTextWindow(void) {
  * @brief      Set the text window (cells are inclusive)
  *
  * @param[in]  x1    x Left
- * @param[in]  y1    y Top
+ * @param[in]  y1    y Bottom
  * @param[in]  x2    x Right
- * @param[in]  y2    y Bottom
+ * @param[in]  y2    y Top
  */
 void VDUSetTextWindow(int x1,int y1,int x2,int y2) {
     struct DVIModeInformation *dmi = DVIGetModeInformation();            
     int w = (dmi->width >> 3)-1;
     int h = (dmi->height >> 3)-1;
-    xLeft = x1;yTop = y1;
-    xRight = min(w,x2);yBottom = min(h,y2);
+    xLeft = x1;yTop = y2;
+    xRight = min(w,x2);yBottom = min(h,y1);
 }
