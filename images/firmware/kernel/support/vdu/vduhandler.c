@@ -42,6 +42,23 @@ void VDUWrite(int c) {
 
 
 /**
+ * @brief      Support function for VDUWrite which allows printf
+ *
+ * @param[in]  fmt        format string
+ * @param[in]  <unnamed>  Assorted parameters.
+ */
+
+void VDUWriteString(const char *fmt, ...) {
+    char buf[128];
+    va_list args;
+    va_start(args, fmt);
+    vsnprintf(buf, 128, fmt, args);
+    uint8_t *p = (uint8_t *)buf;
+    while (*p != '\0') VDUWrite(*p++);
+    va_end(args);
+}
+
+/**
  * @brief      Bridge from CONWrite to VDUWrite. 
  * 
  * This is only compiled if ARTURO_PROCESS_CONSOLE is set to 1.

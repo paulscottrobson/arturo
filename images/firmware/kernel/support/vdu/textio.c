@@ -49,8 +49,12 @@ static uint8_t _VDUMapToBitplaneByte(uint8_t line,int plane) {
  */
 static void _VDURenderCharacter(int x,int y,int c) {
 
+    static const uint8_t _pixelMap[16] = {                                          // Convert 4 bit pixel to extended 8 bit byte.
+        0x00,0x03,0x0C,0x0F,0x30,0x33,0x3C,0x3F,
+        0xC0,0xC3,0xCC,0xCF,0xF0,0xF3,0xFC,0xFF
+    };
+
     // TODO: Check if in text window (also on screen)
-    fgCol = x & 7;bgCol = y & 7;                                                    // BODGE TO FIX COLOURS
 
     struct DVIModeInformation *dmi = DVIGetModeInformation();            
     for (int plane = 0;plane < dmi->bitPlaneCount;plane++) {                        // Do all three planes.
@@ -60,7 +64,8 @@ static void _VDURenderCharacter(int x,int y,int c) {
             if (dmi->bitPlaneDepth == 1) {                                          // Handle 8 bits per bitmap (2,8 colours)
                 *(p+x) = _VDUMapToBitplaneByte(pixels,plane);
             } else {                                                                // Handle 4 bits per bitmap (64 colours)
-
+                *(p+x*2) = _VDUMapToBitplaneByte(_pixelMap[pixels >> 4],plane);
+                *(p+x*2+1) = _VDUMapToBitplaneByte(_pixelMap[pixels & 0x0F],plane);
             }
         }
     }

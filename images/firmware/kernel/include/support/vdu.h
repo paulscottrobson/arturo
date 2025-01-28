@@ -12,6 +12,7 @@
 #pragma once
 
 void VDUWrite(int c);
+void VDUWriteString(const char *fmt, ...);
 
 void VDUNewLine(void);	
 void VDUWriteText(char c);
