@@ -16,7 +16,15 @@ void VDUWriteString(const char *fmt, ...);
 
 void VDUNewLine(void);	
 void VDUWriteText(char c);
-void VDUBackspace(void);
 void VDUClearScreen(void);
-void VDUSetCursor(int x,int y);
+void VDUSetTextCursor(int x,int y);
+void VDUHomeCursor(void);
+
+void VDUSetGraphicsCursor(int x,int y);
+void VDUSetGraphicsOrigin(int x,int y);
 uint8_t VDUGetCharacterLineData(int c,int y);
+
+void VDUSetDefaultTextColour(void);
+void VDUResetTextWindow(void);   
+void VDUSetDefaultGraphicColour(void);
+void VDUResetGraphicsWindow(void);

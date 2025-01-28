@@ -11,6 +11,8 @@
 
 #include "common.h"
 
+static void _VDUSwitchMode(int newMode);
+
 /*
         This table is the number of additional bytes needed for each VDU command
 */
@@ -18,7 +20,7 @@
 const uint8_t _VDUCommandLengths[32] = {
         0,                                                                          // 0 does nothing
         1,                                                                          // 1 sends character to the printer
-        0,0,0,0,0,0,0,0,0,0,0,0,0,0,                                                // 2-16 are all single byte VDU commands
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,                                              // 2-16 are all single byte VDU commands
         1,                                                                          // 17 sets text colour (COLOUR)
         2,                                                                          // 18 sets background colour (GCOL)
         5,                                                                          // 19 redefines colour
@@ -34,6 +36,13 @@ const uint8_t _VDUCommandLengths[32] = {
         2                                                                           // 31 is move text cursor
 };
 
+static uint8_t _vduBuffer[16];                                                      // Buffered input to VDU command
+static uint8_t _vduRequired = 0;                                                    // Amount of data required
+static uint8_t _vduIndex = 0;                                                       // Current index into _vduBuffer
+static uint8_t _vduPendingCommand = 0;                                              // Command to do when all collected.
+static bool writeTextToGraphics = false;                                            // When set, text output is via graphics
+static bool textGfxEnabled = true;                                                  // Text I/O enabled ?
+
 /**
 * @brief      Write one character or control code (bodge version)
 *
@@ -41,28 +50,105 @@ const uint8_t _VDUCommandLengths[32] = {
 */
 
 void VDUWrite(int c) {
-    struct DVIModeInformation *dmi = DVIGetModeInformation();                       // Identify mode data.
-    if (dmi == NULL) return;
-    switch(c) {
-        case 12:                                                                    // Clear Screen.
-            VDUClearScreen();
-            VDUSetCursor(0,0);
+
+    if (DVIGetModeInformation() == NULL) return;                                    // Check screen is actually on.
+
+    if (_vduRequired == 0) {                                                        // New command ?
+        _vduPendingCommand = c;                                                     // The pending command.
+        _vduRequired = (c < 32) ? _VDUCommandLengths[c] : 0;                        // How much to grab before we do it ?
+        _vduIndex = 0;                                                              // Reset the index.
+    } else {
+        _vduBuffer[_vduIndex++] = c;                                                // Collecting data, save the data.
+        _vduRequired--;                                                             // One fewer required
+    }
+
+    if (_vduRequired != 0) return;                                                  // We still want more.
+
+    switch(_vduPendingCommand) {                                                    // So, what do we do as we now have a complete command.
+
+        case 0:                                                                     // 0 does nothing.
             break;
 
-        case 8:
-            VDUBackspace();
+        case 1:                                                                     // 1 outputs to printer, which we don't have, so does nothing.
+        case 2:                                                                     // 2 & 3 sets the printer off and on.
+        case 3:
             break;
 
-        case 13:                                                                    // New line
+        case 4:                                                                     // 4 sets text mode
+            writeTextToGraphics = false;
+            break;
+
+        case 5:
+            writeTextToGraphics = true;                                             // 5 sets graphic mode
+            break;
+
+        case 6:                                                                     // 6 re-enables VDU
+            textGfxEnabled = true;
+            break;  
+
+        case 7:                                                                     // 7 is the beep, which is not supported.
+            break;
+
+        case 12:                                                                    // 12 Clear Screen.
+            if (textGfxEnabled) VDUClearScreen();                                   // This affects the display obviously.
+            VDUHomeCursor();
+            break;
+
+        case 13:                                                                    // 13 New line
             VDUNewLine();
             break;
 
+        case 14:                                                                    // 14,15 control paged mode, not supported
+        case 15:
+            break;
+
+        case 20:                                                                    // 20 set default text, graphics colours (and mapping)
+            VDUSetDefaultTextColour();
+            VDUSetDefaultGraphicColour();
+            break;
+
+        case 21:
+            textGfxEnabled = false;                                                 // 21 stops all text and graphic output.
+            break;
+
+        case 22:                                                                    // 22 n Change mode.
+            _VDUSwitchMode(_vduBuffer[0]);                                          
+            break;
+
+        case 26:                                                                    // 26 reset text and graphics windows
+            VDUResetTextWindow();
+            VDUResetGraphicsWindow();
+            VDUSetGraphicsOrigin(0,0);
+            VDUSetTextCursor(0,0);
+            VDUSetGraphicsCursor(0,0);
+            break;
+
+        case 30:                                                                    // 30 is Home cursor
+            VDUHomeCursor();
+            break;
+
         default:
-            VDUWriteText(c);
+            if (c >= ' ' && textGfxEnabled) VDUWriteText(c);                        // Output character if legitimate and enabled.
             break;
     }
 }
 
+
+/**
+ * @brief      Change the display mode
+ *
+ * @param[in]  newMode  Mode to change it to ; invalid values are ignored.
+ */
+static void _VDUSwitchMode(int newMode) {
+    if (newMode < 0 || newMode >= DVI_MODE_COUNT) return;                           // Validate the mode.
+    DVISetMode(newMode);                                                            // Set the physical driver mode.
+    VDUWrite(20);                                                                   // Reset colours
+    VDUWrite(26);                                                                   // Reset windows and origin
+    VDUWrite(12);                                                                   // Clear the screen
+    VDUWrite(30);                                                                   // Home cursor
+    VDUWrite(6);                                                                    // Enable text/graphics output
+    VDUWrite(4);                                                                    // Enable text mode
+}
 
 /**
  * @brief      Support function for VDUWrite which allows printf

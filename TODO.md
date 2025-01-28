@@ -2,8 +2,12 @@
 
 - Redesign core.
 
-	- Expand the VDUWrite() out from the text handler to collect data etc.
-	- Start adding new VDU stuff.
+	- Foreground and Background text colours.
+
+	- Set up text window and clip to it
+
+	- Up down left right CR
+
 	- UDGs to text.
 
 

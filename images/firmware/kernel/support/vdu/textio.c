@@ -13,15 +13,12 @@
 
 #include "support/font_8x8.h"
 
-#define FONT_N_CHARS 95
-#define FONT_FIRST_ASCII 32
-
-
 static uint xCursor = 0;                                                            // Posiiton in pixels
 static uint yCursor = 0;
 static uint fgCol = 7;                                                              // Foreground & Background colour
 static uint bgCol = 0;
 
+static int  xLeft = 0,yTop = 0,xRight = 79,yBottom = 29;                            // Text window (these are inclusive values)
 
 /**
  * @brief      Convert a pixel pattern to the byte to write to the plane
@@ -54,7 +51,8 @@ static void _VDURenderCharacter(int x,int y,int c) {
         0xC0,0xC3,0xCC,0xCF,0xF0,0xF3,0xFC,0xFF
     };
 
-    // TODO: Check if in text window (also on screen), also check for 0-31
+    if (c < 32 || c == 127) return;                                                 // Not a displayable character
+    if (x < xLeft || x > xRight || y < yTop || y > yBottom) return;                 // Out of the text window.
 
     struct DVIModeInformation *dmi = DVIGetModeInformation();            
     for (int plane = 0;plane < dmi->bitPlaneCount;plane++) {                        // Do all three planes.
@@ -72,15 +70,21 @@ static void _VDURenderCharacter(int x,int y,int c) {
 }
 
 /**
- * @brief      Clear the screen to the background
+ * @brief      Clear the screen to the background, inside the text window.
  */
 void VDUClearScreen(void) {    
-    struct DVIModeInformation *dmi = DVIGetModeInformation();            
-    for (int x = 0;x < dmi->width>>3;x++) {
-        for (int y = 0;y < dmi->height>>3;y++) {
-            _VDURenderCharacter(x,y,x+y*3);
+    for (int x = xLeft;x <= xRight;x++) {                                           // Probably quick enough....
+        for (int y = yTop;y <= yBottom;y++) {
+            _VDURenderCharacter(x,y,(x+y*3) % 64 + 32);
         }
     }
+}
+
+/**
+ * @brief      Home cursor to top left of current window
+ */
+void VDUHomeCursor(void) {
+    VDUSetTextCursor(xLeft,yTop);
 }
 
 /**
@@ -89,21 +93,8 @@ void VDUClearScreen(void) {
  * @param[in]  x     Horizontal character position
  * @param[in]  y     Vertical character position
  */
-void VDUSetCursor(int x,int y) {
+void VDUSetTextCursor(int x,int y) {
     xCursor = x;yCursor = y;
-}
-
-/**
- * @brief      Backspace (8)
- */
-void VDUBackspace(void) {
-    struct DVIModeInformation *dmi = DVIGetModeInformation();            
-    if (xCursor > 0) {	    
-        xCursor --;
-    } else if (yCursor > 0) {
-        yCursor --;
-        xCursor = dmi->width/8-1;
-    }
 }
 
 /**
@@ -135,7 +126,7 @@ void VDUNewLine(void) {
 uint8_t VDUGetCharacterLineData(int c,int y) {
     if (c < ' ') return 0;
     if (c >= 0x80) return 0xFF;
-    return font_8x8[(c - FONT_FIRST_ASCII) * 8+y];
+    return font_8x8[(c - ' ') * 8+y];
 }
 
 /**
@@ -150,3 +141,19 @@ void VDUWriteText(char c) {
     if (xCursor == dmi->width/8) VDUWrite(13);
 }
 
+/**
+ * @brief      Reset the default text colours.
+ */
+void VDUSetDefaultTextColour(void) {
+    fgCol = 7;bgCol = 0;
+}
+
+/**
+ * @brief      Reset the text window
+ */
+void VDUResetTextWindow(void) {    
+    struct DVIModeInformation *dmi = DVIGetModeInformation();            
+    xLeft = yTop = 0;
+    xRight = (dmi->width >> 3)-1;
+    yBottom = (dmi->height >> 3) - 1;
+}

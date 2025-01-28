@@ -22,11 +22,9 @@ static int bg=0;
  */
 void ApplicationRun(void) {
     int n = 0;
-    DVISetMode(mode);VDUWrite(12);
+    VDUWrite(22);VDUWrite(mode);                                                    // Switch mode
     VDUWriteString("Kernel Demo Application\r");                                          
-    //
-    //      A typical 'main'
-    //
+
     while (1) {
   
         n = KBDGetKey();                                                            // Echo any keystroke
@@ -35,13 +33,10 @@ void ApplicationRun(void) {
 
         if (n == 'm') {                                                             // Change working mode
             mode=(mode+1) % DVI_MODE_COUNT;
-            DVISetMode(mode);
-            VDUWrite(12);
+            VDUWrite(22);VDUWrite(mode); 
             struct DVIModeInformation *dmi = DVIGetModeInformation();            
             VDUWriteString("Set mode to %d : %dx%dx%d\n",mode,dmi->width,dmi->height,1 << (dmi->bitPlaneCount * dmi->bitPlaneDepth));
-
         }
-
 
         if (KBDEscapePressed(true)) {                                               // Escaped ?
             VDUWriteString("Escape !\r");
@@ -67,4 +62,3 @@ void ApplicationRun(void) {
         }
     }
 }
-
