@@ -23,17 +23,23 @@ static int bg=0;
 void ApplicationRun(void) {
     int n = 0;
     VDUWrite(22);VDUWrite(mode);                                                    // Switch mode
+    VDUWrite(17);VDUWrite(129);VDUWrite(12);                                        // Clear background to red
     VDUWriteString("Kernel Demo Application\r");                                          
+    VDUWrite(17);VDUWrite(132);                                                     // Background blue
+    VDUWrite(17);VDUWrite(2);
+    VDUWrite(28);VDUWrite(4);VDUWrite(2);VDUWrite(25);VDUWrite(20);                 // Create a working window
+    VDUWrite(12);                                                                   // Clear it
 
     while (1) {
   
         n = KBDGetKey();                                                            // Echo any keystroke
-        if (n != 0) VDUWriteString("%d %c\r",n,n);
+        if (n != 0) VDUWriteString("%d %c ",n,n);
         if (n == ' ') DemoApp_CheckFileIO();                                        // Dump the USB key on space
 
         if (n == 'm') {                                                             // Change working mode
             mode=(mode+1) % DVI_MODE_COUNT;
             VDUWrite(22);VDUWrite(mode); 
+            VDUWrite(17);VDUWrite(3);VDUWrite(17);VDUWrite(0x81);
             struct DVIModeInformation *dmi = DVIGetModeInformation();            
             VDUWriteString("Set mode to %d : %dx%dx%d\n",mode,dmi->width,dmi->height,1 << (dmi->bitPlaneCount * dmi->bitPlaneDepth));
         }

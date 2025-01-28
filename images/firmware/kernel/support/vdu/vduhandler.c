@@ -102,6 +102,10 @@ void VDUWrite(int c) {
         case 15:
             break;
 
+        case 17:                                                                    // 17 sets text colour.
+            VDUSetTextColour(_vduBuffer[0]);
+            break;
+
         case 20:                                                                    // 20 set default text, graphics colours (and mapping)
             VDUSetDefaultTextColour();
             VDUSetDefaultGraphicColour();
@@ -121,6 +125,17 @@ void VDUWrite(int c) {
             VDUSetGraphicsOrigin(0,0);
             VDUSetTextCursor(0,0);
             VDUSetGraphicsCursor(0,0);
+            break;
+
+        case 27:                                                                    // 27 does nothing  
+            break;
+
+        case 28:                                                                    // 28 set text window
+            VDUSetTextWindow(min(_vduBuffer[0],_vduBuffer[2]),
+                             min(_vduBuffer[1],_vduBuffer[3]),
+                             max(_vduBuffer[0],_vduBuffer[2]),
+                             max(_vduBuffer[1],_vduBuffer[3]));
+            VDUHomeCursor();
             break;
 
         case 30:                                                                    // 30 is Home cursor

@@ -25,6 +25,8 @@ void VDUSetGraphicsOrigin(int x,int y);
 uint8_t VDUGetCharacterLineData(int c,int y);
 
 void VDUSetDefaultTextColour(void);
+void VDUSetTextColour(int colour);
 void VDUResetTextWindow(void);   
+void VDUSetTextWindow(int x1,int y1,int x2,int y2);
 void VDUSetDefaultGraphicColour(void);
 void VDUResetGraphicsWindow(void);
