@@ -15,7 +15,7 @@ void VDUWrite(int c);
 void VDUWriteString(const char *fmt, ...);
 
 void VDUCursor(int c);
-void VDUWriteText(char c);
+void VDUWriteText(uint8_t c);
 void VDUClearScreen(void);
 void VDUSetTextCursor(int x,int y);
 void VDUHomeCursor(void);
@@ -23,6 +23,7 @@ void VDUHomeCursor(void);
 void VDUSetGraphicsCursor(int x,int y);
 void VDUSetGraphicsOrigin(int x,int y);
 uint8_t VDUGetCharacterLineData(int c,int y);
+void VDUDefineCharacter(int c,uint8_t *gData);
 
 void VDUSetDefaultTextColour(void);
 void VDUSetTextColour(int colour);

@@ -25,7 +25,12 @@ void ApplicationRun(void) {
     VDUWrite(22);VDUWrite(mode);                                                    // Switch mode
     VDUWrite(17);VDUWrite(129);VDUWrite(12);                                        // Clear background to red
     VDUWrite(31);VDUWrite(10);VDUWrite(1);
-    VDUWriteString("Kernel Demo Application\r\nNext line\r\n");                                          
+
+    VDUWrite(23);VDUWrite(0xE0);VDUWrite(0xFF);                                     // Define $E0
+    for (int i = 0;i < 6;i++) VDUWrite(0x81);
+    VDUWrite(0xFF);
+
+    VDUWriteString("Kernel Demo Application\r\nNext line %c%c\r\n",0xE0,0x2A);                                          
     VDUWrite(17);VDUWrite(132);                                                     // Background blue
     VDUWrite(17);VDUWrite(2);
     VDUWrite(28);VDUWrite(4);VDUWrite(4);VDUWrite(35);VDUWrite(22);                 // Create a working window

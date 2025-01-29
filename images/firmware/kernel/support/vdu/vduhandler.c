@@ -130,6 +130,10 @@ void VDUWrite(int c) {
             _VDUSwitchMode(_vduBuffer[0]);                                          
             break;
 
+        case 23:                                                                    // 23 c <data> Define user defined graphic
+            VDUDefineCharacter(_vduBuffer[0],_vduBuffer+1);
+            break;
+            
         case 26:                                                                    // 26 reset text and graphics windows
             VDUResetTextWindow();
             VDUResetGraphicsWindow();
@@ -197,7 +201,7 @@ void VDUWriteString(const char *fmt, ...) {
     va_start(args, fmt);
     vsnprintf(buf, 128, fmt, args);
     uint8_t *p = (uint8_t *)buf;
-    while (*p != '\0') VDUWrite(*p++);
+    while (*p != '\0') VDUWrite((*p++) & 0xFF);
     va_end(args);
 }
 

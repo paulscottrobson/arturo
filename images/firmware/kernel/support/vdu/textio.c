@@ -21,8 +21,42 @@ static int bgCol = 0;
 
 static int  xLeft = 0,yTop = 0,xRight = 79,yBottom = 29;                            // Text window (these are inclusive values)
 
+static uint8_t udgMemory[32*8];                                                     // Memory for user defined graphics.
+
 static void _VDUScroll(int yFrom,int yTo,int yTarget,int yClear);
 
+/**
+ * @brief      Get the line data for line y of character c, in l-r bit format
+ *
+ *             (e.g. 0x80 is the leftmost bit)
+ *
+ * @param[in]  c     Character 0-255
+ * @param[in]  y     Vertical position within character 0-7
+ *
+ * @return     { description_of_the_return_value }
+ */
+
+
+uint8_t VDUGetCharacterLineData(int c,int y) {
+    if (c < ' ') return 0;                                                          // Control $00-$1F
+    if (c >= 0xE0) return udgMemory[(c-0xE0)*8+y];                                  // UDG $E0-$FF
+    if (c >= 0x7F) return 0xFF;                                                     // Everything else above standard ASCII
+    return font_8x8[(c - ' ') * 8+y];                                               // ASCII $20-$7E ($7F is a control character)
+}
+
+/**
+ * @brief      Change a UDG definition
+ *
+ * @param[in]  c      Character ID ($E0-$FF)
+ * @param      gData  8 bytes of graphic data.
+ */
+void VDUDefineCharacter(int c,uint8_t *gData) {
+    if (c >= 0xE0 && c <= 0xFF) {                                                   // Legal UDG
+        for (int i = 0;i < 8;i++) {                                                 // Copy into UDG memory
+            udgMemory[(c-0xE0)*8+i] = gData[i];
+        }
+    }
+}
 /**
  * @brief      Convert a pixel pattern to the byte to write to the plane
  *             adjusting for foreground and background colours.
@@ -184,30 +218,13 @@ static void _VDUScroll(int yFrom,int yTo,int yTarget,int yClear) {
     }
 }
 
-/**
- * @brief      Get the line data for line y of character c, in l-r bit format
- *
- *             (e.g. 0x80 is the leftmost bit)
- *
- * @param[in]  c     Character 0-255
- * @param[in]  y     Vertical position within character 0-7
- *
- * @return     { description_of_the_return_value }
- */
-
-
-uint8_t VDUGetCharacterLineData(int c,int y) {
-    if (c < ' ') return 0;
-    if (c >= 0x80) return 0xFF;
-    return font_8x8[(c - ' ') * 8+y];
-}
 
 /**
  * @brief      Character output to text display
  *
  * @param[in]  c     Character to output (non control)
  */
-void VDUWriteText(char c) {
+void VDUWriteText(uint8_t c) {
     _VDURenderCharacter(xCursor+xLeft,yCursor+yTop,c);                              // Write character
     VDUWrite(9);                                                                    // Move forward.
 }
