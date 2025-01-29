@@ -24,7 +24,7 @@ bool msc_inquiry_complete = false;
  * @brief      Waits for USB to settle the filesystem.
  */
 void USBSynchronise(void) {
-    CONWriteString("Waiting for USB to stabilise..\r");
+    CONWriteString("Waiting for USB to stabilise..\r\n");
     uint16_t timeOut = 100;                                                         // 10 seconds waiting for timeout.
     while (!msc_inquiry_complete && timeOut > 0) {                                  // Until USB live, or time out.
         USBUpdate();                                                                // USB Check
@@ -49,7 +49,7 @@ bool inquiry_complete_cb(uint8_t dev_addr, tuh_msc_complete_data_t const *cb_dat
 
     uint16_t vid, pid;
     tuh_vid_pid_get(dev_addr, &vid, &pid);
-    CONWriteString("USB Key found [%04x:%04x]\r",vid,pid);
+    CONWriteString("USB Key found [%04x:%04x]\r\n",vid,pid);
 
     char drive_path[3] = "0:";
     drive_path[0] += dev_addr;

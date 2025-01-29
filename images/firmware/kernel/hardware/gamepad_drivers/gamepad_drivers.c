@@ -53,5 +53,5 @@ int  CTLDispatchMessage(int command,CTLState *cs,struct _CTL_MessageData *msg) {
  * @param[in]  name  Name of controller
  */
 void CTLAnnounceDevice(CTLState *cs,const char *name) {
-    CONWriteString("USB Device: [%04x:%04x] %s\r",cs->_hardwareTypeID >> 16,cs->_hardwareTypeID & 0xFFFF,name);
+    CONWriteString("USB Device: [%04x:%04x] %s\r\n",cs->_hardwareTypeID >> 16,cs->_hardwareTypeID & 0xFFFF,name);
 }

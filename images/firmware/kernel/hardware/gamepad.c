@@ -70,7 +70,7 @@ CTLState *CTLReadController(int n) {
  */
 void CTLAddController(uint8_t dev_addr,uint8_t instance,uint16_t vid,uint16_t pid) {
     if (controllerCount < MAX_CONTROLLERS) {                                        // If not reached the end.
-        //CONWriteString("%04x:%04x %02x %02x\r",vid,pid,dev_addr,instance);
+        //CONWriteString("%04x:%04x %02x %02x\r\n",vid,pid,dev_addr,instance);
         CTLState *cs = &controllers[controllerCount++];                             // Pointer to new controller
         cs->_hardwareID = CTL_HARDWARE_ID(dev_addr,instance);                       // Store the hardware ID, and the type ID.
         cs->_hardwareTypeID = CTL_DEVICE_TYPE_ID(vid,pid);
@@ -94,7 +94,7 @@ void CTLUpdateController(uint8_t dev_addr,uint8_t instance,uint8_t const *report
     if (false) {                                                                    // "true" here allows you to know exactly what data is being sent.
         CONWriteString("%d : ",len);
         for (int i = 0;i < len;i++) CONWriteString("%d:%02x ",i,report[i]);
-        CONWriteString("\r");
+        CONWriteString("\r\n");
     }
     struct _CTL_MessageData msgBlock;
     msgBlock.len = len;msgBlock.report = report;                                    // Construct the message block.

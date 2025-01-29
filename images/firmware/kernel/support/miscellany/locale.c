@@ -39,7 +39,7 @@ void LOCSetLocale(char *loc) {
         }
         search += search[0];                                                    // Follow the list.
     }
-    if (!succeed) CONWriteString("Setting the locale to '%s' failed.\r",loc);   // Message if not found, no other issue.
+    if (!succeed) CONWriteString("Setting the locale to '%s' failed.\r\n",loc); // Message if not found, no other issue.
 }
 
 

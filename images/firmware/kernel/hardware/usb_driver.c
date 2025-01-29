@@ -90,7 +90,7 @@ void tuh_hid_mount_cb(uint8_t dev_addr, uint8_t instance, uint8_t const* desc_re
 
     case HID_ITF_PROTOCOL_MOUSE:
         MSEEnableMouse();
-        CONWriteString("USB Mouse found [%04x:%04x]\r",vid,pid);
+        CONWriteString("USB Mouse found [%04x:%04x]\r\n",vid,pid);
         break;
 
     case HID_ITF_PROTOCOL_NONE:
@@ -159,7 +159,7 @@ int USBUpdate(void) {
  * @brief      Reset the Pico by crashing the WDT.
  */
 static void usbResetSystem(void) {
-    CONWriteString("Resetting.\n");
+    CONWriteString("Resetting.\r\n");
     watchdog_enable(1,1);                                                       // Enable the watchdog timer
     while (true) {}                                                             // Ignore it.
 }
