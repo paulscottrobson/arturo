@@ -14,7 +14,7 @@
 static int xOrigin = 0,yOrigin = 0;                                                 // Origin position, this is in logical coordinates.
 static int xScale = 1,yScale = 1;                                                   // Scale (divide by this for logical -> physical)
 static int xLogicalExtent,yLogicalExtent;                                           // The extent of the logical coordinates.
-static struct _GraphicWindow window;                                                // Graphics window (note 0,0 is bottom left) in physical coordinates.
+struct _GraphicWindow window;                                                       // Graphics window (note 0,0 is bottom left) in physical coordinates.
 
 static int xCoord[3],yCoord[3];                                                     // Coordinate buffer.
 
@@ -89,4 +89,5 @@ void VDUPlotCommand(int cmd,int x,int y) {
 
     printf("%d %d,%d\n",cmd,xCoord[0],yCoord[0]);
     printf("%d,%d - %d,%d\n",window.xLeft,window.yBottom,window.xRight,window.yTop);
+
 }

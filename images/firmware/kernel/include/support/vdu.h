@@ -15,6 +15,8 @@ struct _GraphicWindow {
 	int xLeft,yBottom,xRight,yTop;
 };
 
+extern struct _GraphicWindow window;
+
 void VDUWrite(int c);
 void VDUWriteString(const char *fmt, ...);
 
@@ -38,3 +40,11 @@ void VDUSetDefaultGraphicColour(void);
 void VDUResetGraphicsWindow(void);
 void VDUPlotCommand(int cmd,int x,int y);
 
+void GFXAPlot(int x,int y);
+void GFXAHorizLine(int x1,int x2,int y);
+void GFXAVertLine(int x,int y1,int y2);
+
+void GFXAUp(void);
+void GFXADown(void);
+void GFXALeft(void);
+void GFXARight(void);

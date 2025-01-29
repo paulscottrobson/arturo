@@ -35,8 +35,9 @@ static void _TextWindowTest(void) {
  * @brief      Do the graphics test.
  */
 static void _GraphicsTest(void) {
-    VDUWrite(25);VDUWrite(5);VDUWrite(0);VDUWrite(0);VDUWrite(0);VDUWrite(0);
-    VDUWrite(25);VDUWrite(5);VDUWrite(128);VDUWrite(2);VDUWrite(224);VDUWrite(1);
+    GFXAPlot(0,0);GFXAPlot(160,120);
+    GFXAPlot(165,238);GFXAPlot(166,239);
+    GFXAPlot(319,120);
 }
 
 /**
@@ -46,7 +47,7 @@ void ApplicationRun(void) {
     int n = 0;
     int mode = 3;
     VDUWrite(22);VDUWrite(mode);                                                    // Switch mode
-    _TextWindowTest();
+    //_TextWindowTest();
     _GraphicsTest();
 
     while (1) {
