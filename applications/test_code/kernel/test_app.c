@@ -36,8 +36,11 @@ static void _TextWindowTest(void) {
  */
 static void _GraphicsTest(void) {
     GFXAPlot(0,0);GFXAPlot(160,120);
-    GFXAPlot(165,238);GFXAPlot(166,239);
+    GFXAPlot(160,238);GFXAPlot(162,239);
     GFXAPlot(319,120);
+
+    GFXAHorizLine(162,317,120);
+    GFXAVertLine(160,122,236);
 }
 
 /**
