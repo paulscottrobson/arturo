@@ -43,6 +43,7 @@ static void _GraphicsTest(void) {
     GFXAHorizLine(162,317,120);
     GFXAVertLine(160,122,236);
     GFXALine(2,2,158,118);
+    GFXAFillTriangle(20,200,100,150,70,70);
 }
 
 /**

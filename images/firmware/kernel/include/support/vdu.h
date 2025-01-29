@@ -46,6 +46,12 @@ void GFXAPlot(int x,int y);
 void GFXAHorizLine(int x1,int x2,int y);
 void GFXAVertLine(int x,int y1,int y2);
 void GFXALine(int x0, int y0, int x1, int y1);
+void GFXAFillRect(int x0,int y0,int x1,int y1);
+void GFXAFrameRect(int x0,int y0,int x1,int y1);
+void GFXAFillEllipse(int x0,int y0,int x1,int y1);
+void GFXAFrameEllipse(int x0,int y0,int x1,int y1);
+void GFXAFillTriangle(int x0,int y0,int x1,int y1,int x2,int y2);
+void GFXAFrameTriangle(int x0,int y0,int x1,int y1,int x2,int y2);
 
 void GFXAUp(void);
 void GFXADown(void);
