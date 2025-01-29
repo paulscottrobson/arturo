@@ -39,10 +39,13 @@ void VDUSetGraphicsWindow(int x1,int y1,int x2,int y2);
 void VDUSetDefaultGraphicColour(void);
 void VDUResetGraphicsWindow(void);
 void VDUPlotCommand(int cmd,int x,int y);
+void VDUPlotDispatch(int cmd,int *xCoord,int *yCoord);                                           
+
 
 void GFXAPlot(int x,int y);
 void GFXAHorizLine(int x1,int x2,int y);
 void GFXAVertLine(int x,int y1,int y2);
+void GFXALine(int x0, int y0, int x1, int y1);
 
 void GFXAUp(void);
 void GFXADown(void);

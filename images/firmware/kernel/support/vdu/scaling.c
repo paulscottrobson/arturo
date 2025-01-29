@@ -70,6 +70,8 @@ void VDUSetGraphicsWindow(int x1,int y1,int x2,int y2) {
 
     window.xLeft = x1;window.yBottom = y1;                                          // Set the window
     window.xRight = x2;window.yTop = y2;                                  
+
+    printf("Window:%d,%d - %d,%d\n",window.xLeft,window.yBottom,window.xRight,window.yTop);
 }
 
 /**
@@ -87,7 +89,7 @@ void VDUPlotCommand(int cmd,int x,int y) {
     xCoord[1] = xCoord[0];yCoord[1] = yCoord[0];
     xCoord[0] = x >> xScale;yCoord[0] = y >> yScale;                                // Add the latest coordinate.
 
-    printf("%d %d,%d\n",cmd,xCoord[0],yCoord[0]);
-    printf("%d,%d - %d,%d\n",window.xLeft,window.yBottom,window.xRight,window.yTop);
+    printf("Plot: %d %d,%d\n",cmd,xCoord[0],yCoord[0]);
 
+    VDUPlotDispatch(cmd,xCoord,yCoord);                                             // Go do it
 }

@@ -242,7 +242,7 @@ void GFXALine(int x0, int y0, int x1, int y1) {
         }
         if (e2 <= dx) {
             error = error + dx;
-            if (sy < 0) { GFXAUp(); } else { GFXADown();}
+            if (sy < 0) { GFXADown(); } else { GFXAUp();}
         }
     }
 }
