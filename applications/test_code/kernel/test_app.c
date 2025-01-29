@@ -13,16 +13,10 @@
 #include "testapp.h"
 
 
-static int mode = 3;
-static int fg=3;                                                                    // 2 colour mode, you can change what they are.
-static int bg=0;
-
 /**
- * @brief      Run the main program
+ * @brief      Set up for text window test
  */
-void ApplicationRun(void) {
-    int n = 0;
-    VDUWrite(22);VDUWrite(mode);                                                    // Switch mode
+static void _TextWindowTest(void) {
     VDUWrite(17);VDUWrite(129);VDUWrite(12);                                        // Clear background to red
     VDUWrite(31);VDUWrite(10);VDUWrite(1);
 
@@ -35,6 +29,25 @@ void ApplicationRun(void) {
     VDUWrite(17);VDUWrite(2);
     VDUWrite(28);VDUWrite(4);VDUWrite(4);VDUWrite(35);VDUWrite(22);                 // Create a working window
     VDUWrite(12);                                                                   // Clear it
+}
+
+/**
+ * @brief      Do the graphics test.
+ */
+static void _GraphicsTest(void) {
+    VDUWrite(25);VDUWrite(5);VDUWrite(0);VDUWrite(0);VDUWrite(0);VDUWrite(0);
+    VDUWrite(25);VDUWrite(5);VDUWrite(128);VDUWrite(2);VDUWrite(224);VDUWrite(1);
+}
+
+/**
+ * @brief      Run the main program
+ */
+void ApplicationRun(void) {
+    int n = 0;
+    int mode = 3;
+    VDUWrite(22);VDUWrite(mode);                                                    // Switch mode
+    _TextWindowTest();
+    _GraphicsTest();
 
     while (1) {
   
@@ -51,6 +64,7 @@ void ApplicationRun(void) {
             VDUWrite(17);VDUWrite(3);VDUWrite(17);VDUWrite(0x81);
             struct DVIModeInformation *dmi = DVIGetModeInformation();            
             VDUWriteString("Set mode to %d : %dx%dx%d\r\n",mode,dmi->width,dmi->height,1 << (dmi->bitPlaneCount * dmi->bitPlaneDepth));
+            _GraphicsTest();
         }
 
         if (KBDEscapePressed(true)) {                                               // Escaped ?

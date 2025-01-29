@@ -121,7 +121,7 @@ void VDUClearScreen(void) {
  * @brief      Home cursor to top left of current window
  */
 void VDUHomeCursor(void) {
-    VDUSetTextCursor(xLeft,yTop);
+    VDUSetTextCursor(0,0);
 }
 
 /**

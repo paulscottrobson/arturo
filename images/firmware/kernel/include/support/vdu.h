@@ -11,6 +11,10 @@
 
 #pragma once
 
+struct _GraphicWindow {
+	int xLeft,yBottom,xRight,yTop;
+};
+
 void VDUWrite(int c);
 void VDUWriteString(const char *fmt, ...);
 
@@ -29,5 +33,8 @@ void VDUSetDefaultTextColour(void);
 void VDUSetTextColour(int colour);
 void VDUResetTextWindow(void);   
 void VDUSetTextWindow(int x1,int y1,int x2,int y2);
+void VDUSetGraphicsWindow(int x1,int y1,int x2,int y2);
 void VDUSetDefaultGraphicColour(void);
 void VDUResetGraphicsWindow(void);
+void VDUPlotCommand(int cmd,int x,int y);
+

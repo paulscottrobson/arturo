@@ -44,12 +44,25 @@ static bool writeTextToGraphics = false;                                        
 static bool vduEnabled = true;                                                      // Text I/O enabled ?
 
 /**
+ * @brief      Extract signed 16 bit integer from the VDU Buffer
+ *
+ * @param[in]  ofst  Offset of LSB in VDU Buffeer
+ *
+ * @return     Signed 16 bit value.
+ */
+int _VDUShort(int ofst) {
+    int r = _vduBuffer[ofst] + (_vduBuffer[ofst+1] << 8);                           // Value as UInt
+    return ((r & 0x8000) == 0) ? r : r - 0x10000;                                   // Return as signed integer
+}
+
+/**
 * @brief      Write one character or control code (bodge version)
 *
 * @param[in]  c     Character code
 */
 
 void VDUWrite(int c) {
+    int x1,y1,x2,y2;
 
     if (DVIGetModeInformation() == NULL) return;                                    // Check screen is actually on.
 
@@ -74,7 +87,7 @@ void VDUWrite(int c) {
             break;
 
         case 1:                                                                     // 1 outputs to printer, which we don't have, so does nothing.
-        case 2:                                                                     // 2 & 3 sets the printer off and on.
+        case 2:                                                                     // 2 & 3 sets the printer off and on ... same problem.
         case 3:
             break;
 
@@ -100,7 +113,7 @@ void VDUWrite(int c) {
             VDUCursor(c);
             break;
 
-        case 12:                                                                    // 12 Clear Screen.
+        case 12:                                                                    // 12 Clear Screen (CLS)
             VDUClearScreen();     
             VDUHomeCursor();
             break;
@@ -113,8 +126,19 @@ void VDUWrite(int c) {
         case 15:
             break;
 
-        case 17:                                                                    // 17 sets text colour.
+        case 16:                                                                    // 16 clears graphics (CLG)
+            // TODO: Clear Graphics
+            break;
+
+        case 17:                                                                    // 17 sets text colour (COLOUR)
             VDUSetTextColour(_vduBuffer[0]);
+            break;
+
+        case 18:                                                                    // 18 sets graphics mode & colour (GCOL)
+            // TODO: Set colour & mode
+            break;
+
+        case 19:                                                                    // 19 colour redefine (not implemented)
             break;
 
         case 20:                                                                    // 20 set default text, graphics colours (and mapping)
@@ -126,7 +150,7 @@ void VDUWrite(int c) {
             vduEnabled = false;                                                     // 21 stops all text and graphic output.
             break;
 
-        case 22:                                                                    // 22 n Change mode.
+        case 22:                                                                    // 22 n Change mode (MODE)
             _VDUSwitchMode(_vduBuffer[0]);                                          
             break;
 
@@ -134,6 +158,16 @@ void VDUWrite(int c) {
             VDUDefineCharacter(_vduBuffer[0],_vduBuffer+1);
             break;
             
+        case 24:                                                                    // 24 define graphics window
+            x1 = _VDUShort(0);y1 = _VDUShort(2);                                    // Get coordinates.
+            x2 = _VDUShort(4);y2 = _VDUShort(6);
+            VDUSetGraphicsWindow(min(x1,x2),min(y1,y2),max(x1,x2),max(y1,y2));      // Set the window.
+            break;
+
+        case 25:                                                                    // 25 Plot cmd,x,y command PLOT
+            VDUPlotCommand(_vduBuffer[0],_VDUShort(1),_VDUShort(3));
+            break;
+
         case 26:                                                                    // 26 reset text and graphics windows
             VDUResetTextWindow();
             VDUResetGraphicsWindow();
@@ -151,6 +185,10 @@ void VDUWrite(int c) {
                              max(_vduBuffer[0],_vduBuffer[2]),
                              min(_vduBuffer[1],_vduBuffer[3]));
             VDUHomeCursor();
+            break;
+
+        case 29:                                                                    // 29 set graphics origin
+            VDUSetGraphicsOrigin(_VDUShort(0),_VDUShort(2));
             break;
 
         case 30:                                                                    // 30 is Home cursor
