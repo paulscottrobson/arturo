@@ -32,10 +32,13 @@ CMAKE_OUT_FILE = $(ROOTDIR)images/firmware/CMakeLists.txt
 prelim_data: $(CONFIG_OUT_FILE)
 	cd firmware/kernel/locale ; $(PYTHON) keymaps.py >$(LOCALE_OUT_FILE)
 
-prelim: prelim_data  $(CMAKE_OUT_FILE)
+prelim: prelim_data bbc_font $(CMAKE_OUT_FILE)
 	mkdir -p $(BINDIR)
 	rm -f $(BINDIR)*.elf $(BINDIR)*.uf2
 
+bbc_font:
+	cd scripts ; $(PYTHON) makefont.py >$(ROOTDIR)images/firmware/kernel/include/support/font_bbc_8x8.h
+#
 #		Build the C configuration header file, passing constants into code.
 #
 $(CONFIG_OUT_FILE) : $(BUILDENVDIR)/config.make

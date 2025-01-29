@@ -83,7 +83,6 @@ static void audioCallback(void* userdata,uint8_t* stream,int len) {
 	// Unused parameters
 	(void)userdata;
 	(void)len;
-
 	// Write data to the entire buffer by iterating through all samples and
 	// channels.
 	for (int sample = 0; sample < audioSpec.samples; ++sample) {
@@ -176,18 +175,6 @@ void SOUNDOpen(void) {
 				// TODO: throw exception
 		}
 		printf("Format %s %dHz\n",formatName,audioSpec.freq);
-
-		// std::cout << "[Beeper] frequency: " << audioSpec.freq << std::endl;
-		// std::cout << "[Beeper] format: " << formatName << std::endl;
-
-		// std::cout
-		// 	<< "[Beeper] channels: "
-		// 	<< (int)(audioSpec.channels)
-		// 	<< std::endl;
-
-		// std::cout << "[Beeper] samples: " << audioSpec.samples << std::endl;
-		// std::cout << "[Beeper] padding: " << audioSpec.padding << std::endl;
-		// std::cout << "[Beeper] size: " << audioSpec.size << std::endl;
 	}
 }
 

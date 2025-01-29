@@ -11,6 +11,9 @@
 
 #include "common.h"
 
+//#include "support/font_thin_8x8.h"                                                       
+#include "support/font_bbc_8x8.h"                                                       
+
 static int xCursor = 0;                                                             // Posiiton in character cells in the window.
 static int yCursor = 0;
 static int fgCol = 7;                                                               // Foreground & Background colour
@@ -192,7 +195,6 @@ static void _VDUScroll(int yFrom,int yTo,int yTarget,int yClear) {
  * @return     { description_of_the_return_value }
  */
 
-#include "support/font_8x8.h"                                                       
 
 uint8_t VDUGetCharacterLineData(int c,int y) {
     if (c < ' ') return 0;
