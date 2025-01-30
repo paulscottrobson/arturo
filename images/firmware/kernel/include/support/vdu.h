@@ -19,6 +19,9 @@ extern struct _GraphicWindow window;
 
 void VDUWrite(int c);
 void VDUWriteString(const char *fmt, ...);
+void VDUPlotCommand(int cmd,int x,int y);
+
+// -------------------------------------------
 
 void VDUCursor(int c);
 void VDUWriteText(uint8_t c);
@@ -38,22 +41,25 @@ void VDUSetTextWindow(int x1,int y1,int x2,int y2);
 void VDUSetGraphicsWindow(int x1,int y1,int x2,int y2);
 void VDUSetDefaultGraphicColour(void);
 void VDUResetGraphicsWindow(void);
-void VDUPlotCommand(int cmd,int x,int y);
 void VDUPlotDispatch(int cmd,int *xCoord,int *yCoord);                                           
 
 
-void GFXAPlot(int x,int y);
-void GFXAHorizLine(int x1,int x2,int y);
-void GFXAVertLine(int x,int y1,int y2);
-void GFXALine(int x0, int y0, int x1, int y1);
-void GFXAFillRect(int x0,int y0,int x1,int y1);
-void GFXAFrameRect(int x0,int y0,int x1,int y1);
-void GFXAFillEllipse(int x0,int y0,int x1,int y1);
-void GFXAFrameEllipse(int x0,int y0,int x1,int y1);
-void GFXAFillTriangle(int x0,int y0,int x1,int y1,int x2,int y2);
-void GFXAFrameTriangle(int x0,int y0,int x1,int y1,int x2,int y2);
+void GFXASetControlBits(int c);
+void VDUAPlot(int x,int y);
+void VDUAHorizLine(int x1,int x2,int y);
+void VDUAVertLine(int x,int y1,int y2);
+void VDUALine(int x0, int y0, int x1, int y1);
+void VDUAFillRect(int x0,int y0,int x1,int y1);
+void VDUAFrameRect(int x0,int y0,int x1,int y1);
+void VDUAFillEllipse(int x0,int y0,int x1,int y1);
+void VDUAFrameEllipse(int x0,int y0,int x1,int y1);
+void VDUAFillTriangle(int x0,int y0,int x1,int y1,int x2,int y2);
+void VDUAFrameTriangle(int x0,int y0,int x1,int y1,int x2,int y2);
 
-void GFXAUp(void);
-void GFXADown(void);
-void GFXALeft(void);
-void GFXARight(void);
+void VDUAUp(void);
+void VDUADown(void);
+void VDUALeft(void);
+void VDUARight(void);
+
+#define GFXC_NOENDPOINT 	(0x01)
+#define GFXC_DOTTED 		(0x02)

@@ -66,7 +66,7 @@ static void fillBottomFlatTriangle(Vertice v1,Vertice v2,Vertice v3) {
     int curx2 = TOFIXED(v1.x);
 
     for (int scanlineY = v1.y; scanlineY <= v2.y; scanlineY++) {
-        GFXAHorizLine(FROMFIXED(curx1),FROMFIXED(curx2),scanlineY,colour);
+        VDUAHorizLine(FROMFIXED(curx1),FROMFIXED(curx2),scanlineY,colour);
         curx1 += invslope1;
         curx2 += invslope2;
     }
@@ -89,7 +89,7 @@ static void fillTopFlatTriangle(Vertice v1,Vertice v2,Vertice v3)
     int curx2 = TOFIXED(v3.x);
 
     for (int scanlineY = v3.y; scanlineY > v1.y; scanlineY--) {
-        GFXAHorizLine(FROMFIXED(curx1),FROMFIXED(curx2),scanlineY,colour);
+        VDUAHorizLine(FROMFIXED(curx1),FROMFIXED(curx2),scanlineY,colour);
         curx1 -= invslope1;
         curx2 -= invslope2;
     }
@@ -134,7 +134,7 @@ static void drawFilledTriangle() {
  */
 void GFXFillTriangle(GFXPort *vp,int x0,int y0,int x1,int y1,int x2,int y2,int col) {
     GFXCheckMouse(vp);
-    GFXASetPort(vp);
+    VDUASetPort(vp);
     vt1.x = x0;vt1.y = y0;
     vt2.x = x1;vt2.y = y1;
     vt3.x = x2;vt3.y = y2;
@@ -156,8 +156,8 @@ void GFXFillTriangle(GFXPort *vp,int x0,int y0,int x1,int y1,int x2,int y2,int c
  */
 void GFXFrameTriangle(GFXPort *vp,int x0,int y0,int x1,int y1,int x2,int y2,int col) {
     GFXCheckMouse(vp);
-    GFXASetPort(vp);
-    GFXALine(x0,y0,x1,y1,col);
-    GFXALine(x0,y0,x2,y2,col);
-    GFXALine(x2,y2,x1,y1,col);
+    VDUASetPort(vp);
+    VDUALine(x0,y0,x1,y1,col);
+    VDUALine(x0,y0,x2,y2,col);
+    VDUALine(x2,y2,x1,y1,col);
 }

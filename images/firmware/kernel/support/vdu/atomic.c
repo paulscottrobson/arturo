@@ -16,7 +16,7 @@ static inline void _GFXDrawBitmap3(void);
 static inline void _GFXDrawBitmap6(void);
 static inline void _GFXDrawBitmap(void);
 
-static void _GFXAValidate(void);
+static void _VDUAValidate(void);
 
 static struct DVIModeInformation *_dmi = NULL;                                      // Current mode information.
 static int xPixel,yPixel;                                                           // Pixel position in current window
@@ -25,15 +25,25 @@ static uint8_t bitMask;                                                         
 static uint8_t *pl0,*pl1,*pl2;                                                      // Bitplane pointers.
 static uint8_t colour = 7;                                                          // Drawing colour
 static uint8_t action = 0;                                                          // What to do.
+static int controlBits = 0;                                                         // Controls various aspects of atomic drawing
 
 #define OFFWINDOWH(x)   ((x) < window.xLeft || (x) > window.xRight)
 #define OFFWINDOWV(y)   ((y) < window.yBottom || (y) > window.yTop)
 #define OFFWINDOW(x,y)  (OFFWINDOWH(x) || OFFWINDOWV(y))
 
 /**
+ * @brief      Set the drawing control bits
+ *
+ * @param[in]  c     Control bits.
+ */
+void GFXASetControlBits(int c) {
+    controlBits = c;
+}
+
+/**
  * @brief      Validate it (e.g. check on screen and in viewport)
  */
-static void _GFXAValidate(void) {
+static void _VDUAValidate(void) {
     dataValid = false;
     if (OFFWINDOW(xPixel,yPixel)) return;                                           // No, we can't do anything.
 
@@ -58,10 +68,10 @@ static void _GFXAValidate(void) {
  * @param[in]  x       x coordinate
  * @param[in]  y       y coordinate
  */
-void GFXAPlot(int x,int y) {
+void VDUAPlot(int x,int y) {
     _dmi = DVIGetModeInformation();                                                 // Get mode information
     xPixel = x;yPixel = y;                                                          // Update the pixel positions.
-    _GFXAValidate();                                                                // Validate the position.
+    _VDUAValidate();                                                                // Validate the position.
     if (dataValid) _GFXDrawBitmap();                                                // Draw pixel if valid.
 }
 
@@ -73,7 +83,7 @@ void GFXAPlot(int x,int y) {
  * @param[in]  x2      The x2 coordinate
  * @param[in]  y       Y coordinate
  */
-void GFXAHorizLine(int x1,int x2,int y) {
+void VDUAHorizLine(int x1,int x2,int y) {
     _dmi = DVIGetModeInformation();                                                 // Get mode information
     int ppb = _dmi->bitPlaneDepth==2 ? 4 : 8;
     if (OFFWINDOWV(y)) return;                                                      // Vertically out of range => no line.
@@ -81,7 +91,7 @@ void GFXAHorizLine(int x1,int x2,int y) {
     if (x2 < window.xLeft || x1 >= window.xRight) return;                           // On screen area (e.g. lower off right, higher off left)
     x1 = max(x1,window.xLeft);x2 = min(x2,window.xRight);                           // Trim horizontal line to port.
     xPixel = x1;yPixel = y;dataValid = false;                                       // First pixel.
-    _GFXAValidate();
+    _VDUAValidate();
     int pixelCount = x2-x1+1;                                                       // Pixels to draw
 
     //
@@ -89,7 +99,7 @@ void GFXAHorizLine(int x1,int x2,int y) {
     //
     while (pixelCount > 0 && (bitMask & 0x80) == 0) {                               // Shift until reached byte boundary
         _GFXDrawBitmap();
-        GFXARight();
+        VDUARight();
         pixelCount--;
     }
     //
@@ -107,7 +117,7 @@ void GFXAHorizLine(int x1,int x2,int y) {
     bitMask = _dmi->bitPlaneDepth == 2? 0xC0 : 0x80;                                // We know we are on a byte boundary
     while (pixelCount-- > 0) {                                                      // Draw any remaining pixels.
         _GFXDrawBitmap();
-        GFXARight();
+        VDUARight();
     }
 }
 
@@ -119,24 +129,24 @@ void GFXAHorizLine(int x1,int x2,int y) {
  * @param[in]  y2      y2 coordinate
  * @param[in]  colour  colour
  */
-void GFXAVertLine(int x,int y1,int y2) {
+void VDUAVertLine(int x,int y1,int y2) {
     _dmi = DVIGetModeInformation();                                                 // Get mode information
     if (OFFWINDOWH(x)) return;                                                      // Off screen.
     if (y1 > y2) { int n = y1;y1 = y2;y2 = n; }                                     // Sort y coordinates
     if (y2 < window.yBottom || y1 >= window.yTop) return;                           // Wholly off top or bottom.
     y1 = max(y1,window.yBottom);y2 = min(y2,window.yTop);                           // Clip into region.
     xPixel = x;yPixel = y1;dataValid = false;                                       // Set start and validate
-    _GFXAValidate();
+    _VDUAValidate();
     int pixelCount = y2-y1+1;                                                       // Pixels to draw
     while (pixelCount-- > 0) {                                                      // Shift until reached byte boundary
-        _GFXDrawBitmap();GFXAUp();
+        _GFXDrawBitmap();VDUAUp();
     }
 }
 
 /**
  * @brief      Move current up
  */
-void GFXAUp(void) {
+void VDUAUp(void) {
     yPixel++;                                                                       // Pixel up
     pl0 -= _dmi->bytesPerLine;                                                      // Shift pointers to next line up.
     pl1 -= _dmi->bytesPerLine;
@@ -147,7 +157,7 @@ void GFXAUp(void) {
 /**
  * @brief      Move current down
  */
-void GFXADown(void) {
+void VDUADown(void) {
     yPixel--;                                                                       // Pixel down
     pl0 += _dmi->bytesPerLine;                                                      // Shift pointers to next line down
     pl1 += _dmi->bytesPerLine;
@@ -158,7 +168,7 @@ void GFXADown(void) {
 /**
  * @brief      Move current left
  */
-void GFXALeft(void) {
+void VDUALeft(void) {
     xPixel--;                                                                       // Pixel left
     if (_dmi->bitPlaneDepth == 2) {
       bitMask = (bitMask << 2) & 0xFF;                                              // Shift bitmap left
@@ -180,7 +190,7 @@ void GFXALeft(void) {
 /**
  * @brief      Move current right
  */
-void GFXARight(void) {
+void VDUARight(void) {
     xPixel++;                                                                       // Pixel right
     if (_dmi->bitPlaneDepth == 2) {
       bitMask >>= 2;                                                                // Shift bitmap right
@@ -207,14 +217,18 @@ void GFXARight(void) {
  * @param[in]  y1      The y1 coordinate
  * @param[in]  colour  The colour
  */
-void GFXALine(int x0, int y0, int x1, int y1) {
-    if (y0 == y1) {                                                                 // Use the horizontal one.
-        GFXAHorizLine(x0,x1,y1);
-        return;
-    }
-    if (x0 == x1) {                                                                 // Use the vertical one.
-         GFXAVertLine(x0,y0,y1);
-         return;
+void VDUALine(int x0, int y0, int x1, int y1) {
+    bool drawDot = true;                                                            // Used for dotted lines. If GFXC_DOTTED clear this never changes.
+
+    if (controlBits == 0) {                                                         // If control bits set, do not used the optimised line drawers.
+        if (y0 == y1) {                                                             // Use the horizontal one.
+            VDUAHorizLine(x0,x1,y1);
+            return;
+        }
+        if (x0 == x1) {                                                             // Use the vertical one.
+             VDUAVertLine(x0,y0,y1);
+             return;
+        }
     }
 
     _dmi = DVIGetModeInformation();                                                 // Get mode information
@@ -227,23 +241,28 @@ void GFXALine(int x0, int y0, int x1, int y1) {
 
     xPixel = x0;yPixel = y0;                                                        // Start at x0,y0
 
-    _GFXAValidate();                                                                // Validate the current
-    while(1) {
-        if (!dataValid) _GFXAValidate();                                            // Try to validate if invaluid
-        if (dataValid) {
-            _GFXDrawBitmap();                                                       // If valid, then draw line.
-        }
-        if (xPixel == x1 && yPixel == y1) return;                                   // Completed line.
+    _VDUAValidate();                                                                // Validate the current
+
+    while(xPixel != x1 || yPixel != y1) {
+
+        if (!dataValid) _VDUAValidate();                                            // Try to validate if invaluid
+        if (dataValid && drawDot) _GFXDrawBitmap();                                 // If valid, then draw line.
+
+        if (controlBits & GFXC_DOTTED) drawDot = !drawDot;                          // Toggle draw flag if dotted.
 
         int e2 = 2 * error;
         if (e2 >= dy) {
             error = error + dy;
-            if (sx < 0) { GFXALeft(); } else { GFXARight(); }
+            if (sx < 0) { VDUALeft(); } else { VDUARight(); }
         }
         if (e2 <= dx) {
             error = error + dx;
-            if (sy < 0) { GFXADown(); } else { GFXAUp();}
+            if (sy < 0) { VDUADown(); } else { VDUAUp();}
         }
+    }
+    if ((controlBits & GFXC_NOENDPOINT) == 0) {                                     // Draw the last point
+        if (!dataValid) _VDUAValidate();
+        if (dataValid & drawDot) _GFXDrawBitmap();
     }
 }
 

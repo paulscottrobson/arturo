@@ -36,14 +36,14 @@ static void _TextWindowTest(void) {
  */
 static void _GraphicsTest(void) {
 
-    GFXAPlot(0,0);GFXAPlot(160,120);
-    GFXAPlot(160,238);GFXAPlot(162,239);
-    GFXAPlot(319,120);
+    VDUAPlot(0,0);VDUAPlot(160,120);
+    VDUAPlot(160,238);VDUAPlot(162,239);
+    VDUAPlot(319,120);
 
-    GFXAHorizLine(162,317,120);
-    GFXAVertLine(160,122,236);
-    GFXALine(2,2,158,118);
-    GFXAFillTriangle(20,200,100,150,70,70);
+    VDUALine(162,120,317,120);
+    VDUALine(160,122,160,236);
+    VDUALine(2,2,158,118);
+    VDUAFillTriangle(20,200,100,150,70,70);
 }
 
 /**

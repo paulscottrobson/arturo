@@ -19,13 +19,13 @@
  * @param[in]  x1      The x1 coordinate
  * @param[in]  y1      The y1 coordinate
  */
-void GFXAFrameRect(int x0,int y0,int x1,int y1) {
+void VDUAFrameRect(int x0,int y0,int x1,int y1) {
     if (y0 > y1) { int n = y0;y0 = y1;y1 = n; }                                     // Sort vertically.
-    GFXAHorizLine(x0,x1,y0);                                                 		// Top line.
-    if (y1 != y0) GFXAHorizLine(x0,x1,y1);                                   		// Bottom line, if not a one line frame.
+    VDUAHorizLine(x0,x1,y0);                                                 		// Top line.
+    if (y1 != y0) VDUAHorizLine(x0,x1,y1);                                   		// Bottom line, if not a one line frame.
     for (int y = y0+1;y < y1;y++) {
-        GFXAPlot(x0,y);
-        if (x0 != x1) GFXAPlot(x1,y);
+        VDUAPlot(x0,y);
+        if (x0 != x1) VDUAPlot(x1,y);
     }
 }
 
@@ -38,10 +38,10 @@ void GFXAFrameRect(int x0,int y0,int x1,int y1) {
  * @param[in]  x1      The x1 coordinate
  * @param[in]  y1      The y1 coordinate
  */
-void GFXAFillRect(int x0,int y0,int x1,int y1) {
+void VDUAFillRect(int x0,int y0,int x1,int y1) {
     if (y0 > y1) { int n = y0;y0 = y1;y1 = n; }                                     // Sort vertically.
     for (int y = y0;y <= y1;y++) {
-        GFXAHorizLine(x0,x1,y);
+        VDUAHorizLine(x0,x1,y);
     }
 }
 
@@ -59,7 +59,7 @@ static void _GFXDrawEllipseMain(int x0,int y0,int x1,int y1,bool fill);
  * @param[in]  x1      The x1 coordinate
  * @param[in]  y1      The y1 coordinate
  */
-void GFXAFrameEllipse(int x0,int y0,int x1,int y1) {
+void VDUAFrameEllipse(int x0,int y0,int x1,int y1) {
     _GFXDrawEllipseMain(x0,y0,x1,y1,false);
 }
 
@@ -71,7 +71,7 @@ void GFXAFrameEllipse(int x0,int y0,int x1,int y1) {
  * @param[in]  x1      The x1 coordinate
  * @param[in]  y1      The y1 coordinate
  */
-void GFXAFillEllipse(int x0,int y0,int x1,int y1) {
+void VDUAFillEllipse(int x0,int y0,int x1,int y1) {
     _GFXDrawEllipseMain(x0,y0,x1,y1,true);
 }
 
@@ -98,13 +98,13 @@ static void _GFXDrawEllipseMain(int x0,int y0,int x1,int y1,bool fill) {
  * @param[in]  y       y Coordinate
  */
 static void _GFXFramePart(int x,int y) {
-    GFXAPlot(xc+x,yc+y);
+    VDUAPlot(xc+x,yc+y);
     if (x != 0) {                                                               // If at 0 horizontal only do once
-        GFXAPlot(xc-x,yc+y);
+        VDUAPlot(xc-x,yc+y);
     }
     if (y != 0) {                                                               // If at 0 vertical only do once.
-        GFXAPlot(xc+x,yc-y);
-        GFXAPlot(xc-x,yc-y);
+        VDUAPlot(xc+x,yc-y);
+        VDUAPlot(xc-x,yc-y);
     }
 }
 
@@ -115,9 +115,9 @@ static void _GFXFramePart(int x,int y) {
  * @param[in]  y       y Coordinate
  */
 static void _GFXLinePart(int x,int y) {
-    GFXAHorizLine(xc-x,xc+x,yc+y);
+    VDUAHorizLine(xc-x,xc+x,yc+y);
     if (yc != 0) {                                                              // Don't redraw the middle.
-        GFXAHorizLine(xc-x,xc+x,yc-y);
+        VDUAHorizLine(xc-x,xc+x,yc-y);
     }
 }
 

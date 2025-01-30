@@ -62,7 +62,7 @@ static void fillBottomFlatTriangle(Vertice v1,Vertice v2,Vertice v3) {
     int curx2 = TOFIXED(v1.x);
 
     for (int scanlineY = v1.y; scanlineY <= v2.y; scanlineY++) {
-        GFXAHorizLine(FROMFIXED(curx1),FROMFIXED(curx2),scanlineY);
+        VDUAHorizLine(FROMFIXED(curx1),FROMFIXED(curx2),scanlineY);
         curx1 += invslope1;
         curx2 += invslope2;
     }
@@ -85,7 +85,7 @@ static void fillTopFlatTriangle(Vertice v1,Vertice v2,Vertice v3)
     int curx2 = TOFIXED(v3.x);
 
     for (int scanlineY = v3.y; scanlineY > v1.y; scanlineY--) {
-        GFXAHorizLine(FROMFIXED(curx1),FROMFIXED(curx2),scanlineY);
+        VDUAHorizLine(FROMFIXED(curx1),FROMFIXED(curx2),scanlineY);
         curx1 -= invslope1;
         curx2 -= invslope2;
     }
@@ -126,7 +126,7 @@ static void drawFilledTriangle() {
  * @param[in]  x2    The x2 coordinate
  * @param[in]  y2    The y2 coordinate
  */
-void GFXAFillTriangle(int x0,int y0,int x1,int y1,int x2,int y2) {
+void VDUAFillTriangle(int x0,int y0,int x1,int y1,int x2,int y2) {
     vt1.x = x0;vt1.y = y0;
     vt2.x = x1;vt2.y = y1;
     vt3.x = x2;vt3.y = y2;
@@ -143,8 +143,8 @@ void GFXAFillTriangle(int x0,int y0,int x1,int y1,int x2,int y2) {
  * @param[in]  x2    The x2 coordinate
  * @param[in]  y2    The y2 coordinate
  */
-void GFXAFrameTriangle(int x0,int y0,int x1,int y1,int x2,int y2) {
-    GFXALine(x0,y0,x1,y1);
-    GFXALine(x0,y0,x2,y2);
-    GFXALine(x2,y2,x1,y1);
+void VDUAFrameTriangle(int x0,int y0,int x1,int y1,int x2,int y2) {
+    VDUALine(x0,y0,x1,y1);
+    VDUALine(x0,y0,x2,y2);
+    VDUALine(x2,y2,x1,y1);
 }
