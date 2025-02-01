@@ -135,7 +135,7 @@ void VDUWrite(int c) {
             break;
 
         case 18:                                                                    // 18 sets graphics mode & colour (GCOL)
-            VDUSetGraphicColour(_vduBuffer[0],_vduBuffer[1]);                       
+            VDUSetGraphicsColour(_vduBuffer[0],_vduBuffer[1]);                       
             break;
 
         case 19:                                                                    // 19 colour redefine (not implemented)
@@ -173,7 +173,7 @@ void VDUWrite(int c) {
             VDUResetGraphicsWindow();
             VDUSetGraphicsOrigin(0,0);
             VDUSetTextCursor(0,0);
-            VDUSetGraphicsCursor(0,0);
+            VDUResetGraphicsCursor();
             break;
 
         case 27:                                                                    // 27 does nothing  

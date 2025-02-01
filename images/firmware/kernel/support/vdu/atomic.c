@@ -32,11 +32,21 @@ static int controlBits = 0;                                                     
 #define OFFWINDOW(x,y)  (OFFWINDOWH(x) || OFFWINDOWV(y))
 
 /**
+ * @brief      Set Action and Colour (from GCOL)
+ *
+ * @param[in]  act   Action to use (0-5 draw, or, and, xor, invert)
+ * @param[in]  col   The colour to use (not used for invert)
+ */
+void VDUASetActionColour(int act,int col) {
+    action = act;colour = col;
+}
+
+/**
  * @brief      Set the drawing control bits
  *
  * @param[in]  c     Control bits.
  */
-void GFXASetControlBits(int c) {
+void VDUASetControlBits(int c) {
     controlBits = c;
 }
 
@@ -220,7 +230,7 @@ void VDUARight(void) {
 void VDUALine(int x0, int y0, int x1, int y1) {
     bool drawDot = true;                                                            // Used for dotted lines. If GFXC_DOTTED clear this never changes.
 
-    if (controlBits == 0) {                                                         // If control bits set, do not used the optimised line drawers.
+    if (controlBits == 0 || action != 0) {                                          // If control bits set or not simply drawing, use the Bresenham
         if (y0 == y1) {                                                             // Use the horizontal one.
             VDUAHorizLine(x0,x1,y1);
             return;
@@ -292,11 +302,25 @@ static inline void _GFXDrawBitmap3(void) {
             *pl1 = ((*pl1) & (~bitMask)) | ((colour & 2) ? bitMask:0);
             *pl2 = ((*pl2) & (~bitMask)) | ((colour & 4) ? bitMask:0);
             break;
-
-        case 1:                                                                     // XOR Draw
+        case 1:                                                                     // OR Draw
+            *pl0 |= ((colour & 1) ? bitMask:0);
+            *pl1 |= ((colour & 2) ? bitMask:0);
+            *pl2 |= ((colour & 4) ? bitMask:0);
+            break;
+        case 2:                                                                     // AND Draw
+            *pl0 &= ((colour & 1) ? bitMask:0);
+            *pl1 &= ((colour & 2) ? bitMask:0);
+            *pl2 &= ((colour & 4) ? bitMask:0);
+            break;
+        case 3:                                                                     // XOR Draw
             *pl0 ^= ((colour & 1) ? bitMask:0);
             *pl1 ^= ((colour & 2) ? bitMask:0);
             *pl2 ^= ((colour & 4) ? bitMask:0);
+            break;
+        case 4:                                                                     // Invert Draw
+            *pl0 ^= bitMask;
+            *pl1 ^= bitMask;
+            *pl2 ^= bitMask;
             break;
     }
 }
@@ -311,9 +335,17 @@ static inline void _GFXDrawBitmap1(void) {
         case 0:                                                                     // Standard draw
             *pl0 = ((*pl0) & (~bitMask)) | ((colour & 1) ? bitMask:0);
             break;
-
-        case 1:                                                                     // XOR Draw
+        case 1:                                                                     // OR Draw
+            *pl0 |= (colour & 1) ? bitMask:0;
+            break;
+        case 2:                                                                     // AND Draw
+            *pl0 &= (colour & 1) ? bitMask:0;
+            break;
+        case 3:                                                                     // XOR Draw
             *pl0 ^= (colour & 1) ? bitMask:0;
+            break;
+        case 4:                                                                     // Invert Draw
+            *pl0 ^= bitMask;
             break;
     }
 }
@@ -335,11 +367,25 @@ static inline void _GFXDrawBitmap6(void) {
             *pl2 =  ((*pl2) & (~bitMask)) | ((colour & 4) ? bitMask & 0xAA : 0) |
                     ((colour & 32) ? bitMask & 0x55 :0);
              break;
-
-        case 1:                                                                     // XOR Draw
+        case 1:                                                                     // OR Draw
+            *pl0 |= (((colour & 1) ? bitMask & 0xAA:0) | ((colour & 8) ? bitMask & 0x55:0));
+            *pl1 |= (((colour & 2) ? bitMask & 0xAA:0) | ((colour & 16) ? bitMask & 0x55:0));
+            *pl2 |= (((colour & 4) ? bitMask & 0xAA:0) | ((colour & 32) ? bitMask & 0x55:0));
+            break;
+        case 2:                                                                     // AND Draw
+            *pl0 &= (((colour & 1) ? bitMask & 0xAA:0) | ((colour & 8) ? bitMask & 0x55:0));
+            *pl1 &= (((colour & 2) ? bitMask & 0xAA:0) | ((colour & 16) ? bitMask & 0x55:0));
+            *pl2 &= (((colour & 4) ? bitMask & 0xAA:0) | ((colour & 32) ? bitMask & 0x55:0));
+            break;
+        case 3:                                                                     // XOR Draw
             *pl0 ^= (((colour & 1) ? bitMask & 0xAA:0) | ((colour & 8) ? bitMask & 0x55:0));
             *pl1 ^= (((colour & 2) ? bitMask & 0xAA:0) | ((colour & 16) ? bitMask & 0x55:0));
             *pl2 ^= (((colour & 4) ? bitMask & 0xAA:0) | ((colour & 32) ? bitMask & 0x55:0));
+            break;
+        case 4:                                                                     // Invert Draw
+            *pl0 ^= bitMask;
+            *pl1 ^= bitMask;
+            *pl2 ^= bitMask;
             break;
     }
 

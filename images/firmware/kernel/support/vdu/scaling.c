@@ -19,14 +19,26 @@ static int xLogicalExtent,yLogicalExtent;                                       
 static int xLastLogical,yLastLogical;                                               // Last logical
 static int gColMode,fgrGraphic,bgrGraphic;                                          // Graphic mode, foreground, background
 
-static int xCoord[3],yCoord[3];                                                     // Coordinate buffer (PHYSICAL coordinates)
+#define SAVED_COORDS    (3)
+
+static int xCoord[SAVED_COORDS],yCoord[SAVED_COORDS];                               // Coordinate buffer (PHYSICAL coordinates)
 
 /**
  * @brief      Set the default graphics colours.
  */
 void VDUSetDefaultGraphicColour(void) {
     VDUSetGraphicsColour(0,7);                                                      // GCOL 0,7
-    VDUSetGraphicsWindow(0x80,0);                                                   // GCOL 128,0
+    VDUSetGraphicsColour(0x80,0);                                                   // GCOL 128,0
+}
+
+/**
+ * @brief      Reset the graphics cursor information
+ */
+void VDUResetGraphicsCursor(void) {
+    xLastLogical = yLastLogical = 0;
+    for (int i = 0;i < SAVED_COORDS;i++) {
+        xCoord[i] = yCoord[i] = 0;
+    }
 }
 
 /**
@@ -36,7 +48,7 @@ void VDUSetDefaultGraphicColour(void) {
  * @param[in]  colour  The colour
  */
 
-void VDUSetGraphicColour(int mode,int colour) {
+void VDUSetGraphicsColour(int mode,int colour) {
     gColMode = mode;                                                                // Save mode. According to MOS1.2 this is the same mode for both
     if (colour >= 0x80) {                                                           // If bit 7 set, background
         bgrGraphic = colour & 0x7F;
@@ -50,10 +62,6 @@ void VDUSetGraphicColour(int mode,int colour) {
  */
 void VDUResetGraphicsWindow(void) {
     VDUSetGraphicsWindow(0,0,9999,9999);                                            // This works because VDUSetGraphicsWindow clips.
-}
-
-void VDUSetGraphicsCursor(int x,int y) {
-    // TODO: Set Graphics Cursor to x,y
 }
 
 /**

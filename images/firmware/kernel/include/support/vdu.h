@@ -29,7 +29,7 @@ void VDUClearScreen(void);
 void VDUSetTextCursor(int x,int y);
 void VDUHomeCursor(void);
 
-void VDUSetGraphicsCursor(int x,int y);
+void VDUResetGraphicsCursor(void);
 void VDUSetGraphicsOrigin(int x,int y);
 uint8_t VDUGetCharacterLineData(int c,int y);
 void VDUDefineCharacter(int c,uint8_t *gData);
@@ -42,9 +42,10 @@ void VDUSetGraphicsWindow(int x1,int y1,int x2,int y2);
 void VDUSetDefaultGraphicColour(void);
 void VDUResetGraphicsWindow(void);
 void VDUPlotDispatch(int cmd,int *xCoord,int *yCoord);                                           
-void VDUSetGraphicColour(int mode,int colour);
+void VDUSetGraphicsColour(int mode,int colour);
 
-void GFXASetControlBits(int c);
+void VDUASetActionColour(int act,int col);
+void VDUASetControlBits(int c);
 void VDUAPlot(int x,int y);
 void VDUAHorizLine(int x1,int x2,int y);
 void VDUAVertLine(int x,int y1,int y2);
