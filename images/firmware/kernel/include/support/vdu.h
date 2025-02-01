@@ -42,7 +42,7 @@ void VDUSetGraphicsWindow(int x1,int y1,int x2,int y2);
 void VDUSetDefaultGraphicColour(void);
 void VDUResetGraphicsWindow(void);
 void VDUPlotDispatch(int cmd,int *xCoord,int *yCoord);                                           
-
+void VDUSetGraphicColour(int mode,int colour);
 
 void GFXASetControlBits(int c);
 void VDUAPlot(int x,int y);

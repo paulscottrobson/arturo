@@ -11,18 +11,38 @@
 
 #include "common.h"
 
+struct _GraphicWindow window;                                                       // Graphics window (note 0,0 is bottom left) in physical coordinates.
+
 static int xOrigin = 0,yOrigin = 0;                                                 // Origin position, this is in logical coordinates.
 static int xScale = 1,yScale = 1;                                                   // Scale (divide by this for logical -> physical)
 static int xLogicalExtent,yLogicalExtent;                                           // The extent of the logical coordinates.
-struct _GraphicWindow window;                                                       // Graphics window (note 0,0 is bottom left) in physical coordinates.
+static int xLastLogical,yLastLogical;                                               // Last logical
+static int gColMode,fgrGraphic,bgrGraphic;                                          // Graphic mode, foreground, background
 
-static int xCoord[3],yCoord[3];                                                     // Coordinate buffer.
+static int xCoord[3],yCoord[3];                                                     // Coordinate buffer (PHYSICAL coordinates)
 
 /**
  * @brief      Set the default graphics colours.
  */
 void VDUSetDefaultGraphicColour(void) {
+    VDUSetGraphicsColour(0,7);                                                      // GCOL 0,7
+    VDUSetGraphicsWindow(0x80,0);                                                   // GCOL 128,0
+}
 
+/**
+ * @brief      Set the graphic mode and colour (this is GCOL)
+ *
+ * @param[in]  mode    The mode
+ * @param[in]  colour  The colour
+ */
+
+void VDUSetGraphicColour(int mode,int colour) {
+    gColMode = mode;                                                                // Save mode. According to MOS1.2 this is the same mode for both
+    if (colour >= 0x80) {                                                           // If bit 7 set, background
+        bgrGraphic = colour & 0x7F;
+    } else {                                                                        // If bit 7 clear, foreground
+        fgrGraphic = colour & 0x7F;
+    }
 }
 
 /**
@@ -33,7 +53,7 @@ void VDUResetGraphicsWindow(void) {
 }
 
 void VDUSetGraphicsCursor(int x,int y) {
-
+    // TODO: Set Graphics Cursor to x,y
 }
 
 /**
@@ -83,6 +103,12 @@ void VDUSetGraphicsWindow(int x1,int y1,int x2,int y2) {
  */
 void VDUPlotCommand(int cmd,int x,int y) {
 
+    if ((cmd & 4) == 0) {                                                           // Is it a relative movement.
+        x += xLastLogical;y += yLastLogical;                                        // If so, offset from the last logical position
+    }
+
+    xLastLogical = x;yLastLogical = y;                                              // Update the last logical position.
+
     x += xOrigin; y += yOrigin;                                                     // Adjust for origin.
 
     xCoord[2] = xCoord[1];yCoord[2] = yCoord[1];                                    // Push x and y cordinates down the 3 level store
@@ -90,6 +116,9 @@ void VDUPlotCommand(int cmd,int x,int y) {
     xCoord[0] = x >> xScale;yCoord[0] = y >> yScale;                                // Add the latest coordinate.
 
     printf("Plot: %d %d,%d\n",cmd,xCoord[0],yCoord[0]);
+
+    // TODO: Work out colours to use from FGR/INV/BGR none if not move and mode.
+    // TODO: Set control bits.
 
     VDUPlotDispatch(cmd,xCoord,yCoord);                                             // Go do it
 }
