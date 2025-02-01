@@ -111,22 +111,50 @@ void VDUSetGraphicsWindow(int x1,int y1,int x2,int y2) {
  */
 void VDUPlotCommand(int cmd,int x,int y) {
 
+    //
+    //      Handle offset (e.g. command bit 2 is zero)
+    //
     if ((cmd & 4) == 0) {                                                           // Is it a relative movement.
         x += xLastLogical;y += yLastLogical;                                        // If so, offset from the last logical position
     }
-
     xLastLogical = x;yLastLogical = y;                                              // Update the last logical position.
-
+    //
+    //      Convert to physical, first offset by the origin
+    //
     x += xOrigin; y += yOrigin;                                                     // Adjust for origin.
-
+    //
+    //      Push the old coordinates on the stack for things like triangles
+    //
     xCoord[2] = xCoord[1];yCoord[2] = yCoord[1];                                    // Push x and y cordinates down the 3 level store
     xCoord[1] = xCoord[0];yCoord[1] = yCoord[0];
+    //
+    //      And add the coordinate in physical pixels from (0,0) at bottom left of screen.
+    //
     xCoord[0] = x >> xScale;yCoord[0] = y >> yScale;                                // Add the latest coordinate.
-
     printf("Plot: %d %d,%d\n",cmd,xCoord[0],yCoord[0]);
 
-    // TODO: Work out colours to use from FGR/INV/BGR none if not move and mode.
-    // TODO: Set control bits.
+    //
+    //      Now workout the GCOL data, both the action and colour (the two GCOL parameters)
+    //
+    int drawMode = cmd & 3;                                                         // 0 Move only, 1 Background, 2 Inverse, 3 Foreground
+    int command = cmd & 0xF8;                                                       // Command byte, ignores lower 3 bits.
 
-    VDUPlotDispatch(cmd,xCoord,yCoord);                                             // Go do it
+    if (drawMode == 0) return;                                                      // Move only, exit.
+
+    VDUASetActionColour(gColMode,                                                   // Tell it the action and the colour
+                        (drawMode == 1) ? bgrGraphic:fgrGraphic);
+    if (drawMode == 2) {                                                            // Invert
+        VDUASetActionColour(3,0x7F);                                                // Set EOR $7F on colour.
+    }
+    //
+    //      Now work out special draws, dotted and missing end point on inversion draws only.
+    //
+    int controlBits = 0;
+    if (command == 16 || command == 24) controlBits |= GFXC_DOTTED;                 // $10 $18 are the same as $00 and $08
+    if (command == 8 || command == 24) {                                            // Possible inverting ?
+        if (drawMode == 2 || gColMode == 4) controlBits |= GFXC_NOENDPOINT;         // If inverting, do not draw end point.        
+    }
+    VDUASetControlBits(controlBits);                                                // Set the various control bits.
+
+    VDUPlotDispatch(command,xCoord,yCoord);                                         // Go do it
 }
