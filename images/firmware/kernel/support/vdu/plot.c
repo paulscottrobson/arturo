@@ -28,6 +28,9 @@ void VDUPlotDispatch(int cmd,int *xCoord,int *yCoord) {
 			VDUALine(xCoord[1],yCoord[1],xCoord[0],yCoord[0]);
 			break;
 
+		case 64:																	// 64-71 plot point
+			VDUAPlot(xCoord[0],yCoord[0]);
+			break;
 
 		case 80:  																	// 80-87 filled triangle.
 			VDUAFillTriangle(xCoord[2],yCoord[2],xCoord[1],yCoord[1],xCoord[0],yCoord[0]);

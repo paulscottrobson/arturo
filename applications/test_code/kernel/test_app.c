@@ -41,6 +41,7 @@ static void _GraphicsTest(void) {
     VDUPlotCommand(1,0,164);
     VDUSetGraphicsColour(0,3);
     VDUPlotCommand(85,332,900);
+    VDUPlotCommand(69,1000,900);
 }
 
 /**
