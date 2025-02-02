@@ -51,6 +51,7 @@
 #include "interface/mouse.h"
 #include "interface/fileio.h"
 #include "interface/usb_interface.h"
+#include "interface/vdu_internal.h"
 
 #ifdef PICO
 #include "internal.h"

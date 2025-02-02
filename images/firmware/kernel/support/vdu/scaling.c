@@ -28,7 +28,7 @@ static int xCoord[SAVED_COORDS],yCoord[SAVED_COORDS];                           
  */
 void VDUSetDefaultGraphicColour(void) {
     VDUSetGraphicsColour(0,7);                                                      // GCOL 0,7
-    VDUSetGraphicsColour(0x80,0);                                                   // GCOL 128,0
+    VDUSetGraphicsColour(0,0x80);                                                   // GCOL 0,128
 }
 
 /**
@@ -50,7 +50,7 @@ void VDUResetGraphicsCursor(void) {
 
 void VDUSetGraphicsColour(int mode,int colour) {
     gColMode = mode;                                                                // Save mode. According to MOS1.2 this is the same mode for both
-    if (colour >= 0x80) {                                                           // If bit 7 set, background
+    if (colour & 0x80) {                                                            // If bit 7 set, background
         bgrGraphic = colour & 0x7F;
     } else {                                                                        // If bit 7 clear, foreground
         fgrGraphic = colour & 0x7F;
@@ -131,7 +131,7 @@ void VDUPlotCommand(int cmd,int x,int y) {
     //      And add the coordinate in physical pixels from (0,0) at bottom left of screen.
     //
     xCoord[0] = x >> xScale;yCoord[0] = y >> yScale;                                // Add the latest coordinate.
-    printf("Plot: %d %d,%d\n",cmd,xCoord[0],yCoord[0]);
+    //printf("Plot: %d %d,%d\n",cmd,xCoord[0],yCoord[0]);
 
     //
     //      Now workout the GCOL data, both the action and colour (the two GCOL parameters)
@@ -142,7 +142,7 @@ void VDUPlotCommand(int cmd,int x,int y) {
     if (drawMode == 0) return;                                                      // Move only, exit.
 
     VDUASetActionColour(gColMode,                                                   // Tell it the action and the colour
-                        (drawMode == 1) ? bgrGraphic:fgrGraphic);
+                        (drawMode == 1) ? fgrGraphic:bgrGraphic);
     if (drawMode == 2) {                                                            // Invert
         VDUASetActionColour(3,0x7F);                                                // Set EOR $7F on colour.
     }

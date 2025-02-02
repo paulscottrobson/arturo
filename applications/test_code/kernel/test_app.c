@@ -35,15 +35,12 @@ static void _TextWindowTest(void) {
  * @brief      Do the graphics test.
  */
 static void _GraphicsTest(void) {
-
-    VDUAPlot(0,0);VDUAPlot(160,120);
-    VDUAPlot(160,238);VDUAPlot(162,239);
-    VDUAPlot(319,120);
-
-    VDUALine(162,120,317,120);
-    VDUALine(160,122,160,236);
-    VDUALine(2,2,158,118);
-    VDUAFillTriangle(20,200,100,150,70,70);
+    VDUPlotCommand(4,20,10);
+    VDUSetGraphicsColour(0,1);
+    VDUPlotCommand(5,640,512);
+    VDUPlotCommand(1,0,164);
+    VDUSetGraphicsColour(0,3);
+    VDUPlotCommand(85,332,900);
 }
 
 /**
